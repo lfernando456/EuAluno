@@ -22,7 +22,7 @@ public class Config {
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences
     public static final String SHARED_PREF_NAME = "EuAluno";
-    //andre e um viadao
+    //luis e um viadao
     
 
     //This would be used to store the email of current logged in user
