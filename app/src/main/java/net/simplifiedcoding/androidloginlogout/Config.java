@@ -1,8 +1,5 @@
 package net.simplifiedcoding.androidloginlogout;
 
-/**
- * Created by Belal on 11/14/2015.
- */
 public class Config {
     //URL to our login.php file
     public static final String LOGIN_URL = "http://eualuno.pe.hu/login.php";
@@ -24,7 +21,7 @@ public class Config {
     public static final String LOGIN_FAIL = "failure";
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences
-    public static final String SHARED_PREF_NAME = "myloginapp";
+    public static final String SHARED_PREF_NAME = "EuAluno";
 
     //This would be used to store the email of current logged in user
     public static final String EMAIL_SHARED_PREF = "email";
