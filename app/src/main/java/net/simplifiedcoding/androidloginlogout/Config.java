@@ -6,7 +6,7 @@ public class Config {
     public static final String REGISTER_URL = "http://eualuno.pe.hu/register.php";
     public static final String FORPASS_URL = "http://eualuno.pe.hu/";
     public static final String CHGPASS_URL = "http://eualuno.pe.hu/";
-
+//lalalalalala
 
     public static final String KEY_NAME = "name";
     public static final String KEY_LASTNAME = "lastname";
