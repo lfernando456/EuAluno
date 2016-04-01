@@ -1,0 +1,54 @@
+<resources>
+    <string name="app_name">EuAluno</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="string_enter_name">Nome</string>
+    <string name="string_enter_lastname">Sobrenome</string>
+    <string name="string_choose_username">Nome de Usuário</string>
+    <string name="string_choose_password">Senha</string>
+    <string name="string_enter_email">Email</string>
+    <string name="button_register">Registrar</string>
+    <string name="button_login">Login</string>
+    <string name="textview_password">Senha</string>
+    <string name="string_username">Nome de Usuário</string>
+    <string name="string_already_registered">Já Registrado</string>
+    <string name="title_activity_activity_login">ActivityLogin</string>
+    <string name="string_user_login">Login</string>
+    <string name="title_activity_user_profile">Perfil de Usuário</string>
+    <string name="sign_in">Sign in</string>
+
+    <string name="inbox">Inbox</string>
+    <string name="starred">Favorito</string>
+    <string name="sent_mail">Mensagens Enviadas</string>
+    <string name="drafts">Rascunhos</string>
+    <string name="categories">Categorias</string>
+    <string name="trash">Lixeira</string>
+    <string name="spam">Spam</string>
+    <string name="settings">Configuração</string>
+    <string name="login">Login</string>
+    <string name="presence">Presença</string>
+    <string name="grades">Notas</string>
+    <string name="disciplines">Disciplinas</string>
+    <string name="myProfile">Meu Perfil</string>
+
+    <string name="add">Adicionar</string>
+    <string name="search">Buscar</string>
+
+    <string name="important">Importante</string>
+    <string name="documents">Documentos</string>
+
+    <!-- Toast -->
+    <string name="open_user_profile">Abrir perfil de usuário</string>
+    <string name="open_settings">Abrir configuração</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Senha (optional)</string>
+    <string name="action_sign_in">Entre ou cadastre-se</string>
+    <string name="action_sign_in_short">Entrar</string>
+
+    <string name="error_invalid_email">Endereço de email invalido</string>
+    <string name="error_invalid_password">Senha muito curta</string>
+    <string name="error_incorrect_password">Senha incorreta</string>
+    <string name="error_field_required">Campo obrigatorio</string>
+</resources>
