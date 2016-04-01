@@ -6,8 +6,7 @@ public class Config {
     public static final String REGISTER_URL = "http://eualuno.pe.hu/register.php";
     public static final String FORPASS_URL = "http://eualuno.pe.hu/";
     public static final String CHGPASS_URL = "http://eualuno.pe.hu/";
-//lalalalalala
-    //oioioi
+
 
     public static final String KEY_NAME = "name";
     public static final String KEY_LASTNAME = "lastname";
@@ -23,7 +22,7 @@ public class Config {
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences
     public static final String SHARED_PREF_NAME = "EuAluno";
-    //luis e um viadao
+    //andregay
 
 
     //This would be used to store the email of current logged in user
