@@ -7,7 +7,7 @@ public class Config {
     public static final String FORPASS_URL = "http://eualuno.pe.hu/";
     public static final String CHGPASS_URL = "http://eualuno.pe.hu/";
 
-
+//oi eu sou o deu do espaguete voador
     public static final String KEY_NAME = "name";
     public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_USERNAME = "username";
@@ -22,7 +22,6 @@ public class Config {
     //Keys for Sharedpreferences
     //This would be the name of our shared preferences
     public static final String SHARED_PREF_NAME = "EuAluno";
-    //andregay
 
 
     //This would be used to store the email of current logged in user
