@@ -20,7 +20,7 @@ public class ParseJSON {
     public static final String KEY_NAME = "lastname";
     public static final String KEY_USERNAME = "username";
     public static final String KEY_EMAIL = "email";
-
+//adssadfsjafd
     public JSONArray user = null;
 
     private String json;
