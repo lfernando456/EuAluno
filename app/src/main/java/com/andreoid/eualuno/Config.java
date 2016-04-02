@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout;
+package com.andreoid.eualuno;
 
 public class Config {
     //URL to our login.php file

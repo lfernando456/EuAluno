@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout.fragment;
+package com.andreoid.eualuno.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.simplifiedcoding.androidloginlogout.R;
-import net.simplifiedcoding.androidloginlogout.adapter.TabPagerItem;
-import net.simplifiedcoding.androidloginlogout.adapter.ViewPagerAdapter;
+import com.andreoid.eualuno.adapter.TabPagerItem;
+import com.andreoid.eualuno.adapter.ViewPagerAdapter;
 
 public class ViewPagerFragment extends Fragment {
 	private List<TabPagerItem> mTabs = new ArrayList<>();

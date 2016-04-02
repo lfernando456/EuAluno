@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout.adapter;
+package com.andreoid.eualuno.adapter;
 
 import android.support.v4.app.Fragment;
 

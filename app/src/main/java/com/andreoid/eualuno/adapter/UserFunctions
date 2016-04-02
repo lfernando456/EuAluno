@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout.adapter;
+package com.andreoid.eualuno.adapter;
 
 /**
  * Author :Raj Amal
@@ -13,7 +13,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 import android.content.Context;
 
-import net.simplifiedcoding.androidloginlogout.Config;
+import com.andreoid.eualuno.Config;
 
 
 public class UserFunctions {

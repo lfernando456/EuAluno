@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout;
+package com.andreoid.eualuno;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,8 +14,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.simplifiedcoding.androidloginlogout.fragment.MainFragment;
-import net.simplifiedcoding.androidloginlogout.fragment.ViewPagerFragment;
+import net.simplifiedcoding.androidloginlogout.R;
+
+import com.andreoid.eualuno.fragment.MainFragment;
+import com.andreoid.eualuno.fragment.ViewPagerFragment;
 
 import br.liveo.interfaces.OnItemClickListener;
 import br.liveo.interfaces.OnPrepareOptionsMenuLiveo;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.simplifiedcoding.androidloginlogout.fragment;
+package com.andreoid.eualuno.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

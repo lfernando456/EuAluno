@@ -1,4 +1,4 @@
-package net.simplifiedcoding.androidloginlogout;
+package com.andreoid.eualuno;
 
 import org.json.JSONArray;
 import org.json.JSONException;

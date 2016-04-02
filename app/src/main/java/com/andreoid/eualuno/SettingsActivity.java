@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.simplifiedcoding.androidloginlogout;
+package com.andreoid.eualuno;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import net.simplifiedcoding.androidloginlogout.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
