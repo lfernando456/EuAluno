@@ -9,8 +9,10 @@ public class Config {
 
 //oi eu sou o deu do espaguete voador
     public static final String KEY_NAME = "name";
+    public static final String KEY_ID = "unique_id";
     public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_USERNAME = "username";
+
 
     //Keys for email and password as defined in our $_POST['key'] in login.php
     public static final String KEY_EMAIL = "email";

@@ -19,6 +19,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import com.andreoid.eualuno.R;
@@ -97,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             ParseJSON pj = new ParseJSON(response);
                             pj.parseJSON();
-                            System.out.println(ParseJSON.ids[0]);
+                            //System.out.println(Arrays.toString(ParseJSON.usernames));
                             //Adding values to editor
                             editor.putBoolean(Config.LOGGEDIN_SHARED_PREF, true);
                             editor.putString(Config.EMAIL_SHARED_PREF, email);
@@ -106,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             editor.putString(Config.USERNAME_SHARED_PREF, ParseJSON.usernames[0]);
                             editor.putString(Config.UNIQUEID_SHARED_PREF, ParseJSON.ids[0]);
                             //Saving values to editor
-                            editor.commit();
+                            editor.apply();
 
                             //Starting profile activity
                             Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
