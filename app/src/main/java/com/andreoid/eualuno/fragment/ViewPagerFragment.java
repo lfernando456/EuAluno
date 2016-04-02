@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.simplifiedcoding.androidloginlogout.R;
+import com.andreoid.eualuno.R;
 import com.andreoid.eualuno.adapter.TabPagerItem;
 import com.andreoid.eualuno.adapter.ViewPagerAdapter;
 

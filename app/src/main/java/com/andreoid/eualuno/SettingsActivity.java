@@ -21,8 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import net.simplifiedcoding.androidloginlogout.R;
-
+import com.andreoid.eualuno.R;
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

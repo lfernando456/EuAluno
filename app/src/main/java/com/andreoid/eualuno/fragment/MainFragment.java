@@ -29,7 +29,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import net.simplifiedcoding.androidloginlogout.R;
+import com.andreoid.eualuno.R;
 
 public class MainFragment extends Fragment {
 
