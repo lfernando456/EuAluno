@@ -14,6 +14,7 @@ public class ParseJSON {
 
     public static final String JSON_ARRAY = "user";
 
+    public static final String KEY_NAME = "firstname";
 
 //adssadfsjafd
     public JSONArray user = null;
@@ -39,7 +40,7 @@ public class ParseJSON {
             for(int i=0;i<user.length();i++){
                 JSONObject jo = user.getJSONObject(i);
                 ids[i] = jo.getString(Config.KEY_ID);
-                names[i] = jo.getString(Config.KEY_NAME);
+                names[i] = jo.getString(KEY_NAME);
                 lastnames[i] = jo.getString(Config.KEY_LASTNAME);
                 usernames[i] = jo.getString(Config.KEY_USERNAME);
                 emails[i] = jo.getString(Config.KEY_EMAIL);

@@ -8,7 +8,7 @@ public class Config {
     public static final String CHGPASS_URL = "http://eualuno.pe.hu/";
 
 //oi eu sou o deu do espaguete voador
-    public static final String KEY_NAME = "name";
+    public static final String KEY_NAME = "firstname";
     public static final String KEY_ID = "unique_id";
     public static final String KEY_LASTNAME = "lastname";
     public static final String KEY_USERNAME = "username";
@@ -33,7 +33,7 @@ public class Config {
     public static final String LOGGEDIN_SHARED_PREF = "loggedin";
 
     public static final String UNIQUEID_SHARED_PREF = "uid";
-    public static final String NAME_SHARED_PREF = "name";
+    public static final String NAME_SHARED_PREF = "firstname";
     public static final String LASTNAME_SHARED_PREF = "lastname";
     public static final String USERNAME_SHARED_PREF = "username";
 
