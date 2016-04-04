@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.andreoid.eualuno;
+package com.andreoid.EuAluno;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -21,7 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.andreoid.eualuno.R;
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

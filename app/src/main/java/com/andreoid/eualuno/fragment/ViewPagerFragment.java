@@ -1,4 +1,4 @@
-package com.andreoid.eualuno.fragment;
+package com.andreoid.EuAluno.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -9,12 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.andreoid.EuAluno.R;
+import com.andreoid.EuAluno.adapter.TabPagerItem;
+import com.andreoid.EuAluno.adapter.ViewPagerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.andreoid.eualuno.R;
-import com.andreoid.eualuno.adapter.TabPagerItem;
-import com.andreoid.eualuno.adapter.ViewPagerAdapter;
 
 public class ViewPagerFragment extends Fragment {
 	private List<TabPagerItem> mTabs = new ArrayList<>();

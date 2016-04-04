@@ -1,4 +1,4 @@
-package com.andreoid.eualuno.adapter;
+package com.andreoid.EuAluno.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

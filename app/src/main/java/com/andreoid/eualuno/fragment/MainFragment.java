@@ -13,9 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.andreoid.eualuno.fragment;
+package com.andreoid.EuAluno.fragment;
+
 
 import android.os.Bundle;
+
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -29,7 +31,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andreoid.eualuno.R;
+import com.andreoid.EuAluno.R;
+
 
 public class MainFragment extends Fragment {
 

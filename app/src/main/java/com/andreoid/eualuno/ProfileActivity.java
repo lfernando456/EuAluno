@@ -1,10 +1,13 @@
-package com.andreoid.eualuno;
+package com.andreoid.EuAluno;
 
+import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -14,35 +17,33 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andreoid.eualuno.fragment.MainFragment;
-import com.andreoid.eualuno.fragment.ViewPagerFragment;
+
+import com.andreoid.EuAluno.fragment.MainFragment;
+import com.andreoid.EuAluno.fragment.ViewPagerFragment;
 
 import br.liveo.interfaces.OnItemClickListener;
 import br.liveo.interfaces.OnPrepareOptionsMenuLiveo;
 import br.liveo.model.HelpLiveo;
 import br.liveo.navigationliveo.NavigationLiveo;
-import com.andreoid.eualuno.R;
 
 public class ProfileActivity extends NavigationLiveo implements OnItemClickListener {
 
     //Textview to show currently logged in user
     private TextView textView;
     private HelpLiveo mHelpLiveo;
-    public String name;
-    public String email;
+    private SharedPreferences pref;
+    public String name ;//= "Andre";
+    public String email ;//= "andre@asdndsa.sas";
+
 
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
-        SharedPreferences sharedPreferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        String uid = sharedPreferences.getString(Config.UNIQUEID_SHARED_PREF, "Not Available");
-        String name = sharedPreferences.getString(Config.NAME_SHARED_PREF, "Not Available");
-        String lastname = sharedPreferences.getString(Config.LASTNAME_SHARED_PREF, "Not Available");
-        String email = sharedPreferences.getString(Config.EMAIL_SHARED_PREF, "Not Available");
+        pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
         // User Information
-        this.userName.setText(name);
-        this.userEmail.setText(email);
+        this.userName.setText(pref.getString(Constants.NAME,""));
+        this.userEmail.setText(pref.getString(Constants.EMAIL,""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
 
@@ -101,20 +102,25 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     @Override
     public void onItemClick(int position) {
         Fragment mFragment;
-        FragmentManager mFragmentManager = getSupportFragmentManager();
+        //FragmentManager mFragmentManager = getSupportFragmentManager();
 
         switch (position){
             case 2:
                 mFragment = new ViewPagerFragment();
                 break;
-
+            case 6:
+                mFragment = new ProfileFragment();
+                break;
             default:
                 mFragment = MainFragment.newInstance(position + "");
                 break;
         }
 
         if (mFragment != null){
-            mFragmentManager.beginTransaction().replace(R.id.container, mFragment).commit();
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.container,mFragment);
+            ft.commit();
         }
 
         setElevationToolBar(position != 2 ? 15 : 0);
@@ -153,22 +159,16 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
 
-                        //Getting out sharedpreferences
-                        SharedPreferences preferences = getSharedPreferences(Config.SHARED_PREF_NAME,Context.MODE_PRIVATE);
-                        //Getting editor
-                        SharedPreferences.Editor editor = preferences.edit();
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putBoolean(Constants.IS_LOGGED_IN, false);
+                        editor.putString(Constants.EMAIL,"");
+                        editor.putString(Constants.NAME,"");
+                        editor.putString(Constants.UNIQUE_ID, "");
+                        editor.apply();
 
-                        //Puting the value false for loggedin
-                        editor.putBoolean(Config.LOGGEDIN_SHARED_PREF, false);
-
-                        //Putting blank value to email
-                        editor.putString(Config.UNIQUEID_SHARED_PREF, "");
-
-                        //Saving the sharedpreferences
-                        editor.commit();
 
                         //Starting login activity
-                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                         finish();
                         startActivity(intent);
                     }
