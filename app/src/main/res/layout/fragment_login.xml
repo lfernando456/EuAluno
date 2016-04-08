@@ -38,7 +38,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:hint="Password"
+            android:hint="Senha"
             android:id="@+id/et_password"
             android:drawableRight="@drawable/ic_key"
             android:inputType="textPassword"
@@ -59,7 +59,7 @@
         android:id="@+id/tv_register"
         android:layout_marginTop="20dp"
         android:textColor="@color/colorAccent"
-        android:text="Not Registered ? Register Now !"
+        android:text="Não possui cadastro? Cadastre-se agora!"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
