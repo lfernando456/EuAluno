@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -26,8 +27,10 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
     private AppCompatButton btn_register;
     private EditText et_email,et_password,et_name;
+    private RadioButton radioAluno,radioProf;
     private TextView tv_login;
     private ProgressBar progress;
+    private int tipoUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +47,8 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         et_name = (EditText)view.findViewById(R.id.et_name);
         et_email = (EditText)view.findViewById(R.id.et_email);
         et_password = (EditText)view.findViewById(R.id.et_password);
+        radioAluno = (RadioButton)view.findViewById(R.id.radioAluno);
+        radioProf = (RadioButton)view.findViewById(R.id.radioProf);
 
         progress = (ProgressBar)view.findViewById(R.id.progress);
 
@@ -65,11 +70,14 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
                 String name = et_name.getText().toString();
                 String email = et_email.getText().toString();
                 String password = et_password.getText().toString();
+                if(radioAluno.isChecked()){
+                    tipoUsuario=0;
+                }else tipoUsuario=1;
 
                 if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
 
                     progress.setVisibility(View.VISIBLE);
-                    registerProcess(name,email,password);
+                    registerProcess(name,email,password,tipoUsuario);
 
                 } else {
 
@@ -81,7 +89,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
     }
 
-    private void registerProcess(String name, String email,String password){
+    private void registerProcess(String name, String email,String password,int tipoUsuario){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -94,11 +102,12 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
+        user.setTipoUsuario(tipoUsuario);
         ServerRequest request = new ServerRequest();
         request.setOperation(Constants.REGISTER_OPERATION);
         request.setUser(user);
         Call<ServerResponse> response = requestInterface.operation(request);
-        System.out.println(user.getName());
+        System.out.println(user.getNome());
         response.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {

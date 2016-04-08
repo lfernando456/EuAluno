@@ -5,7 +5,8 @@
     android:layout_marginRight="40dp"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -61,6 +62,32 @@
             android:layout_height="wrap_content" />
 
     </android.support.design.widget.TextInputLayout>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_weight="0.08">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Aluno"
+                android:id="@+id/radioAluno" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Professor"
+                android:id="@+id/radioProf" />
+        </LinearLayout>
+
+    </RadioGroup>
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_register"
