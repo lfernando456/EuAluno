@@ -20,6 +20,8 @@ import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -85,11 +87,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }
     }
     private void loginProcess(String email,String password){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
@@ -107,10 +114,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
                 ServerResponse resp = response.body();
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
+                boolean novoCadastro=false;
+                if(resp.getResult().equals(Constants.SUCCESS)||resp.getResult().equals("primeiroAluno")||resp.getResult().equals("primeiroProf")){
+                    if(resp.getResult().equals("primeiroAluno")||resp.getResult().equals("primeiroProf")){
+                        novoCadastro =true;
 
-                if(resp.getResult().equals(Constants.SUCCESS)){
+                    }
+
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);
+                    editor.putBoolean("novoCadastro", novoCadastro);
+                    editor.putString("tipo", resp.getUser().getTipo());
                     editor.putString(Constants.EMAIL,resp.getUser().getEmail());
                     editor.putString(Constants.NAME,resp.getUser().getName());
                     editor.putString(Constants.UNIQUE_ID,resp.getUser().getUnique_id());
@@ -118,6 +132,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     goToProfile();
 
                 }
+
                 progress.setVisibility(View.INVISIBLE);
             }
 

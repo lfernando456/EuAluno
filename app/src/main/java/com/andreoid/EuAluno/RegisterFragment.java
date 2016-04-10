@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
     private RadioButton radioAluno,radioProf;
     private TextView tv_login;
     private ProgressBar progress;
-    private int tipoUsuario;
+    private String tipoUsuario;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,12 +70,12 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
             case R.id.radioAluno:
                 if (radioAluno.isChecked())
-                    tipoUsuario=0;
+                    tipoUsuario="0";
                 break;
 
             case R.id.radioProf:
                 if (radioProf.isChecked())
-                    tipoUsuario=1;
+                    tipoUsuario="1";
                 break;
 
             case R.id.tv_login:
@@ -106,7 +105,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
     }
 
-    private void registerProcess(String name, String email,String password,int tipoUsuario){
+    private void registerProcess(String name, String email,String password,String tipoUsuario){
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -124,7 +123,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         user.setName(name);
         user.setEmail(email);
         user.setPassword(password);
-        user.setTipoUsuario(tipoUsuario);
+        user.setTipo(tipoUsuario);
         ServerRequest request = new ServerRequest();
         request.setOperation(Constants.REGISTER_OPERATION);
         request.setUser(user);
