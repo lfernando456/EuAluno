@@ -48,7 +48,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
-        tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NOME,""));
+        tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NAME,""));
         tv_email.setText(pref.getString(Constants.EMAIL,""));
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID,""));
 
@@ -127,7 +127,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         SharedPreferences.Editor editor = pref.edit();
         editor.putBoolean(Constants.IS_LOGGED_IN,false);
         editor.putString(Constants.EMAIL,"");
-        editor.putString(Constants.NOME,"");
+        editor.putString(Constants.NAME,"");
         editor.putString(Constants.UNIQUE_ID,"");
         editor.apply();
         goToLogin();

@@ -106,12 +106,13 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         ServerRequest request = new ServerRequest();
         request.setOperation(Constants.REGISTER_OPERATION);
         request.setUser(user);
+        System.out.println(request.toString());
         Call<ServerResponse> response = requestInterface.operation(request);
-        System.out.println(user.getNome());
+        System.out.println(user.getTipoUsuario());
         response.enqueue(new Callback<ServerResponse>() {
             @Override
             public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
-                System.out.println(response.toString());
+                System.out.println(response.body());
                 ServerResponse resp = response.body();
 
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();

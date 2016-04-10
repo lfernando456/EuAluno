@@ -112,7 +112,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);
                     editor.putString(Constants.EMAIL,resp.getUser().getEmail());
-                    editor.putString(Constants.NOME,resp.getUser().getNome());
+                    editor.putString(Constants.NAME,resp.getUser().getName());
                     editor.putString(Constants.UNIQUE_ID,resp.getUser().getUnique_id());
                     editor.commit();
                     goToProfile();

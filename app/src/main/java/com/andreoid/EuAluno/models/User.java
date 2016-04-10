@@ -3,7 +3,7 @@ package com.andreoid.EuAluno.models;
 
 public class User {
 
-    private String nome;
+    private String name;
     private String email;
     private String unique_id;
     private String password;
@@ -12,8 +12,8 @@ public class User {
     private String new_password;
 
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
     public String getEmail() {
@@ -27,8 +27,8 @@ public class User {
         return tipoUsuario;
     }
 
-    public void setName(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setEmail(String email) {

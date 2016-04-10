@@ -12,4 +12,5 @@ public interface RequestInterface {
     @POST("TestePHP/")
     Call<ServerResponse> operation(@Body ServerRequest request);
 
+
 }
