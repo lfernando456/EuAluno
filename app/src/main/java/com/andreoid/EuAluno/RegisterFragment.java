@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.AppCompatButton;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -48,19 +51,34 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         et_email = (EditText)view.findViewById(R.id.et_email);
         et_password = (EditText)view.findViewById(R.id.et_password);
         radioAluno = (RadioButton)view.findViewById(R.id.radioAluno);
+
         radioProf = (RadioButton)view.findViewById(R.id.radioProf);
 
         progress = (ProgressBar)view.findViewById(R.id.progress);
 
         btn_register.setOnClickListener(this);
         tv_login.setOnClickListener(this);
+        radioAluno.setOnClickListener(this);
+        radioProf.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
 
+
         switch (v.getId()){
+
+            case R.id.radioAluno:
+                if (radioAluno.isChecked())
+                    tipoUsuario=0;
+                break;
+
+            case R.id.radioProf:
+                if (radioProf.isChecked())
+                    tipoUsuario=1;
+                break;
+
             case R.id.tv_login:
                 goToLogin();
                 break;
@@ -70,9 +88,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
                 String name = et_name.getText().toString();
                 String email = et_email.getText().toString();
                 String password = et_password.getText().toString();
-                if(radioAluno.isChecked()){
-                    tipoUsuario=0;
-                }else tipoUsuario=1;
+
 
                 if(!name.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
 
@@ -87,14 +103,20 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
         }
 
+
     }
 
     private void registerProcess(String name, String email,String password,int tipoUsuario){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
@@ -106,10 +128,11 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         ServerRequest request = new ServerRequest();
         request.setOperation(Constants.REGISTER_OPERATION);
         request.setUser(user);
-        System.out.println(request.toString());
+        System.out.println(tipoUsuario);
         Call<ServerResponse> response = requestInterface.operation(request);
-        System.out.println(user.getTipoUsuario());
+
         response.enqueue(new Callback<ServerResponse>() {
+
             @Override
             public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
                 System.out.println(response.body());
@@ -122,6 +145,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
+                System.out.println(call.request().body());
                 progress.setVisibility(View.INVISIBLE);
                 Log.d(Constants.TAG,t.getMessage());
                 Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
@@ -137,5 +161,9 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_frame,login);
         ft.commit();
+    }
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+
     }
 }

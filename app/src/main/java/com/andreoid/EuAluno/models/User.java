@@ -7,7 +7,7 @@ public class User {
     private String email;
     private String unique_id;
     private String password;
-    private int tipoUsuario;
+   private int tipoUsuario;
     private String old_password;
     private String new_password;
 
@@ -23,6 +23,7 @@ public class User {
     public String getUnique_id() {
         return unique_id;
     }
+
     public int getTipoUsuario() {
         return tipoUsuario;
     }
@@ -39,7 +40,7 @@ public class User {
         this.password = password;
     }
     public void setTipoUsuario(int tipoUsuario) {
-        this.tipoUsuario = tipoUsuario;
+       this.tipoUsuario = tipoUsuario;
     }
     public void setOld_password(String old_password) {
         this.old_password = old_password;
