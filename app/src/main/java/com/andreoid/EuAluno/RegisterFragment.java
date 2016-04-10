@@ -51,7 +51,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
         et_email = (EditText)view.findViewById(R.id.et_email);
         et_password = (EditText)view.findViewById(R.id.et_password);
         radioAluno = (RadioButton)view.findViewById(R.id.radioAluno);
-
+        radioAluno.setChecked(true);
         radioProf = (RadioButton)view.findViewById(R.id.radioProf);
 
         progress = (ProgressBar)view.findViewById(R.id.progress);
