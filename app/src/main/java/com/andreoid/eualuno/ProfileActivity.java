@@ -9,8 +9,8 @@ import android.os.Bundle;
 
 
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,11 +20,20 @@ import android.widget.Toast;
 
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.fragment.ViewPagerFragment;
+import com.andreoid.EuAluno.models.ServerRequest;
+import com.andreoid.EuAluno.models.ServerResponse;
+import com.andreoid.EuAluno.models.User;
 
 import br.liveo.interfaces.OnItemClickListener;
 import br.liveo.interfaces.OnPrepareOptionsMenuLiveo;
 import br.liveo.model.HelpLiveo;
 import br.liveo.navigationliveo.NavigationLiveo;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileActivity extends NavigationLiveo implements OnItemClickListener {
 
@@ -33,7 +42,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     private HelpLiveo mHelpLiveo;
     private SharedPreferences pref;
     public String name ;//= "Andre";
-    public String email ;//= "andre@asdndsa.sas";
+
+    public String email ;//= "andre@asdndsa.sass";
 
 
     @Override
@@ -42,11 +52,18 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
         // User Information
-        this.userName.setText(pref.getString(Constants.NAME,""));
-        this.userEmail.setText(pref.getString(Constants.EMAIL,""));
+        this.userName.setText(pref.getString(Constants.NAME, ""));
+        this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
-
+        if (pref.getBoolean("novoCadastro", false)) {
+            if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
+                registerAluno(pref.getString(Constants.UNIQUE_ID, ""),"1","12321321321","3");
+            }
+            if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
+                registerProfessor(pref.getString(Constants.UNIQUE_ID, ""));
+            }
+        }
         // Creating items navigation
         mHelpLiveo = new HelpLiveo();
         mHelpLiveo.add(getString(R.string.inbox), R.mipmap.ic_inbox_black_24dp, 100);
@@ -160,11 +177,12 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                     public void onClick(DialogInterface arg0, int arg1) {
 
                         SharedPreferences.Editor editor = pref.edit();
-                        editor.putBoolean(Constants.IS_LOGGED_IN, false);
+                        editor.clear();
+                        /*editor.putBoolean(Constants.IS_LOGGED_IN, false);
                         editor.putString(Constants.EMAIL,"");
                         editor.putString(Constants.NAME,"");
                         editor.putString(Constants.UNIQUE_ID, "");
-                        editor.apply();
+                        */editor.apply();
 
 
                         //Starting login activity
@@ -201,5 +219,100 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             logout();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void registerAluno(String uniqueId,String idCurso,String matricula,String ano){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+
+        User user = new User();
+        user.setUnique_id(uniqueId);
+        user.setIdCurso(idCurso);
+        user.setMatricula(matricula);
+        user.setAno(ano);
+        ServerRequest request = new ServerRequest();
+        request.setOperation(Constants.REGISTER_OPERATION+"Aluno");
+        request.setUser(user);
+
+        Call<ServerResponse> response = requestInterface.operation(request);
+
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+                System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                //Snackbar.make(this, resp.getMessage(), Snackbar.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+                // progress.setVisibility(View.INVISIBLE);
+                Log.d(Constants.TAG, t.getMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+
+
+            }
+        });
+    }
+    private void registerProfessor(String uniqueId){
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+
+        User user = new User();
+        user.setUnique_id(uniqueId);
+
+        ServerRequest request = new ServerRequest();
+        request.setOperation(Constants.REGISTER_OPERATION + "Professor");
+        request.setUser(user);
+
+        Call<ServerResponse> response = requestInterface.operation(request);
+
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+                System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                //Snackbar.make(this, resp.getMessage(), Snackbar.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+                // progress.setVisibility(View.INVISIBLE);
+                Log.d(Constants.TAG, t.getMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+
+
+            }
+        });
     }
 }
