@@ -32,7 +32,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
     private RadioButton radioAluno,radioProf;
     private TextView tv_login;
     private ProgressBar progress;
-    private String tipoUsuario;
+    private String tipoUsuario="0";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

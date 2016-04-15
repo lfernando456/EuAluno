@@ -58,7 +58,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
-
+        showConfigAlunoDialog();
         if (pref.getBoolean("novoCadastro", false)) {
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
                 showConfigAlunoDialog();
@@ -131,6 +131,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 break;
             case 6:
                 mFragment = new ProfileFragment();
+                break;
+            case 4:
+                mFragment = new DisciplinaFragment();
+
                 break;
             default:
                 mFragment = MainFragment.newInstance(position + "");
