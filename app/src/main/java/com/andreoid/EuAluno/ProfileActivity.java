@@ -1,5 +1,6 @@
 package com.andreoid.EuAluno;
 
+import android.net.Uri;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,10 @@ import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 
+
+import java.util.ArrayList;
+import java.util.List;
+
 import br.liveo.interfaces.OnItemClickListener;
 import br.liveo.interfaces.OnPrepareOptionsMenuLiveo;
 import br.liveo.model.HelpLiveo;
@@ -34,6 +41,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -43,9 +51,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     private TextView textView;
     private HelpLiveo mHelpLiveo;
     private SharedPreferences pref;
-    public String name ;//= "Andre";
+    public String name;//= "Andre";
 
-    public String email ;//= "andre@asdndsa.sass";
+    public String email;//= "andre@asdndsa.sass";
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
 
 
     @Override
@@ -58,14 +70,16 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
-        showConfigAlunoDialog();
+        //showConfigAlunoDialog();
         if (pref.getBoolean("novoCadastro", false)) {
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
-                showConfigAlunoDialog();
-                registerAluno(pref.getString(Constants.UNIQUE_ID, ""),"1","12321321321","3");
+                showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
+                registerAluno(pref.getString(Constants.UNIQUE_ID, ""), "1", "12321321321", "3");
+                pref.edit().putBoolean("novoCadastro",false);
             }
             if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
                 registerProfessor(pref.getString(Constants.UNIQUE_ID, ""));
+                pref.edit().putBoolean("novoCadastro", false);
             }
         }
         // Creating items navigation
@@ -125,7 +139,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         Fragment mFragment;
         //FragmentManager mFragmentManager = getSupportFragmentManager();
 
-        switch (position){
+        switch (position) {
             case 2:
                 mFragment = new ViewPagerFragment();
                 break;
@@ -141,10 +155,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 break;
         }
 
-        if (mFragment != null){
+        if (mFragment != null) {
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container,mFragment);
+            ft.replace(R.id.container, mFragment);
             ft.commit();
         }
 
@@ -175,7 +189,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
 
     //Logout function
-    private void logout(){
+    private void logout() {
         //Creating an alert dialog to confirm logout
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("Você deseja deslogar?");
@@ -190,7 +204,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                         editor.putString(Constants.EMAIL,"");
                         editor.putString(Constants.NAME,"");
                         editor.putString(Constants.UNIQUE_ID, "");
-                        */editor.apply();
+                        */
+                        editor.apply();
 
 
                         //Starting login activity
@@ -229,7 +244,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         return super.onOptionsItemSelected(item);
     }
 
-    private void registerAluno(String uniqueId,String idCurso,String matricula,String ano){
+    private void registerAluno(String uniqueId, String idCurso, String matricula, String ano) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -249,7 +264,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         user.setMatricula(matricula);
         user.setAno(ano);
         ServerRequest request = new ServerRequest();
-        request.setOperation(Constants.REGISTER_OPERATION+"Aluno");
+        request.setOperation(Constants.REGISTER_OPERATION + "Aluno");
         request.setUser(user);
 
         Call<ServerResponse> response = requestInterface.operation(request);
@@ -257,7 +272,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
 
@@ -277,7 +292,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             }
         });
     }
-    private void registerProfessor(String uniqueId){
+
+    private void registerProfessor(String uniqueId) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -303,7 +319,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ServerResponse> call, retrofit2.Response<ServerResponse> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
 
@@ -323,27 +339,44 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             }
         });
     }
-    public void showConfigAlunoDialog() {
+
+    public void showConfigAlunoDialog(String uniqueId) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
         dialogBuilder.setView(dialogView);
-
+        dialogBuilder.setCancelable(false);
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.spinner);
 
-        dialogBuilder.setTitle("Custom dialog");
-        dialogBuilder.setMessage("Enter text below");
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<>();
+        categories.add("1");
+        categories.add("2");
+        categories.add("3");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+
+        dialogBuilder.setTitle("Cadastro de Aluno");
+        //dialogBuilder.setMessage("Enter text below");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                //do something with edt.getText().toString();
+                String matricula = edt.getText().toString();
+                String ano = spinner.getSelectedItem().toString();
             }
         });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
-            }
-        });
+
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
+
+
 }

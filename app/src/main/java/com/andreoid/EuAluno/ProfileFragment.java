@@ -117,29 +117,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_chg_password:
                 showDialog();
                 break;
-            case R.id.btn_logout:
-                logout();
-                break;
+
         }
     }
 
-    private void logout() {
-        SharedPreferences.Editor editor = pref.edit();
-        editor.putBoolean(Constants.IS_LOGGED_IN,false);
-        editor.putString(Constants.EMAIL,"");
-        editor.putString(Constants.NAME,"");
-        editor.putString(Constants.UNIQUE_ID,"");
-        editor.apply();
-        goToLogin();
-    }
-
-    private void goToLogin(){
-
-        Fragment login = new LoginFragment();
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_frame,login);
-        ft.commit();
-    }
 
     private void changePasswordProcess(String email,String old_password,String new_password){
 
