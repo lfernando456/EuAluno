@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,8 +58,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
+
         if (pref.getBoolean("novoCadastro", false)) {
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
+                showConfigAlunoDialog();
                 registerAluno(pref.getString(Constants.UNIQUE_ID, ""),"1","12321321321","3");
             }
             if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
@@ -314,5 +318,28 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
             }
         });
+    }
+    public void showConfigAlunoDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+
+        dialogBuilder.setTitle("Custom dialog");
+        dialogBuilder.setMessage("Enter text below");
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //do something with edt.getText().toString();
+            }
+        });
+        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //pass
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
     }
 }
