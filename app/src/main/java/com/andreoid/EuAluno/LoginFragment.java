@@ -128,7 +128,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     editor.putString(Constants.EMAIL,resp.getUser().getEmail());
                     editor.putString(Constants.NAME,resp.getUser().getName());
                     editor.putString(Constants.UNIQUE_ID,resp.getUser().getUnique_id());
-                    editor.commit();
+                    editor.apply();
                     goToProfile();
 
                 }

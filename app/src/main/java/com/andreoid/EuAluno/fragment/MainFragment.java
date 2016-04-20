@@ -71,7 +71,7 @@ public class MainFragment extends Fragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.menu, menu);
+		//inflater.inflate(R.menu.menu, menu);
         
         //Select search item
         final MenuItem menuItem = menu.findItem(R.id.menu_search);

@@ -4,53 +4,62 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:divider="#000000">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Digite o numero de sua matricula"
-        android:id="@+id/textView2" />
+        android:text="NÚMERO DE MATRICULA"
+        android:id="@+id/textView2"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/edit1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:layout_gravity="center" />
+        android:inputType="number"
+        android:layout_gravity="center"
+        android:numeric="integer" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Selecione o seu curso"
-        android:id="@+id/textView3" />
+        android:text="CURSO"
+        android:id="@+id/textView3"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/spinner2"
-        android:layout_gravity="center" />
+        android:layout_weight="0.04" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:measureWithLargestChild="false">
 
         <TextView
-            android:layout_width="222dp"
+            android:layout_width="162dp"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Selecione o seu ano"
+            android:text="ANO"
             android:id="@+id/textView4"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="fill_parent"
+            android:layout_width="95dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="right" />
+            style="@android:style/Widget.Holo.Light.Spinner"
+            android:layout_weight="0.02" />
     </LinearLayout>
 
 </LinearLayout>

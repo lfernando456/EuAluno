@@ -22,13 +22,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFragment(){
-        Fragment fragment;
         if(pref.getBoolean(Constants.IS_LOGGED_IN,false)){
             //Starting login activity
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             finish();
             startActivity(intent);
         }else {
+            Fragment fragment;
             fragment = new LoginFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_frame, fragment);

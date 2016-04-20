@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.fragment.ViewPagerFragment;
+import com.andreoid.EuAluno.models.Curso;
+import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
@@ -58,11 +60,22 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
-
-
+    Retrofit retrofit;
+    private List<Curso> cursos;
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+
+        retrofit= new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
         // User Information
@@ -70,11 +83,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
-        //showConfigAlunoDialog();
+
+
         if (pref.getBoolean("novoCadastro", false)) {
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
+               //showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
+                getCursos();
                 showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
-                registerAluno(pref.getString(Constants.UNIQUE_ID, ""), "1", "12321321321", "3");
                 pref.edit().putBoolean("novoCadastro",false);
             }
             if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
@@ -245,16 +260,6 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     }
 
     private void registerAluno(String uniqueId, String idCurso, String matricula, String ano) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
@@ -294,16 +299,6 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     }
 
     private void registerProfessor(String uniqueId) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
@@ -339,8 +334,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             }
         });
     }
+    Spinner spinnerCurso;
+    public void showConfigAlunoDialog(final String uniqueId) {
 
-    public void showConfigAlunoDialog(String uniqueId) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
@@ -348,6 +344,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         dialogBuilder.setCancelable(false);
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
         final Spinner spinner = (Spinner) dialogView.findViewById(R.id.spinner);
+        spinnerCurso = (Spinner) dialogView.findViewById(R.id.spinner2);
 
         // Spinner Drop down elements
         List<String> categories = new ArrayList<>();
@@ -365,12 +362,14 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         spinner.setAdapter(dataAdapter);
 
 
-        dialogBuilder.setTitle("Cadastro de Aluno");
+        //dialogBuilder.setTitle("Cadastro de Aluno");
         //dialogBuilder.setMessage("Enter text below");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String matricula = edt.getText().toString();
                 String ano = spinner.getSelectedItem().toString();
+                int cursoId = spinnerCurso.getSelectedItemPosition()+1;
+                registerAluno(uniqueId, cursoId+"", matricula, ano);
             }
         });
 
@@ -378,5 +377,56 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         b.show();
     }
 
+    private void getCursos() {
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        ServerRequest request = new ServerRequest();
+        request.setOperation("getCursos");
+        Call<ListaDeCursos> response = requestInterface.getCursos(request);
 
+        response.enqueue(new Callback<ListaDeCursos>() {
+
+            @Override
+            public void onResponse(Call<ListaDeCursos> call, Response<ListaDeCursos> response) {
+                //System.out.println(response.body());
+                ListaDeCursos listaDeCursos = response.body();
+                cursos = listaDeCursos.getCursos();
+                for (int i = 0; i < cursos.size(); i++) {
+                    System.out.println(cursos.get(i).getNome());
+                    populateSpinner();
+                }
+                //populateSpinner();
+                //
+                // System.out.println(resp.getCurso().getNome());
+            }
+
+            @Override
+            public void onFailure(Call<ListaDeCursos> call, Throwable t) {
+
+
+                // progress.setVisibility(View.INVISIBLE);
+                Log.d(Constants.TAG, t.getLocalizedMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+    }
+    private void populateSpinner() {
+        List<String> lables = new ArrayList<String>();
+
+
+        for (int i = 0; i < cursos.size(); i++) {
+            lables.add(cursos.get(i).getNome());
+        }
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, lables);
+
+        // Drop down layout style - list view with radio button
+        spinnerAdapter
+                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinnerCurso.setAdapter(spinnerAdapter);
+    }
 }
