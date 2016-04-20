@@ -1,6 +1,7 @@
 package com.andreoid.EuAluno;
 
 import android.net.Uri;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,7 +26,6 @@ import android.widget.Toast;
 
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.fragment.ViewPagerFragment;
-import com.andreoid.EuAluno.models.Curso;
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
@@ -61,7 +61,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     Retrofit retrofit;
-    private List<Curso> cursos;
+    private List<ListaDeCursos.Curso> cursos;
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
@@ -317,18 +317,17 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
-
-                //Snackbar.make(this, resp.getMessage(), Snackbar.LENGTH_LONG).show();
+                Toast.makeText(ProfileActivity.this, resp.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
-                System.out.println(call.request().body());
+                //System.out.println(call.request().body());
                 // progress.setVisibility(View.INVISIBLE);
                 Log.d(Constants.TAG, t.getMessage());
-                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                Toast.makeText(ProfileActivity.this,  t.getMessage(), Toast.LENGTH_SHORT).show();
 
 
             }
