@@ -76,14 +76,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tv_message = (TextView)view.findViewById(R.id.tv_message);
         progress = (ProgressBar)view.findViewById(R.id.progress);
         builder.setView(view);
-        builder.setTitle("Change Password");
-        builder.setPositiveButton("Change Password", new DialogInterface.OnClickListener() {
+        builder.setTitle("Alterar Senha");
+        builder.setPositiveButton("Alterar Senha", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
