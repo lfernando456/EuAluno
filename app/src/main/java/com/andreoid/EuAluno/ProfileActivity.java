@@ -86,15 +86,16 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
 
         if (pref.getBoolean("novoCadastro", false)) {
+
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
                //showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
                 getCursos();
                 showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
-                pref.edit().putBoolean("novoCadastro",false);
+
             }
             if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
                 registerProfessor(pref.getString(Constants.UNIQUE_ID, ""));
-                pref.edit().putBoolean("novoCadastro", false);
+
             }
         }
         // Creating items navigation
@@ -280,7 +281,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
-
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("novoCadastro", false);
+                editor.apply();
                 //Snackbar.make(this, resp.getMessage(), Snackbar.LENGTH_LONG).show();
 
             }
@@ -318,7 +321,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
                 Toast.makeText(ProfileActivity.this, resp.getMessage(), Toast.LENGTH_SHORT).show();
-
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putBoolean("novoCadastro", false);
+                editor.apply();
             }
 
             @Override
@@ -391,8 +396,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 cursos = listaDeCursos.getCursos();
                 for (int i = 0; i < cursos.size(); i++) {
                     System.out.println(cursos.get(i).getNome());
-                    populateSpinner();
                 }
+                populateSpinner();
+
                 //populateSpinner();
                 //
                 // System.out.println(resp.getCurso().getNome());
@@ -403,7 +409,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
 
                 // progress.setVisibility(View.INVISIBLE);
-                Log.d(Constants.TAG, t.getLocalizedMessage());
+//                Log.d(Constants.TAG, t.getLocalizedMessage());
                 //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
