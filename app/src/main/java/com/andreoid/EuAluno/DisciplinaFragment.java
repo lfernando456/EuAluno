@@ -32,15 +32,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
-    String[] values = new String[] { "Android List View",
-            "Adapter implementation",
-            "Simple List View In Android",
-            "Create List View Android",
-            "Android Example",
-            "List View Source Code",
-            "List View Array Adapter",
-            "Android Example List View"
-    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
