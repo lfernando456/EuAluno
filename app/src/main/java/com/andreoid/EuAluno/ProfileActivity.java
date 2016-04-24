@@ -1,7 +1,5 @@
 package com.andreoid.EuAluno;
 
-import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -416,7 +414,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
     }
     private void populateSpinner() {
-        List<String> lables = new ArrayList<String>();
+        List<String> lables = new ArrayList<>();
 
 
         for (int i = 0; i < cursos.size(); i++) {
@@ -424,7 +422,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         }
 
         // Creating adapter for spinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, lables);
 
         // Drop down layout style - list view with radio button
