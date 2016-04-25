@@ -31,12 +31,12 @@ public class SettingsActivity extends AppCompatActivity {
         TextView mTxtTitle = (TextView) findViewById(R.id.txtTitle);
         mTxtTitle.setText(getString(R.string.settings));
 
-        ActionBar actionBar = getSupportActionBar();
+       /* ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeButtonEnabled(true);
-        }
+        }*/
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreoid.EuAluno.models.ListaDeCursos;
@@ -35,6 +36,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
+    TextView textView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -84,37 +86,13 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         btn_logout.setOnClickListener(this);*/
         listView = (ListView) view.findViewById(R.id.listView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        textView = (TextView) view.findViewById(R.id.textView5);
+
     }
 
     @Override
     public void onClick(View view) {
 
-    }
-    private void getAnos(final String numCurso) {
-        String[] anos = {"Curso "+numCurso+" -> Ano 1","Curso "+numCurso+" -> Ano 2","Curso "+numCurso+" -> Ano 3"};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, anos);
-        // Assign adapter to ListView
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // ListView Clicked item index
-                //disciplinas.get(position).getNome();
-                // ListView Clicked item value
-                String itemValue = (String) listView.getItemAtPosition(position);
-                // Show Alert
-                Toast.makeText(getActivity(),
-                        "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
-                        .show();
-                int ano = position +1;
-                progressBar.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                getDisciplinas(numCurso,ano+"");
-            }
-
-        });
     }
     private void getCursos() {
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
@@ -172,7 +150,37 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         });
 
     }
+    private void getAnos(final String numCurso) {
+        textView.setText(cursos.get(Integer.parseInt(numCurso)).getNome());
+        final String[] anos = {"Ano 1","Ano 2","Ano 3"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, anos);
+        // Assign adapter to ListView
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // ListView Clicked item index
+                //disciplinas.get(position).getNome();
+                // ListView Clicked item value
+                String itemValue = (String) listView.getItemAtPosition(position);
+                // Show Alert
+                Toast.makeText(getActivity(),
+                        "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
+                        .show();
+                int ano = position + 1;
+                progressBar.setVisibility(View.VISIBLE);
+                listView.setVisibility(View.GONE);
+                //textView.setText("Curso " + cursos.get(Integer.parseInt(numCurso)).getNome()+" --> "+anos[ano]);
+                getDisciplinas(numCurso, ano + "");
+            }
+
+        });
+    }
+
     private void getDisciplinas(final String numCurso, final String ano) {
+        textView.setText(textView.getText()+" --> Ano "+ano);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinas");
@@ -189,11 +197,11 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                 disciplinas = listaDeDisciplinas.getDisciplinas();
                 String[] nomes = new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
-                     nomes [i]= "Curso "+numCurso+" ->  Ano "+ano+" -> "+disciplinas.get(i).getNome();
+                     nomes [i]= disciplinas.get(i).getNome();
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
+                        android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, nomes);
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -208,6 +216,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         //getAnos(cursos.get(itemPosition).getIdCurso());
+
                     }
 
                 });

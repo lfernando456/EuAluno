@@ -11,13 +11,7 @@ public class ListaDeDisciplinas {
     public List<Disciplina> getDisciplinas() {
         return disciplinas;
     }
-    public String[] getNomeDisciplinas() {
-        String[] nomes = new String[disciplinas.size()];
-        for (int i = 0; i < disciplinas.size(); i++) {
-            nomes [i]= disciplinas.get(i).getNome();
-        }
-        return nomes;
-    }
+
     public void setDisciplinas(List<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
