@@ -7,6 +7,15 @@ public class ServerRequest {
     private String curso;
     private String ano;
     private User user;
+    private int topicCat;
+
+    public int getTopicCat() {
+        return topicCat;
+    }
+
+    public void setTopicCat(int topicCat) {
+        this.topicCat = topicCat;
+    }
 
     public void setOperation(String operation) {
         this.operation = operation;
