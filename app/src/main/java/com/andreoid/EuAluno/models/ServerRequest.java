@@ -7,13 +7,13 @@ public class ServerRequest {
     private String curso;
     private String ano;
     private User user;
-    private int topicCat;
+    private String topicCat;
 
-    public int getTopicCat() {
+    public String getTopicCat() {
         return topicCat;
     }
 
-    public void setTopicCat(int topicCat) {
+    public void setTopicCat(String topicCat) {
         this.topicCat = topicCat;
     }
 

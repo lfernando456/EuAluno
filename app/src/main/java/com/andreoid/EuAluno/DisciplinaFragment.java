@@ -59,7 +59,6 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         initViews(view);
         getCursos();
 
-
         // ListView Item Click Listener
 
         return view;
@@ -240,12 +239,12 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         });
 
     }
-    private void getTopicos(final int topicCat) {
+    private void getTopicos (final int topicCat) {
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getTopicos");
-        request.setTopicCat(topicCat);
+        request.setTopicCat(topicCat+"");
 
         Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
 
