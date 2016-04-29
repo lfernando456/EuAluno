@@ -3,13 +3,17 @@ package com.andreoid.EuAluno;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +23,7 @@ import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ListaDeDisciplinas;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
+import com.andreoid.EuAluno.models.ServerResponse;
 
 import java.util.List;
 
@@ -35,11 +40,12 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
     private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeCursos.Curso> cursos;
     private SharedPreferences pref;
+    private  AppCompatButton btn_concluir;
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
     TextView textView;
-
+   private View view;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -55,15 +61,29 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
-        View view = inflater.inflate(R.layout.fragment_disciplina,container,false);
+        view = inflater.inflate(R.layout.fragment_disciplina, container, false);
         initViews(view);
         getCursos();
-
+        btn_concluir = (AppCompatButton) view.findViewById(R.id.bSalvar);
+        btn_concluir.setVisibility(View.INVISIBLE);
         // ListView Item Click Listener
-
+        Button bSalvar = (Button) view.findViewById(R.id.bSalvar);
+        bSalvar.setOnClickListener(oioi);
         return view;
     }
+    @Override
+      public void onClick(View v) {
 
+        insertAlunoDisciplina("8","1");
+
+
+    }
+    private View.OnClickListener oioi = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            insertAlunoDisciplina("9","3");
+        }
+    };
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -91,10 +111,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
 
     }
 
-    @Override
-    public void onClick(View view) {
 
-    }
     private void getCursos() {
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -217,10 +234,13 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         //getAnos(cursos.get(itemPosition).getIdCurso());
-                        getTopicos(position+1);
+                        btn_concluir.setVisibility(View.VISIBLE);
+
                     }
 
                 });
+
+
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
                 //populateSpinner();
@@ -239,7 +259,49 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         });
 
     }
-    private void getTopicos (final int topicCat) {
+
+  private void insertAlunoDisciplina (final String aluno_idAluno, final String disciplina_idDisciplina){
+
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+
+
+        ServerRequest request = new ServerRequest();
+        request.setOperation("insertAlunoDisciplina");
+        request.setAluno_idAluno(aluno_idAluno);
+        request.setDisciplina_idDisciplina(disciplina_idDisciplina);
+
+        Call<ServerResponse> response = requestInterface.operation(request);
+
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.d(Constants.TAG, t.getMessage());
+                Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+
+
+            }
+        });
+    }
+
+
+
+
+    {
+    /** private void getTopicos (final int topicCat) {
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -298,5 +360,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
             }
         });
 
+    }**/
     }
+
 }
