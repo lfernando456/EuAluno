@@ -16,6 +16,8 @@ public class ListaDeDisciplinas {
         this.disciplinas = disciplinas;
     }
 
+
+
     public class Disciplina {
         private String idDisciplina;
         private String idCurso;

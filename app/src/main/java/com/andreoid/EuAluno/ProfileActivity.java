@@ -146,8 +146,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         int position = this.getCurrentPosition();
         this.setElevationToolBar(position != 2 ? 15 : 0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

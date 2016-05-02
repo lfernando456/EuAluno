@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -35,17 +37,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class DisciplinaFragment extends Fragment implements View.OnClickListener {
+public class DisciplinaFragment extends Fragment{
     private List<ListaDeDisciplinas.Disciplina> disciplinas;
     private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeCursos.Curso> cursos;
     private SharedPreferences pref;
-    private  AppCompatButton btn_concluir;
+    Button btn_concluir;
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
     TextView textView;
    private View view;
+    String[] nomes;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -64,26 +67,11 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         view = inflater.inflate(R.layout.fragment_disciplina, container, false);
         initViews(view);
         getCursos();
-        btn_concluir = (AppCompatButton) view.findViewById(R.id.bSalvar);
-        btn_concluir.setVisibility(View.INVISIBLE);
-        // ListView Item Click Listener
-        Button bSalvar = (Button) view.findViewById(R.id.bSalvar);
-        bSalvar.setOnClickListener(oioi);
+
+
         return view;
     }
-    @Override
-      public void onClick(View v) {
 
-        insertAlunoDisciplina("8","1");
-
-
-    }
-    private View.OnClickListener oioi = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            insertAlunoDisciplina("9","3");
-        }
-    };
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -108,6 +96,26 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
         listView = (ListView) view.findViewById(R.id.listView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         textView = (TextView) view.findViewById(R.id.textView5);
+        btn_concluir = (Button) view.findViewById(R.id.bSalvar);
+
+        btn_concluir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                List<ListaDeDisciplinas.Disciplina> selectedItems =new ArrayList<>();
+
+                SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
+                for (int i = 0; i < listView.getCount(); i++) {
+                    if (checkedPositions.get(i) == true) {
+                        selectedItems.add(disciplinas.get(i));
+
+                    }
+                }
+
+                insertAlunoDisciplina("9", selectedItems);
+            }
+        });
 
     }
 
@@ -125,7 +133,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                 //System.out.println(response.body());
                 ListaDeCursos listaDeCursos = response.body();
                 cursos = listaDeCursos.getCursos();
-                String[] nomes = new String[cursos.size()];
+                nomes = new String[cursos.size()];
                 for (int i = 0; i < cursos.size(); i++) {
                     nomes [i] = cursos.get(i).getNome();
                 }
@@ -133,6 +141,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
+
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -198,6 +207,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
     }
 
     private void getDisciplinas(final String numCurso, final String ano) {
+        btn_concluir.setVisibility(View.VISIBLE);
         textView.setText(textView.getText()+" --> Ano "+ano);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -213,7 +223,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                 //System.out.println(response.body());
                 ListaDeDisciplinas listaDeDisciplinas = response.body();
                 disciplinas = listaDeDisciplinas.getDisciplinas();
-                String[] nomes = new String[disciplinas.size()];
+                nomes = new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
                     nomes[i] = disciplinas.get(i).getNome();
                 }
@@ -234,7 +244,7 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         //getAnos(cursos.get(itemPosition).getIdCurso());
-                        btn_concluir.setVisibility(View.VISIBLE);
+
 
                     }
 
@@ -260,16 +270,19 @@ public class DisciplinaFragment extends Fragment implements View.OnClickListener
 
     }
 
-  private void insertAlunoDisciplina (final String aluno_idAluno, final String disciplina_idDisciplina){
+    private void insertAlunoDisciplina (final String aluno_idAluno, List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
 
+
+        ListaDeDisciplinas listaDeDisciplinas=new ListaDeDisciplinas();
+        listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();
         request.setOperation("insertAlunoDisciplina");
         request.setAluno_idAluno(aluno_idAluno);
-        request.setDisciplina_idDisciplina(disciplina_idDisciplina);
+        request.setListaDeDisciplinas(listaDeDisciplinas);
 
         Call<ServerResponse> response = requestInterface.operation(request);
 
