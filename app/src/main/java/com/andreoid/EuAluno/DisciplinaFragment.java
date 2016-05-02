@@ -1,12 +1,13 @@
 package com.andreoid.EuAluno;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.AppCompatButton;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.andreoid.EuAluno.models.ListaDeDisciplinas;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
+import com.andreoid.EuAluno.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,14 @@ public class DisciplinaFragment extends Fragment{
     private List<ListaDeDisciplinas.Disciplina> disciplinas;
     private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeCursos.Curso> cursos;
-    private SharedPreferences pref;
+
     Button btn_concluir;
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
+    private SharedPreferences pref;
     TextView textView;
+
    private View view;
     String[] nomes;
     @Override
@@ -66,7 +70,11 @@ public class DisciplinaFragment extends Fragment{
 
         view = inflater.inflate(R.layout.fragment_disciplina, container, false);
         initViews(view);
-        getCursos();
+        User usr = new User();
+
+        verificadorAD(pref.getString(Constants.UNIQUE_ID, ""));
+
+
 
 
         return view;
@@ -121,8 +129,17 @@ public class DisciplinaFragment extends Fragment{
 
 
     private void getCursos() {
+
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
+        alertDialogBuilder.setMessage("Você ainda não cadastrou suas disciplinas, por favor selecione-as a seguir");
+        alertDialogBuilder.setPositiveButton("Continuar",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                    }
+                });
         request.setOperation("getCursos");
         Call<ListaDeCursos> response = requestInterface.getCursos(request);
 
@@ -135,7 +152,7 @@ public class DisciplinaFragment extends Fragment{
                 cursos = listaDeCursos.getCursos();
                 nomes = new String[cursos.size()];
                 for (int i = 0; i < cursos.size(); i++) {
-                    nomes [i] = cursos.get(i).getNome();
+                    nomes[i] = cursos.get(i).getNome();
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
@@ -281,7 +298,7 @@ public class DisciplinaFragment extends Fragment{
         listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();
         request.setOperation("insertAlunoDisciplina");
-        request.setAluno_idAluno(aluno_idAluno);
+        request.setUnique_id(aluno_idAluno);
         request.setListaDeDisciplinas(listaDeDisciplinas);
 
         Call<ServerResponse> response = requestInterface.operation(request);
@@ -310,8 +327,46 @@ public class DisciplinaFragment extends Fragment{
         });
     }
 
+    private void verificadorAD(final String unique_id ){
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        ServerRequest request = new ServerRequest();
+        request.setOperation("verificadorAD");
+        request.setUnique_id(unique_id);
 
 
+        Call<ServerResponse> response = requestInterface.operation(request);
+
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                if(resp.isAux())
+                {
+                    getCursos();
+                }
+
+                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
+                progressBar.setVisibility(View.INVISIBLE);
+
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.d(Constants.TAG, t.getMessage());
+                Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+
+
+            }
+        });
+
+    }
 
     {
     /** private void getTopicos (final int topicCat) {

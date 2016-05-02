@@ -13,25 +13,13 @@ public class User {
    private String tipo;
     private String old_password;
     private String new_password;
-    private String idAluno;
-    private String idProfessor;
+
+
     private String idCurso;
     private String matricula;
     private String ano;
 
-    public String getIdProfessor() {
-        return idProfessor;
-    }
 
-    public void setIdProfessor(String idProfessor) {
-        this.idProfessor = idProfessor;
-    }
-
-
-
-    public String getIdAluno() {
-        return idAluno;
-    }
     public String getIdCurso() {
         return idCurso;
     }
@@ -96,9 +84,7 @@ public class User {
     public void setMatricula(String matricula) {
         this.matricula = matricula;
     }
-    public void setIdAluno(String idAluno) {
-        this.idAluno = idAluno;
-    }
+
     public void setIdCurso(String idCurso) {
         this.idCurso = idCurso;
     }

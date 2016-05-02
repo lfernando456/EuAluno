@@ -1,8 +1,6 @@
 package com.andreoid.EuAluno.models;
 
 
-import java.util.List;
-
 public class ServerRequest {
 
     private String operation;
@@ -11,12 +9,12 @@ public class ServerRequest {
     private User user;
     private ListaDeDisciplinas listaDeDisciplinas;
     private String topicCat;
-    private String aluno_idAluno;
+    private String unique_id;
     private String disciplina_idDisciplina;
 
 
-    public void setAluno_idAluno(String aluno_idAluno) {
-        this.aluno_idAluno = aluno_idAluno;
+    public void setUnique_id(String unique_id) {
+        this.unique_id = unique_id;
     }
 
 

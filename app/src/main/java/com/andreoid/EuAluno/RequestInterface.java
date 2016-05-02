@@ -24,6 +24,7 @@ public interface RequestInterface {
     @POST("TestePHP/")
     Call<ListaDeTopicos> getTopicos(@Body ServerRequest request);
     @POST("TestePHP/")
-    Call<ListaDeTopicos> insertAlunoDisciplina(@Body ServerRequest request);
-
+    Call<ServerResponse> insertAlunoDisciplina(@Body ServerRequest request);
+    @POST("TestePHP/")
+    Call<ServerResponse> verificadorAD(@Body ServerRequest request);
 }

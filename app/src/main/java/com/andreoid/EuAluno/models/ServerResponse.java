@@ -5,12 +5,17 @@ public class ServerResponse {
 
     private String result;
     private String message;
+    private boolean aux;
     private User user;
     private ListaDeCursos cursos;
     private ListaDeDisciplinas listaDeDisciplinas;
 
     public String getResult() {
         return result;
+    }
+
+    public boolean isAux() {
+        return aux;
     }
 
     public String getMessage() {
