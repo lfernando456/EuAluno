@@ -21,43 +21,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="CURSO"
-        android:id="@+id/textView3"
-        android:layout_marginTop="15dp"
-        android:textStyle="bold" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner2"
-        android:layout_weight="0.04" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:measureWithLargestChild="false">
-
-        <TextView
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="ANO"
-            android:id="@+id/textView4"
-            android:layout_gravity="center_vertical"
-            android:textStyle="bold" />
-
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="95dp"
-            android:layout_height="wrap_content"
-            style="@android:style/Widget.Holo.Light.Spinner"
-            android:layout_weight="0.02" />
-    </LinearLayout>
-
 </LinearLayout>

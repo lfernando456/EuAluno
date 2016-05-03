@@ -3,6 +3,7 @@ package com.andreoid.EuAluno;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ListaDeDisciplinas;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
+import com.andreoid.EuAluno.models.ListaDeTurmas;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
@@ -43,8 +45,10 @@ public class DisciplinaFragment extends Fragment{
     private List<ListaDeDisciplinas.Disciplina> disciplinas;
     private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeCursos.Curso> cursos;
+    private List<ListaDeTurmas.Turma> turmas;
 
     Button btn_concluir;
+    Button btn_voltar;
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
@@ -53,6 +57,9 @@ public class DisciplinaFragment extends Fragment{
 
    private View view;
     String[] nomes;
+    String[] idCurso;
+    String[] idTurma;
+    String auxTurma;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -105,41 +112,23 @@ public class DisciplinaFragment extends Fragment{
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         textView = (TextView) view.findViewById(R.id.textView5);
         btn_concluir = (Button) view.findViewById(R.id.bSalvar);
-
-        btn_concluir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                List<ListaDeDisciplinas.Disciplina> selectedItems =new ArrayList<>();
-
-                SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
-                for (int i = 0; i < listView.getCount(); i++) {
-                    if (checkedPositions.get(i) == true) {
-                        selectedItems.add(disciplinas.get(i));
-
-                    }
-                }
-
-                insertAlunoDisciplina("9", selectedItems);
-            }
-        });
+        btn_voltar = (Button) view.findViewById(R.id.bVoltar);
 
     }
-
-
     private void getCursos() {
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
         alertDialogBuilder.setMessage("Você ainda não cadastrou suas disciplinas, por favor selecione-as a seguir");
-        alertDialogBuilder.setPositiveButton("Continuar",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
+        alertDialogBuilder.setPositiveButton("Continuar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
 
-                    }
-                });
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
         request.setOperation("getCursos");
         Call<ListaDeCursos> response = requestInterface.getCursos(request);
 
@@ -151,8 +140,10 @@ public class DisciplinaFragment extends Fragment{
                 ListaDeCursos listaDeCursos = response.body();
                 cursos = listaDeCursos.getCursos();
                 nomes = new String[cursos.size()];
+                idCurso = new String[cursos.size()];
                 for (int i = 0; i < cursos.size(); i++) {
                     nomes[i] = cursos.get(i).getNome();
+                    idCurso[i] = cursos.get(i).getIdCurso();
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
@@ -164,23 +155,14 @@ public class DisciplinaFragment extends Fragment{
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // ListView Clicked item index
-                        //disciplinas.get(position).getNome();
-                        // ListView Clicked item value
                         String itemValue = (String) listView.getItemAtPosition(position);
-                        // Show Alert
-                        Toast.makeText(getActivity(),
-                                "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
-                                .show();
-                        //progressBar.setVisibility(View.VISIBLE);
-                        //listView.setVisibility(View.GONE);
-                        getAnos(cursos.get(position).getIdCurso());
+                        Toast.makeText(getActivity(), "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT).show();
+
+                        getTurmas(cursos.get(position).getIdCurso());
                     }
 
                 });
-                //populateSpinner();
-                //
-                // System.out.println(resp.getCurso().getNome());
+
             }
 
             @Override
@@ -194,43 +176,82 @@ public class DisciplinaFragment extends Fragment{
         });
 
     }
-    private void getAnos(final String numCurso) {
-        textView.setText(cursos.get(Integer.parseInt(numCurso)).getNome());
-        final String[] anos = {"Ano 1","Ano 2","Ano 3"};
+    private void getTurmas(final String idCurso) {
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        ServerRequest request = new ServerRequest();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, anos);
-        // Assign adapter to ListView
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        btn_voltar.setVisibility(View.VISIBLE);
+        request.setOperation("getTurmas");
+        request.setIdCurso(idCurso);
+        Call<ListaDeTurmas> response = requestInterface.getTurmas(request);
+        response.enqueue(new Callback<ListaDeTurmas>() {
+
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // ListView Clicked item index
-                //disciplinas.get(position).getNome();
-                // ListView Clicked item value
-                String itemValue = (String) listView.getItemAtPosition(position);
-                // Show Alert
-                Toast.makeText(getActivity(),
-                        "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
-                        .show();
-                int ano = position + 1;
-                progressBar.setVisibility(View.VISIBLE);
-                listView.setVisibility(View.GONE);
-                //textView.setText("Curso " + cursos.get(Integer.parseInt(numCurso)).getNome()+" --> "+anos[ano]);
-                getDisciplinas(numCurso, ano + "");
+            public void onResponse(Call<ListaDeTurmas> call, Response<ListaDeTurmas> response) {
+                System.out.println(response.body());
+                ListaDeTurmas listaDeTurmas = response.body();
+                turmas = listaDeTurmas.getTurmas();
+                nomes = new String[turmas.size()];
+                idTurma = new String[turmas.size()];
+                for (int i = 0; i < turmas.size(); i++) {
+                    nomes[i] = turmas.get(i).getNome();
+
+                    idTurma[i] = turmas.get(i).getIdTurma();
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
+                // Assign adapter to ListView
+                listView.setAdapter(adapter);
+
+                progressBar.setVisibility(View.GONE);
+                listView.setVisibility(View.VISIBLE);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String itemValue = (String) listView.getItemAtPosition(position);
+                        Toast.makeText(getActivity(), "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT).show();
+                        for (int i = 0; i < nomes.length; i++) {
+                            if( nomes[i].equals(itemValue)){
+                                auxTurma = idTurma[i];
+
+                                textView.setText(textView.getText() + "Turma: " + nomes[i]);
+                            }
+                        }
+                        System.out.println("Curso: " + idCurso + " Turma: " + auxTurma);
+                        getDisciplinas(auxTurma);
+                    }
+
+                });
+
             }
 
+            @Override
+            public void onFailure(Call<ListaDeTurmas> call, Throwable t) {
+
+
+                // progress.setVisibility(View.INVISIBLE);
+//                Log.d(Constants.TAG, t.getLocalizedMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+        btn_voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCursos();
+
+
+            }
         });
     }
-
-    private void getDisciplinas(final String numCurso, final String ano) {
+    private void getDisciplinas(final String turma) {
         btn_concluir.setVisibility(View.VISIBLE);
-        textView.setText(textView.getText()+" --> Ano "+ano);
+        btn_voltar.setVisibility(View.INVISIBLE);
+
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinas");
-        request.setCurso(numCurso);
-        request.setAno(ano);
+        request.setTurma(turma);
         Call<ListaDeDisciplinas> response = requestInterface.getDisciplinas(request);
 
         response.enqueue(new Callback<ListaDeDisciplinas>() {
@@ -260,7 +281,7 @@ public class DisciplinaFragment extends Fragment{
                         Toast.makeText(getActivity(),
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
-                        //getAnos(cursos.get(itemPosition).getIdCurso());
+                        //getTurmas(cursos.get(itemPosition).getIdCurso());
 
 
                     }
@@ -285,8 +306,16 @@ public class DisciplinaFragment extends Fragment{
             }
         });
 
-    }
 
+        btn_voltar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getCursos();
+
+
+            }
+        });
+    }
     private void insertAlunoDisciplina (final String aluno_idAluno, List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
 
@@ -326,7 +355,6 @@ public class DisciplinaFragment extends Fragment{
             }
         });
     }
-
     private void verificadorAD(final String unique_id ){
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
@@ -344,7 +372,7 @@ public class DisciplinaFragment extends Fragment{
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
 
-                if(resp.isAux())
+                if(!resp.isAux())
                 {
                     getCursos();
                 }
@@ -367,7 +395,6 @@ public class DisciplinaFragment extends Fragment{
         });
 
     }
-
     {
     /** private void getTopicos (final int topicCat) {
 
@@ -406,7 +433,7 @@ public class DisciplinaFragment extends Fragment{
                         Toast.makeText(getActivity(),
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
-                        //getAnos(cursos.get(itemPosition).getIdCurso());
+                        //getTurmas(cursos.get(itemPosition).getIdCurso());
 
                     }
 

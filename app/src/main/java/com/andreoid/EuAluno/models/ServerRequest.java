@@ -4,15 +4,22 @@ package com.andreoid.EuAluno.models;
 public class ServerRequest {
 
     private String operation;
-    private String curso;
-    private String ano;
+
+    private String idCurso;
+    private String turma;
     private User user;
     private ListaDeDisciplinas listaDeDisciplinas;
     private String topicCat;
     private String unique_id;
     private String disciplina_idDisciplina;
 
+    public String getIdCurso() {
+        return idCurso;
+    }
 
+    public void setIdCurso(String idCurso) {
+        this.idCurso = idCurso;
+    }
     public void setUnique_id(String unique_id) {
         this.unique_id = unique_id;
     }
@@ -38,12 +45,10 @@ public class ServerRequest {
         this.operation = operation;
     }
 
-    public void setCurso(String curso) {
-        this.curso = curso;
-    }
 
-    public void setAno(String ano) {
-        this.ano = ano;
+
+    public void setTurma(String turma) {
+        this.turma = turma;
     }
 
     public void setUser(User user) {

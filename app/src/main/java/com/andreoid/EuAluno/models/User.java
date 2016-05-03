@@ -14,11 +14,18 @@ public class User {
     private String old_password;
     private String new_password;
 
-
+    private String siap;
     private String idCurso;
     private String matricula;
     private String ano;
 
+    public String getSiap() {
+        return siap;
+    }
+
+    public void setSiap(String siap) {
+        this.siap = siap;
+    }
 
     public String getIdCurso() {
         return idCurso;

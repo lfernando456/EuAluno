@@ -114,27 +114,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
                 ServerResponse resp = response.body();
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
-                boolean novoCadastro=false;
-                if(resp.getResult().equals(Constants.SUCCESS)||resp.getResult().equals("primeiroAluno")||resp.getResult().equals("primeiroProf")){
-                    if(resp.getResult().equals("primeiroAluno")||resp.getResult().equals("primeiroProf")){
-                        novoCadastro =true;
 
-                    }
+
 
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean(Constants.IS_LOGGED_IN,true);
-                    editor.putBoolean("novoCadastro", novoCadastro);
+                    editor.putBoolean("novoCadastro", resp.isAux());
                     editor.putString("tipo", resp.getUser().getTipo());
                     editor.putString(Constants.EMAIL,resp.getUser().getEmail());
                     editor.putString(Constants.NAME,resp.getUser().getName());
                     editor.putString(Constants.UNIQUE_ID,resp.getUser().getUnique_id());
-
-
                     editor.apply();
-
                     goToProfile();
 
-                }
+
 
                 progress.setVisibility(View.INVISIBLE);
             }

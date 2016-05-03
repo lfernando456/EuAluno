@@ -40,13 +40,28 @@
 
     </LinearLayout>
 
-    <Button
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
 
-        android:layout_width="203dp"
-        android:layout_height="wrap_content"
-        android:text="@string/fish"
-        android:id="@+id/bSalvar"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal" />
+        <Button
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/back"
+            android:id="@+id/bVoltar"
+            android:visibility="gone"
+            android:clickable="true" />
+
+        <Button
+
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:text="@string/fish"
+
+            android:id="@+id/bSalvar"
+            android:visibility="gone"
+            android:clickable="true" />
+
+    </LinearLayout>
 
 </LinearLayout>

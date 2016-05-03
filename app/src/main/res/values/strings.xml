@@ -53,4 +53,5 @@
     <string name="error_field_required">Campo obrigatorio</string>
     <string name="title_activity_forum">ForumActivity</string>
     <string name="fish">Concluido</string>
+    <string name="back">Voltar</string>
 </resources>

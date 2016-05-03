@@ -51,13 +51,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     private TextView textView;
     private HelpLiveo mHelpLiveo;
     private SharedPreferences pref;
-    public String name;//= "Andre";
-
-    public String email;//= "andre@asdndsa.sass";
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+    public String name;
+    public String email;
     Retrofit retrofit;
     private List<ListaDeCursos.Curso> cursos;
     @Override
@@ -86,14 +81,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         if (pref.getBoolean("novoCadastro", false)) {
 
             if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
-               //showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
-                getCursos();
-                showConfigAlunoDialog(pref.getString(Constants.UNIQUE_ID, ""));
-
+                showConfigAlunoDialogAluno(pref.getString(Constants.UNIQUE_ID, ""));
             }
             if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
-                registerProfessor(pref.getString(Constants.UNIQUE_ID, ""));
-
+                showConfigAlunoDialogProfessor(pref.getString(Constants.UNIQUE_ID, ""));
             }
         }
         // Creating items navigation
@@ -146,8 +137,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         int position = this.getCurrentPosition();
         this.setElevationToolBar(position != 2 ? 15 : 0);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-       // getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -202,9 +193,6 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             closeDrawer();
         }
     };
-
-
-    //Logout function
     private void logout() {
         //Creating an alert dialog to confirm logout
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -244,13 +232,11 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         alertDialog.show();
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -259,16 +245,15 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         }
         return super.onOptionsItemSelected(item);
     }
-
-    private void registerAluno(String uniqueId, String idCurso, String matricula, String ano) {
+    private void registerAluno(String uniqueId, String matricula) {
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setUnique_id(uniqueId);
-        user.setIdCurso(idCurso);
+
         user.setMatricula(matricula);
-        user.setAno(ano);
+
         ServerRequest request = new ServerRequest();
         request.setOperation(Constants.REGISTER_OPERATION + "Aluno");
         request.setUser(user);
@@ -300,16 +285,16 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             }
         });
     }
-
-    private void registerProfessor(String uniqueId) {
+    private void registerProfessor(String uniqueId, String siap) {
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setUnique_id(uniqueId);
+        user.setSiap(siap);
 
         ServerRequest request = new ServerRequest();
-        request.setOperation(Constants.REGISTER_OPERATION + "Professor");
+        request.setOperation("registerProfessor");
         request.setUser(user);
 
         Call<ServerResponse> response = requestInterface.operation(request);
@@ -332,14 +317,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 //System.out.println(call.request().body());
                 // progress.setVisibility(View.INVISIBLE);
                 Log.d(Constants.TAG, t.getMessage());
-                Toast.makeText(ProfileActivity.this,  t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
 
 
             }
         });
     }
-    Spinner spinnerCurso;
-    public void showConfigAlunoDialog(final String uniqueId) {
+    public void showConfigAlunoDialogAluno(final String uniqueId) {
 
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
@@ -347,33 +331,34 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         dialogBuilder.setView(dialogView);
         dialogBuilder.setCancelable(false);
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
-        final Spinner spinner = (Spinner) dialogView.findViewById(R.id.spinner);
-        spinnerCurso = (Spinner) dialogView.findViewById(R.id.spinner2);
-
-        // Spinner Drop down elements
-        List<String> categories = new ArrayList<>();
-        categories.add("1");
-        categories.add("2");
-        categories.add("3");
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
-
-        //dialogBuilder.setTitle("Cadastro de Aluno");
-        //dialogBuilder.setMessage("Enter text below");
         dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String matricula = edt.getText().toString();
-                String ano = spinner.getSelectedItem().toString();
-                int cursoId = spinnerCurso.getSelectedItemPosition()+1;
-                registerAluno(uniqueId, cursoId+"", matricula, ano);
+
+                registerAluno(uniqueId, matricula);
+            }
+        });
+
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+    public void showConfigAlunoDialogProfessor(final String uniqueId) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        TextView textV = (TextView)dialogView.findViewById(R.id.textView2);
+        textV.setText("Número SIAP");
+
+        dialogBuilder.setView(dialogView);
+
+        dialogBuilder.setCancelable(false);
+        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String siap = edt.getText().toString();
+
+                registerProfessor(uniqueId, siap);
             }
         });
 
@@ -381,57 +366,6 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         b.show();
     }
 
-    private void getCursos() {
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
-        ServerRequest request = new ServerRequest();
-        request.setOperation("getCursos");
-        Call<ListaDeCursos> response = requestInterface.getCursos(request);
-
-        response.enqueue(new Callback<ListaDeCursos>() {
-
-            @Override
-            public void onResponse(Call<ListaDeCursos> call, Response<ListaDeCursos> response) {
-                //System.out.println(response.body());
-                ListaDeCursos listaDeCursos = response.body();
-                cursos = listaDeCursos.getCursos();
-                for (int i = 0; i < cursos.size(); i++) {
-                    System.out.println(cursos.get(i).getNome());
-                }
-                populateSpinner();
-
-                //populateSpinner();
-                //
-                // System.out.println(resp.getCurso().getNome());
-            }
-
-            @Override
-            public void onFailure(Call<ListaDeCursos> call, Throwable t) {
 
 
-                // progress.setVisibility(View.INVISIBLE);
-//                Log.d(Constants.TAG, t.getLocalizedMessage());
-                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
-            }
-        });
-
-    }
-    private void populateSpinner() {
-        List<String> lables = new ArrayList<>();
-
-
-        for (int i = 0; i < cursos.size(); i++) {
-            lables.add(cursos.get(i).getNome());
-        }
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, lables);
-
-        // Drop down layout style - list view with radio button
-        spinnerAdapter
-                .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinnerCurso.setAdapter(spinnerAdapter);
-    }
 }
