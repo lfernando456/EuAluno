@@ -236,8 +236,10 @@ public class DisciplinaFragment extends Fragment{
             }
         });
         btn_voltar.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+                textView.setText("");
                 getCursos();
 
 
@@ -246,7 +248,7 @@ public class DisciplinaFragment extends Fragment{
     }
     private void getDisciplinas(final String turma) {
         btn_concluir.setVisibility(View.VISIBLE);
-        btn_voltar.setVisibility(View.INVISIBLE);
+
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
