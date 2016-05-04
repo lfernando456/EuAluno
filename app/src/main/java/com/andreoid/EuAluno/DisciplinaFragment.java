@@ -60,6 +60,8 @@ public class DisciplinaFragment extends Fragment{
     String[] idCurso;
     String[] idTurma;
     String auxTurma;
+    String unique_id;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -77,9 +79,8 @@ public class DisciplinaFragment extends Fragment{
 
         view = inflater.inflate(R.layout.fragment_disciplina, container, false);
         initViews(view);
-        User usr = new User();
-
-        verificadorAD(pref.getString(Constants.UNIQUE_ID, ""));
+        unique_id = pref.getString(Constants.UNIQUE_ID, "");
+        verificadorAD(unique_id);
 
 
 
@@ -111,8 +112,26 @@ public class DisciplinaFragment extends Fragment{
         listView = (ListView) view.findViewById(R.id.listView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         textView = (TextView) view.findViewById(R.id.textView5);
-        btn_concluir = (Button) view.findViewById(R.id.bSalvar);
+        //btn_concluir = (Button) view.findViewById(R.id.bSalvar);
         btn_voltar = (Button) view.findViewById(R.id.bVoltar);
+        btn_concluir = (Button) view.findViewById(R.id.bSalvar);
+        btn_concluir.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+
+            List<ListaDeDisciplinas.Disciplina> selectedItems =new ArrayList<>();
+
+            SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
+            for (int i = 0; i < listView.getCount(); i++) {
+                if (checkedPositions.get(i)) {
+                    selectedItems.add(disciplinas.get(i));
+                }
+            }
+
+            insertAlunoDisciplina(selectedItems);
+            }
+        });
 
     }
     private void getCursos() {
@@ -149,7 +168,6 @@ public class DisciplinaFragment extends Fragment{
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
-
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -285,7 +303,6 @@ public class DisciplinaFragment extends Fragment{
                                 .show();
                         //getTurmas(cursos.get(itemPosition).getIdCurso());
 
-
                     }
 
                 });
@@ -318,7 +335,7 @@ public class DisciplinaFragment extends Fragment{
             }
         });
     }
-    private void insertAlunoDisciplina (final String aluno_idAluno, List<ListaDeDisciplinas.Disciplina> selectedItems) {
+    private void insertAlunoDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
@@ -329,7 +346,7 @@ public class DisciplinaFragment extends Fragment{
         listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();
         request.setOperation("insertAlunoDisciplina");
-        request.setUnique_id(aluno_idAluno);
+        request.setUnique_id(unique_id);
         request.setListaDeDisciplinas(listaDeDisciplinas);
 
         Call<ServerResponse> response = requestInterface.operation(request);

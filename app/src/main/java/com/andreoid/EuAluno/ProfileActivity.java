@@ -276,9 +276,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
-                System.out.println(call.request().body());
+          ///      System.out.println(call.request().body());
                 // progress.setVisibility(View.INVISIBLE);
-                Log.d(Constants.TAG, t.getMessage());
+//                Log.d(Constants.TAG, t.getMessage());
                 //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
 
 
