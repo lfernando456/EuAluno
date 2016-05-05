@@ -22,9 +22,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
-        android:gravity="center"
-        android:layout_weight="0.77">
+        android:layout_height="460dp"
+        android:gravity="center">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
