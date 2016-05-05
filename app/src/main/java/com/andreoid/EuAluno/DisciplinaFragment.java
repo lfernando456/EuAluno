@@ -135,7 +135,8 @@ public class DisciplinaFragment extends Fragment{
 
     }
     private void getCursos() {
-
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
@@ -195,10 +196,12 @@ public class DisciplinaFragment extends Fragment{
 
     }
     private void getTurmas(final String idCurso) {
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
 
-        btn_voltar.setVisibility(View.VISIBLE);
+
         request.setOperation("getTurmas");
         request.setIdCurso(idCurso);
         Call<ListaDeTurmas> response = requestInterface.getTurmas(request);
@@ -206,6 +209,7 @@ public class DisciplinaFragment extends Fragment{
 
             @Override
             public void onResponse(Call<ListaDeTurmas> call, Response<ListaDeTurmas> response) {
+                btn_voltar.setVisibility(View.VISIBLE);
                 System.out.println(response.body());
                 ListaDeTurmas listaDeTurmas = response.body();
                 turmas = listaDeTurmas.getTurmas();
@@ -227,6 +231,7 @@ public class DisciplinaFragment extends Fragment{
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                         String itemValue = (String) listView.getItemAtPosition(position);
                         Toast.makeText(getActivity(), "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT).show();
                         for (int i = 0; i < nomes.length; i++) {
@@ -236,6 +241,7 @@ public class DisciplinaFragment extends Fragment{
                                 textView.setText(textView.getText() + "Turma: " + nomes[i]);
                             }
                         }
+
                         System.out.println("Curso: " + idCurso + " Turma: " + auxTurma);
                         getDisciplinas(auxTurma);
                     }
@@ -265,8 +271,9 @@ public class DisciplinaFragment extends Fragment{
         });
     }
     private void getDisciplinas(final String turma) {
-        btn_concluir.setVisibility(View.VISIBLE);
 
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -279,6 +286,7 @@ public class DisciplinaFragment extends Fragment{
             @Override
             public void onResponse(Call<ListaDeDisciplinas> call, Response<ListaDeDisciplinas> response) {
                 //System.out.println(response.body());
+                btn_concluir.setVisibility(View.VISIBLE);
                 ListaDeDisciplinas listaDeDisciplinas = response.body();
                 disciplinas = listaDeDisciplinas.getDisciplinas();
                 nomes = new String[disciplinas.size()];
@@ -330,14 +338,16 @@ public class DisciplinaFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 getCursos();
-
-
+                textView.setText("");
+                btn_voltar.setVisibility(View.GONE);
+                btn_concluir.setVisibility(View.GONE);
             }
         });
     }
     private void insertAlunoDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
-
+        progressBar.setVisibility(View.VISIBLE);
+        listView.setVisibility(View.GONE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
 
@@ -359,14 +369,14 @@ public class DisciplinaFragment extends Fragment{
                 ServerResponse resp = response.body();
 
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
                 System.out.println(call.request().body());
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 Log.d(Constants.TAG, t.getMessage());
                 Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
 
@@ -388,16 +398,18 @@ public class DisciplinaFragment extends Fragment{
 
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-                System.out.println(response.body());
+                //System.out.println(response.body());
                 ServerResponse resp = response.body();
 
                 if(!resp.isAux())
                 {
                     getCursos();
+                }else{
+
                 }
 
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
 
             }
 
@@ -405,7 +417,7 @@ public class DisciplinaFragment extends Fragment{
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
                 System.out.println(call.request().body());
-                progressBar.setVisibility(View.INVISIBLE);
+                progressBar.setVisibility(View.GONE);
                 Log.d(Constants.TAG, t.getMessage());
                 Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
 
