@@ -22,8 +22,16 @@ public class ListaDeDisciplinas {
         private String idDisciplina;
         private String idCurso;
         private String nome;
+        private String nomeTurma;
         private String ano;
 
+        public String getNomeTurma() {
+            return nomeTurma;
+        }
+
+        public void setNomeTurma(String nomeTurma) {
+            this.nomeTurma = nomeTurma;
+        }
 
         public String getIdDisciplina() {
             return idDisciplina;

@@ -3,7 +3,6 @@ package com.andreoid.EuAluno;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -28,7 +27,6 @@ import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ListaDeTurmas;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
-import com.andreoid.EuAluno.models.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +55,7 @@ public class DisciplinaFragment extends Fragment{
 
    private View view;
     String[] nomes;
+    String[] nomesTurmas;
     String[] idCurso;
     String[] idTurma;
     String auxTurma;
@@ -129,7 +128,7 @@ public class DisciplinaFragment extends Fragment{
                     }
                 }
 
-                insertAlunoDisciplina(selectedItems);
+                insertDisciplina(selectedItems);
             }
         });
 
@@ -348,14 +347,14 @@ public class DisciplinaFragment extends Fragment{
             }
         });
     }
-    private void getDisciplinasAluno(final String unique_id) {
+    private void getDisciplinasAP(final String unique_id) {
 
         progressBar.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
-        request.setOperation("getDisciplinasAluno");
+        request.setOperation("getDisciplinasAP");
         request.setUnique_id(unique_id);
         Call<ListaDeDisciplinas> response = requestInterface.getDisciplinas(request);
 
@@ -368,8 +367,16 @@ public class DisciplinaFragment extends Fragment{
                 ListaDeDisciplinas listaDeDisciplinas = response.body();
                 disciplinas = listaDeDisciplinas.getDisciplinas();
                 nomes = new String[disciplinas.size()];
+                nomesTurmas =new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
-                    nomes[i] = disciplinas.get(i).getNome();
+                    nomesTurmas [i] = disciplinas.get(i).getNomeTurma();
+                    if( pref.getString("tipo","").equals("1")) {
+
+
+                        nomes[i] = disciplinas.get(i).getNome() + "--" + nomesTurmas[i];
+                    }else{
+                        nomes[i] = disciplinas.get(i).getNome(); 
+                    }
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
@@ -389,6 +396,7 @@ public class DisciplinaFragment extends Fragment{
                         Toast.makeText(getActivity(),
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
+
                         getTopicos(disciplinas.get(position).getIdDisciplina());
                         //getTurmas(cursos.get(itemPosition).getIdCurso());
 
@@ -425,7 +433,8 @@ public class DisciplinaFragment extends Fragment{
             }
         });
     }
-    private void insertAlunoDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
+    private void insertDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
+
 
         progressBar.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
@@ -436,7 +445,7 @@ public class DisciplinaFragment extends Fragment{
         ListaDeDisciplinas listaDeDisciplinas=new ListaDeDisciplinas();
         listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();
-        request.setOperation("insertAlunoDisciplina");
+        request.setOperation("insertDisciplina");
         request.setUnique_id(unique_id);
         request.setListaDeDisciplinas(listaDeDisciplinas);
 
@@ -469,7 +478,7 @@ public class DisciplinaFragment extends Fragment{
 
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
-        request.setOperation("verificadorAD");
+        request.setOperation("verificadorD");
         request.setUnique_id(unique_id);
 
 
@@ -486,7 +495,7 @@ public class DisciplinaFragment extends Fragment{
                 {
                     getCursos();
                 }else{
-                    getDisciplinasAluno(unique_id);
+                    getDisciplinasAP(unique_id);
                 }
 
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
@@ -507,17 +516,13 @@ public class DisciplinaFragment extends Fragment{
         });
 
     }
-
-
-
-
-     private void getTopicos (final String topicCat) {
+    private void getTopicos (final String topic_cat) {
          progressBar.setVisibility(View.VISIBLE);
          listView.setVisibility(View.GONE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getTopicos");
-        request.setTopicCat(topicCat);
+        request.setTopic_cat(topic_cat);
 
         Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
 
@@ -572,6 +577,4 @@ public class DisciplinaFragment extends Fragment{
         });
 
     }
-
-
 }

@@ -9,7 +9,7 @@ public class ServerRequest {
     private String turma;
     private User user;
     private ListaDeDisciplinas listaDeDisciplinas;
-    private String topicCat;
+    private String topic_cat;
     private String unique_id;
     private String disciplina_idDisciplina;
 
@@ -33,12 +33,12 @@ public class ServerRequest {
         this.listaDeDisciplinas = listaDeDisciplinas;
     }
 
-    public String getTopicCat() {
-        return topicCat;
+    public String getTopic_cat() {
+        return topic_cat;
     }
 
-    public void setTopicCat(String topicCat) {
-        this.topicCat = topicCat;
+    public void setTopic_cat(String topic_cat) {
+        this.topic_cat = topic_cat;
     }
 
     public void setOperation(String operation) {
