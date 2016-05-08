@@ -497,8 +497,7 @@ public class DisciplinaFragment extends Fragment{
                 }else{
                     getDisciplinasAP(unique_id);
                 }
-
-                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
+if(resp.getMessage()!=null)Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
                 progressBar.setVisibility(View.GONE);
 
             }

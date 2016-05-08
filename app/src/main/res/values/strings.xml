@@ -54,4 +54,25 @@
     <string name="title_activity_forum">ForumActivity</string>
     <string name="fish">Concluido</string>
     <string name="back">Voltar</string>
+
+
+    <string name="collapsing_toolbar_fragment_title">Collapsing toolbar</string>
+    <string name="fab_fragment_title">FAB</string>
+    <string name="tab_fragment_title">TAB</string>
+    <string name="about_fragment_title">About</string>
+
+    <string name="open_drawer">Open</string>
+    <string name="close_drawer">Close</string>
+
+    <string name="title_input_hint">Title</string>
+    <string name="content_input_hint">Content</string>
+
+    <string name="dialog_title">Add item</string>
+
+    <string name="edittext_error">Can\'t be empty</string>
+    <string name="titletext_error">Title can\'t be empty</string>
+    <string name="contenttext_error">Content can\'t be empty</string>
+    <string name="title_content_error">Title &#038; Content can\'t be empty</string>
+    <string name="text_success">Item added</string>
+    <string name="text_undo">UNDO</string>
 </resources>

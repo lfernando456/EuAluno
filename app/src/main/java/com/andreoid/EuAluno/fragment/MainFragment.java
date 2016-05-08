@@ -66,13 +66,13 @@ public class MainFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
 		super.onCreateOptionsMenu(menu, inflater);
 		//inflater.inflate(R.menu.menu, menu);
-        
+       /*
         //Select search item
         final MenuItem menuItem = menu.findItem(R.id.menu_search);
         menuItem.setVisible(true);
@@ -86,14 +86,14 @@ public class MainFragment extends Fragment {
 
 		menu.findItem(R.id.menu_add).setVisible(true);
 
-		mSearchCheck = false;	
+		mSearchCheck = false;	*/
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		
-		switch (item.getItemId()) {
+
+		/*switch (item.getItemId()) {
 
 		case R.id.menu_add:
             Toast.makeText(getActivity(), R.string.add, Toast.LENGTH_SHORT).show();
@@ -103,9 +103,9 @@ public class MainFragment extends Fragment {
 			mSearchCheck = true;
             Toast.makeText(getActivity(), R.string.search, Toast.LENGTH_SHORT).show();
 			break;
-		}
+		}*/
 		return true;
-	}	
+	}
 
    private SearchView.OnQueryTextListener onQuerySearchView = new SearchView.OnQueryTextListener() {
        @Override

@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.andreoid.EuAluno.fragment.FabFragment;
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.fragment.ViewPagerFragment;
 import com.andreoid.EuAluno.models.ListaDeCursos;
@@ -148,7 +149,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         switch (position) {
             case 2:
-                mFragment = new ViewPagerFragment();
+                mFragment = new FabFragment();
                 break;
             case 6:
                 mFragment = new ProfileFragment();
@@ -175,6 +176,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     private OnPrepareOptionsMenuLiveo onPrepare = new OnPrepareOptionsMenuLiveo() {
         @Override
         public void onPrepareOptionsMenu(Menu menu, int position, boolean visible) {
+
         }
     };
 
@@ -276,7 +278,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
-          ///      System.out.println(call.request().body());
+                ///      System.out.println(call.request().body());
                 // progress.setVisibility(View.INVISIBLE);
 //                Log.d(Constants.TAG, t.getMessage());
                 //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
