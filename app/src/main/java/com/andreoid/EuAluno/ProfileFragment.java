@@ -104,7 +104,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     }else {
 
                         tv_message.setVisibility(View.VISIBLE);
-                        tv_message.setText("Fields are empty");
+                        tv_message.setText("Campos vazios!");
                     }
                 }
             });
