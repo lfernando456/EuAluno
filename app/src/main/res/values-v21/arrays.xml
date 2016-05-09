@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="card_titles">
-        <item>Title 1</item>
-        <item>Title 2</item>
-        <item>Title 3</item>
+        <item>Titulo 1</item>
+        <item>Titulo 2</item>
+        <item>Titulo 3</item>
 
     </string-array>
 
