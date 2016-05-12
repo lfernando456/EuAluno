@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class DisciplinaFragment extends Fragment{
     Button btn_voltar;
     Retrofit retrofit;
     ListView listView ;
+    RelativeLayout relativeLay;
     ProgressBar progressBar;
     private SharedPreferences pref;
     TextView textView;
@@ -109,6 +111,7 @@ public class DisciplinaFragment extends Fragment{
         btn_change_password.setOnClickListener(this);
         btn_logout.setOnClickListener(this);*/
         listView = (ListView) view.findViewById(R.id.listView);
+        relativeLay = (RelativeLayout) view.findViewById(R.id.relativeLayout2);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         textView = (TextView) view.findViewById(R.id.textView5);
         //btn_concluir = (Button) view.findViewById(R.id.bSalvar);
@@ -170,6 +173,7 @@ public class DisciplinaFragment extends Fragment{
                 listView.setAdapter(adapter);
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
+                relativeLay.setVisibility(View.VISIBLE);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -560,6 +564,7 @@ if(resp.getMessage()!=null)Snackbar.make(getView(), resp.getMessage(), Snackbar.
                 });
                 progressBar.setVisibility(View.GONE);
                 listView.setVisibility(View.VISIBLE);
+
                 //populateSpinner();
                 //
                 // System.out.println(resp.getCurso().getNome());

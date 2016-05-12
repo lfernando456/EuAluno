@@ -315,6 +315,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 String matricula = edt.getText().toString();
 
                 registerAluno(uniqueId, matricula);
+
+                Fragment mFragment = new DisciplinaFragment();
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.container, mFragment);
+                ft.commit();
+
             }
         });
 
@@ -338,6 +345,12 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 String siap = edt.getText().toString();
 
                 registerProfessor(uniqueId, siap);
+                
+                Fragment mFragment = new DisciplinaFragment();
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.container, mFragment);
+                ft.commit();
             }
         });
 
