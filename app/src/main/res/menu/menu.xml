@@ -2,5 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuLogout" android:title="Logout" />
+    <item
+        android:id="@+id/voltar"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="Voltar" />
 
 </menu>

@@ -72,10 +72,10 @@ public class DisciplinaFragment extends Fragment{
 
     }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_disciplinas, menu);
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.voltar).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
 
-        super.onCreateOptionsMenu(menu, inflater);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
