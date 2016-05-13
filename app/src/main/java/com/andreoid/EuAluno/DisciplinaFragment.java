@@ -11,6 +11,9 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -47,7 +50,7 @@ public class DisciplinaFragment extends Fragment{
     private List<ListaDeTurmas.Turma> turmas;
 
     Button btn_concluir;
-    Button btn_voltar;
+
     Retrofit retrofit;
     ListView listView ;
     RelativeLayout relativeLay;
@@ -62,7 +65,33 @@ public class DisciplinaFragment extends Fragment{
     String[] idTurma;
     String auxTurma;
     String unique_id;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_disciplinas, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.voltar:
+                getCursos();
+                textView.setText("");
+
+                btn_concluir.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
+                relativeLay.setVisibility(View.GONE);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -82,8 +111,6 @@ public class DisciplinaFragment extends Fragment{
         initViews(view);
         unique_id = pref.getString(Constants.UNIQUE_ID, "");
         verificadorAD(unique_id);
-
-
 
 
         return view;
@@ -115,7 +142,6 @@ public class DisciplinaFragment extends Fragment{
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         textView = (TextView) view.findViewById(R.id.textView5);
         //btn_concluir = (Button) view.findViewById(R.id.bSalvar);
-        btn_voltar = (Button) view.findViewById(R.id.bVoltar);
         btn_concluir = (Button) view.findViewById(R.id.bSalvar);
         btn_concluir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,7 +238,7 @@ public class DisciplinaFragment extends Fragment{
 
             @Override
             public void onResponse(Call<ListaDeTurmas> call, Response<ListaDeTurmas> response) {
-                btn_voltar.setVisibility(View.VISIBLE);
+
                 System.out.println(response.body());
                 ListaDeTurmas listaDeTurmas = response.body();
                 turmas = listaDeTurmas.getTurmas();
@@ -238,7 +264,7 @@ public class DisciplinaFragment extends Fragment{
                         String itemValue = (String) listView.getItemAtPosition(position);
                         Toast.makeText(getActivity(), "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT).show();
                         for (int i = 0; i < nomes.length; i++) {
-                            if( nomes[i].equals(itemValue)){
+                            if (nomes[i].equals(itemValue)) {
                                 auxTurma = idTurma[i];
 
                                 textView.setText(textView.getText() + "Turma: " + nomes[i]);
@@ -262,22 +288,13 @@ public class DisciplinaFragment extends Fragment{
                 //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
-        btn_voltar.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                textView.setText("");
-                getCursos();
-
-
-            }
-        });
     }
     private void getDisciplinas(final String turma) {
 
         progressBar.setVisibility(View.VISIBLE);
         listView.setVisibility(View.GONE);
-
+textView.setVisibility(View.VISIBLE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinas");
@@ -302,7 +319,7 @@ public class DisciplinaFragment extends Fragment{
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
                 for (int i = 0; i < nomes.length; i++) {
-                    listView.setItemChecked(i,true);
+                    listView.setItemChecked(i, true);
                 }
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -341,15 +358,7 @@ public class DisciplinaFragment extends Fragment{
         });
 
 
-        btn_voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCursos();
-                textView.setText("");
-                btn_voltar.setVisibility(View.GONE);
-                btn_concluir.setVisibility(View.GONE);
-            }
-        });
+
     }
     private void getDisciplinasAP(final String unique_id) {
 
@@ -427,15 +436,6 @@ public class DisciplinaFragment extends Fragment{
         });
 
 
-        btn_voltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCursos();
-                textView.setText("");
-                btn_voltar.setVisibility(View.GONE);
-                btn_concluir.setVisibility(View.GONE);
-            }
-        });
     }
     private void insertDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
