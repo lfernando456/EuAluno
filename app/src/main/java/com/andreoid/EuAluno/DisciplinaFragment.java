@@ -263,16 +263,16 @@ public class DisciplinaFragment extends Fragment{
 
                         String itemValue = (String) listView.getItemAtPosition(position);
                         Toast.makeText(getActivity(), "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT).show();
-                        for (int i = 0; i < nomes.length; i++) {
-                            if (nomes[i].equals(itemValue)) {
-                                auxTurma = idTurma[i];
+                        //for (int i = 0; i < nomes.length; i++) {
+                        //    if (nomes[i].equals(itemValue)) {
+                        //        auxTurma = idTurma[i];
 
-                                textView.setText(textView.getText() + "Turma: " + nomes[i]);
-                            }
-                        }
+                                textView.setText(textView.getText() + "Turma: " + nomes[position]);
+                        //    }
+                        //}
 
                         System.out.println("Curso: " + idCurso + " Turma: " + auxTurma);
-                        getDisciplinas(auxTurma);
+                        getDisciplinas(turmas.get(position).getIdTurma());
                     }
 
                 });
