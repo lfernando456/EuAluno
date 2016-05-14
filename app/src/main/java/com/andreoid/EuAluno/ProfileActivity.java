@@ -1,38 +1,29 @@
 package com.andreoid.EuAluno;
 
-import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.andreoid.EuAluno.fragment.FabFragment;
 import com.andreoid.EuAluno.fragment.MainFragment;
-import com.andreoid.EuAluno.fragment.ViewPagerFragment;
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 import br.liveo.interfaces.OnItemClickListener;
@@ -57,6 +48,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     public String email;
     Retrofit retrofit;
     private List<ListaDeCursos.Curso> cursos;
+    int a;
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
@@ -96,6 +88,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         mHelpLiveo.add(getString(R.string.presence), R.mipmap.ic_star_black_24dp);
         mHelpLiveo.add(getString(R.string.grades), R.mipmap.ic_send_black_24dp);
         mHelpLiveo.add(getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
+        mHelpLiveo.add("Cadastrar " + getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
         mHelpLiveo.addSeparator(); // Item separator
         mHelpLiveo.add(getString(R.string.myProfile), R.mipmap.ic_delete_black_24dp);
         //mHelpLiveo.add(getString(R.string.spam), R.mipmap.ic_report_black_24dp, 120);
@@ -116,7 +109,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         //mList.setFitsSystemWindows(false);
 
         this.setElevationToolBar(15);
-
+        verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
     }
 
     @Override
@@ -128,12 +121,14 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             case 2:
                 mFragment = new FabFragment();
                 break;
-            case 6:
+            case 7:
                 mFragment = new ProfileFragment();
                 break;
             case 4:
                 mFragment = new DisciplinaFragment();
-
+                break;
+            case 5:
+                mFragment = new CadastrarDisciplinaFragment();
                 break;
             default:
                 mFragment = MainFragment.newInstance(position + "");
@@ -316,7 +311,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
                 registerAluno(uniqueId, matricula);
 
-                Fragment mFragment = new DisciplinaFragment();
+                Fragment mFragment = new CadastrarDisciplinaFragment();
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, mFragment);
@@ -340,13 +335,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         dialogBuilder.setCancelable(false);
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
-        dialogBuilder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 String siap = edt.getText().toString();
 
                 registerProfessor(uniqueId, siap);
-                
-                Fragment mFragment = new DisciplinaFragment();
+
+                Fragment mFragment = new CadastrarDisciplinaFragment();
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.container, mFragment);
@@ -358,6 +353,47 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         b.show();
     }
 
+    private void verificadorAD(final String unique_id ){
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        ServerRequest request = new ServerRequest();
+        request.setOperation("verificadorD");
+        request.setUnique_id(unique_id);
+
+
+        Call<ServerResponse> response = requestInterface.operation(request);
+
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                //System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                if (resp.isAux()) {
+                    a=1;
+                } else {
+                    a=0;
+                }
+                //if (resp.getMessage() != null)
+                    //Toast.makeText(, resp.getMessage(), Toast.LENGTH_LONG).show();
+
+
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+
+                Log.d(Constants.TAG, t.getMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+
+
+            }
+        });
+
+    }
 
 
 }
