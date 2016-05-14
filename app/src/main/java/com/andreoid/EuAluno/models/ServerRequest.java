@@ -6,6 +6,7 @@ public class ServerRequest {
     private String operation;
 
     private String idCurso;
+    private String idTurma;
     private String turma;
     private User user;
     private ListaDeDisciplinas listaDeDisciplinas;
@@ -19,6 +20,9 @@ public class ServerRequest {
 
     public void setIdCurso(String idCurso) {
         this.idCurso = idCurso;
+    }
+    public void setIdTurma(String idTurma) {
+        this.idTurma = idTurma;
     }
     public void setUnique_id(String unique_id) {
         this.unique_id = unique_id;

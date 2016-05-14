@@ -42,12 +42,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         View view = inflater.inflate(R.layout.fragment_login,container,false);
         initViews(view);
+        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+
+        et_email.setText(pref.getString(Constants.EMAIL,""));
         return view;
     }
 
     private void initViews(View view){
 
-        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
         btn_login = (AppCompatButton)view.findViewById(R.id.btn_login);
         tv_register = (TextView)view.findViewById(R.id.tv_register);
@@ -115,19 +117,22 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                 ServerResponse resp = response.body();
                 Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
 
+                if(resp.getResult().equals(Constants.SUCCESS)||resp.getResult().equals("primeiroAluno")||resp.getResult().equals("primeiroProf")) {
+
+
 
 
                     SharedPreferences.Editor editor = pref.edit();
-                    editor.putBoolean(Constants.IS_LOGGED_IN,true);
+                    editor.putBoolean(Constants.IS_LOGGED_IN, true);
                     editor.putBoolean("novoCadastro", resp.isAux());
                     editor.putString("tipo", resp.getUser().getTipo());
-                    editor.putString(Constants.EMAIL,resp.getUser().getEmail());
-                    editor.putString(Constants.NAME,resp.getUser().getName());
-                    editor.putString(Constants.UNIQUE_ID,resp.getUser().getUnique_id());
+                    editor.putString(Constants.EMAIL, resp.getUser().getEmail());
+                    editor.putString(Constants.NAME, resp.getUser().getName());
+                    editor.putString(Constants.UNIQUE_ID, resp.getUser().getUnique_id());
                     editor.apply();
                     goToProfile();
 
-
+                }
 
                 progress.setVisibility(View.INVISIBLE);
             }

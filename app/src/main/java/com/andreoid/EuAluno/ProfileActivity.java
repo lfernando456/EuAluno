@@ -64,10 +64,11 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
-
+        name=pref.getString(Constants.NAME, "");
+        email=pref.getString(Constants.EMAIL, "");
         // User Information
-        this.userName.setText(pref.getString(Constants.NAME, ""));
-        this.userEmail.setText(pref.getString(Constants.EMAIL, ""));
+        this.userName.setText(name);
+        this.userEmail.setText(email);
         this.userPhoto.setImageResource(R.mipmap.ic_no_user);
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
 
@@ -183,6 +184,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                         editor.putString(Constants.NAME,"");
                         editor.putString(Constants.UNIQUE_ID, "");
                         */
+                        editor.putString(Constants.EMAIL, email);
                         editor.apply();
 
 

@@ -364,6 +364,8 @@ public class CadastrarDisciplinaFragment extends Fragment{
         ServerRequest request = new ServerRequest();
         request.setOperation("insertDisciplina");
         request.setUnique_id(unique_id);
+        request.setIdCurso(idCursoSelected);
+        request.setIdTurma(idTurmaSelected);
         request.setListaDeDisciplinas(listaDeDisciplinas);
 
         Call<ServerResponse> response = requestInterface.operation(request);
@@ -374,8 +376,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 System.out.println(response.body());
                 ServerResponse resp = response.body();
-
-                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
+//                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_LONG).show();
                 loading(false);
             }
 
@@ -385,7 +386,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
                 System.out.println(call.request().body());
                 loading(false);
                 Log.d(Constants.TAG, t.getMessage());
-                Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+   //             Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
 
 
             }
