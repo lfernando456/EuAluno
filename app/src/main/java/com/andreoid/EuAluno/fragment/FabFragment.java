@@ -27,6 +27,7 @@ import com.andreoid.EuAluno.ProfileActivity;
 import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.adapter.RecyclerAdapter;
 import com.andreoid.EuAluno.models.CardItemModel;
+import com.andreoid.EuAluno.models.ListaDeDisciplinas;
 
 import java.util.ArrayList;
 import java.util.List;

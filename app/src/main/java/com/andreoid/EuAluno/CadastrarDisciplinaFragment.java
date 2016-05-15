@@ -151,7 +151,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
                 }
 
                 insertDisciplina(selectedItems);
-                Fragment mFragment = new CadastrarDisciplinaFragment();
+                Fragment mFragment = new DisciplinaFragment();
 
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.replace(R.id.container, mFragment);
