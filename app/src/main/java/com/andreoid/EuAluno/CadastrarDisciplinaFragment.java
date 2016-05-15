@@ -117,7 +117,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
         getCursos();
         return view;
     }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
@@ -129,7 +128,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));*/
 
     }
-
     private void initViews(View view){
 
 
