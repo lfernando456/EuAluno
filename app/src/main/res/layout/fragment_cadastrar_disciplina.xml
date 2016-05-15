@@ -2,25 +2,33 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:weightSum="1">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear5"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/textView5"
-        android:textColor="@color/colorPrimary"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="5dp"
-        android:visibility="gone"
-        android:layout_alignParentStart="true" />
+        android:background="@color/colorPrimary">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:id="@+id/textView5"
+            android:textColor="#ffffff"
+            android:visibility="visible"
+            android:layout_alignParentStart="true"
+            android:autoText="true"
+            android:layout_gravity="center"
+            android:layout_margin="5dp" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:layout_alignBottom="@+id/textView5"
+        android:layout_alignBottom="@+id/linear5"
         android:layout_alignRight="@+id/relativeLayout2"
         android:layout_alignEnd="@+id/relativeLayout2" />
     <LinearLayout
@@ -31,8 +39,8 @@
 
         android:id="@+id/linearLayout"
         android:layout_alignWithParentIfMissing="false"
-        android:layout_below="@+id/textView5"
-        android:layout_above="@+id/relativeLayout2">
+        android:layout_above="@+id/relativeLayout2"
+        android:layout_below="@+id/linear5">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -55,17 +63,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignLeft="@+id/textView5"
-        android:layout_alignStart="@+id/textView5"
         android:id="@+id/relativeLayout2"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <Button
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:text="@string/fish"
             android:id="@+id/bSalvar"
-            android:visibility="visible"
+            android:visibility="gone"
             android:clickable="true"
             android:layout_gravity="bottom|right"
             android:layout_alignParentLeft="true"

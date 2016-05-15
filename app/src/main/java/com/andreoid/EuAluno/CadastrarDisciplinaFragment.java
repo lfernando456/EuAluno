@@ -78,6 +78,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.voltar).setVisible(true);
+
         super.onPrepareOptionsMenu(menu);
 
     }
@@ -241,7 +242,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
                     //idTurma[i] = turmas.get(i).getIdTurma();
                 }
-
+                //getActivity().
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
                 // Assign adapter to ListView
@@ -258,7 +259,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
                         //    if (nomes[i].equals(itemValue)) {
                         //        auxTurma = idTurma[i];
                         textView.setVisibility(View.VISIBLE);
-                        textView.setText(textView.getText() + "Turma: " + nomes[position]);
+                        textView.setText(nomes[position]);
                         //    }
                         //}
 
@@ -310,9 +311,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
                         android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, nomes);
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
-                for (int i = 0; i < nomes.length; i++) {
-                    listView.setItemChecked(i, true);
-                }
+
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
