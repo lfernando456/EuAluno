@@ -86,8 +86,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         mHelpLiveo = new HelpLiveo();
         mHelpLiveo.add(getString(R.string.inbox), R.mipmap.ic_inbox_black_24dp, 100);
         mHelpLiveo.addSubHeader(getString(R.string.categories)); //Item subHeader
-        mHelpLiveo.add(getString(R.string.presence), R.mipmap.ic_star_black_24dp);
+        mHelpLiveo.add("Inicio", R.mipmap.ic_star_black_24dp);
         mHelpLiveo.add(getString(R.string.grades), R.mipmap.ic_send_black_24dp);
+
         mHelpLiveo.add(getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
         mHelpLiveo.add("Cadastrar " + getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
         mHelpLiveo.addSeparator(); // Item separator
@@ -373,12 +374,12 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 ServerResponse resp = response.body();
 
                 if (resp.isAux()) {
-                    a=1;
+                    a = 1;
                 } else {
-                    a=0;
+                    a = 0;
                 }
                 //if (resp.getMessage() != null)
-                    //Toast.makeText(, resp.getMessage(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(, resp.getMessage(), Toast.LENGTH_LONG).show();
 
 
             }

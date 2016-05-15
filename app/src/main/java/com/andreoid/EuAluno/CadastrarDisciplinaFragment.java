@@ -353,7 +353,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
 
     }
-
     private void insertDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
 
 
@@ -392,8 +391,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
             }
         });
     }
-
-
     private void loading(boolean isLoading){
         if(isLoading){
             progressBar.setVisibility(View.VISIBLE);

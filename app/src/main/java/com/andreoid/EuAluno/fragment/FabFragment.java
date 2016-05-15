@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.andreoid.EuAluno.ProfileActivity;
@@ -40,13 +41,14 @@ public class FabFragment extends Fragment {
     private ProfileActivity mainActivity;
 
     private RecyclerView recyclerView;
+
     private FloatingActionButton floatingActionButton;
     private RecyclerAdapter recyclerAdapter;
     private View dialogView;
+    public int bt = 0;
     //private View thisView;
-    public FabFragment() {
-        // Required empty public constructor
-    }
+
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -61,6 +63,8 @@ public class FabFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_fab, container, false);
 
 
+
+
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +72,12 @@ public class FabFragment extends Fragment {
                 fabClick(view);
             }
         });
+        floatingActionButton.setVisibility(View.INVISIBLE);
         fixFloatingActionButtonMargin();
+        if(bt ==0){
+            recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
+        }
 
-        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
 
         setupRecyclerView();
 
