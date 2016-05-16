@@ -144,7 +144,7 @@ public class DisciplinaFragment extends Fragment{
 
                         nomes[i] = disciplinas.get(i).getNome() + " -> " + nomesTurmas[i];
                     }else{
-                        nomes[i] = disciplinas.get(i).getNome(); 
+                        nomes[i] = disciplinas.get(i).getNome();
                     }
                 }
 
@@ -166,8 +166,9 @@ public class DisciplinaFragment extends Fragment{
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         getActivity().setTitle(itemValue);
+                        ProfileActivity pa = new ProfileActivity();
                         getTopicos(disciplinas.get(position).getIdDisciplina());
-                        //getTurmas(cursos.get(itemPosition).getIdCurso());
+
 
                     }
 
@@ -213,11 +214,14 @@ public class DisciplinaFragment extends Fragment{
                 String[] nomeTopicos = new String[ topicos.size()];
                 System.out.println(topicos.size());
                 for (int i = 0; i <  topicos.size(); i++) {
+
                     nomeTopicos [i]=  topicos.get(i).getTopic_subject();
+                    System.out.println( nomeTopicos [i]);
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1,nomeTopicos);
+
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

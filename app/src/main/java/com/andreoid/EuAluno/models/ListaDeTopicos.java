@@ -18,6 +18,15 @@ public class ListaDeTopicos {
         private String topic_date;
         private String topic_cat;
         private String topic_by;
+        private String nomeProfessor;
+
+        public String getNomeProfessor() {
+            return nomeProfessor;
+        }
+
+        public void setNomeProfessor(String nomeProfessor) {
+            this.nomeProfessor = nomeProfessor;
+        }
 
         public String getIdTopics() {
             return idTopics;

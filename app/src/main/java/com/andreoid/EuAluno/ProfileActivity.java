@@ -121,6 +121,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         switch (position) {
             case 2:
                 mFragment = new FabFragment();
+
                 break;
             case 7:
                 mFragment = new ProfileFragment();
@@ -130,6 +131,9 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 break;
             case 5:
                 mFragment = new CadastrarDisciplinaFragment();
+                break;
+            case 66:
+                mFragment = new FabFragment();
                 break;
             default:
                 mFragment = MainFragment.newInstance(position + "");

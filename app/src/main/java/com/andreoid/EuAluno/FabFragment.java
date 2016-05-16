@@ -20,17 +20,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.andreoid.EuAluno.ProfileActivity;
 import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.adapter.RecyclerAdapter;
 import com.andreoid.EuAluno.models.CardItemModel;
 import com.andreoid.EuAluno.models.ListaDeDisciplinas;
+import com.andreoid.EuAluno.models.ListaDeTopicos;
+import com.andreoid.EuAluno.models.ServerRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -39,6 +52,7 @@ import java.util.List;
 public class FabFragment extends Fragment {
 
     private List<CardItemModel> cardItems = new ArrayList<>(30);
+    private List<ListaDeTopicos.Topicos> topicos;
     private ProfileActivity mainActivity;
 
     private RecyclerView recyclerView;
@@ -46,7 +60,7 @@ public class FabFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private RecyclerAdapter recyclerAdapter;
     private View dialogView;
-    public int bt = 0;
+    Retrofit retrofit;
     //private View thisView;
 
 
@@ -62,7 +76,9 @@ public class FabFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fab, container, false);
-
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
 
 
@@ -75,9 +91,14 @@ public class FabFragment extends Fragment {
         });
         //floatingActionButton.setVisibility(View.INVISIBLE);
         fixFloatingActionButtonMargin();
-        if(bt ==0){
+
             recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
-        }
+        retrofit= new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .client(client)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
 
         setupRecyclerView();
@@ -91,22 +112,65 @@ public class FabFragment extends Fragment {
     private void setupRecyclerView(){
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setHasFixedSize(true);
-        initializeCardItemList();
+        getTopicos("2");
         recyclerAdapter = new RecyclerAdapter(cardItems);
         recyclerView.setAdapter(recyclerAdapter);
     }
 
-    private void initializeCardItemList(){
-        CardItemModel cardItemModel;
-        String[] cardTitles = getResources().getStringArray(R.array.card_titles);
-        String[] cardContents = getResources().getStringArray(R.array.card_contents);
-        final int length = cardTitles.length;
-        for(int i=0;i<length;i++){
-            cardItemModel = new CardItemModel(cardTitles[i],cardContents[i]);
-            cardItems.add(cardItemModel);
+    public void getTopicos(final String topic_cat){
+
+
+            RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+            ServerRequest request = new ServerRequest();
+            request.setOperation("getTopicos");
+            request.setTopic_cat(topic_cat);
+
+        Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
+
+        response.enqueue(new Callback<ListaDeTopicos>() {
+
+                @Override
+                public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
+                    System.out.println(response.body());
+                    ListaDeTopicos ListaDeTopicos = response.body();
+                    topicos = ListaDeTopicos.getTopicos();
+                    String[] nomeTopicos = new String[topicos.size()];
+                    String[] nomeProfessor = new String[topicos.size()];
+                    System.out.println(topicos.size());
+                    for (int i = 0; i < topicos.size(); i++) {
+                        nomeProfessor[i]= "Professor(a): "+topicos.get(i).getNomeProfessor();
+                        nomeTopicos[i] = topicos.get(i).getTopic_subject();
+                        System.out.println(nomeTopicos[i]);
+                        System.out.println( nomeProfessor[i]);
+                    }
+
+
+
+                    final int length = nomeTopicos.length;
+                    for (int i = 0; i < length; i++) {
+                        addItem(nomeTopicos[i], nomeProfessor[i]);
+
+
+                    }
+
+
+                    //populateSpinner();
+                    //
+                    // System.out.println(resp.getCurso().getNome());
+                }
+
+                @Override
+                public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
+
+                    // progress.setVisibility(View.INVISIBLE);
+//                Log.d(Constants.TAG, t.getLocalizedMessage());
+                    //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                }
+            });
+
         }
 
-    }
+
 
     public void addItem(String title,String content){
         recyclerAdapter.cardItems.add(new CardItemModel(title, content));
