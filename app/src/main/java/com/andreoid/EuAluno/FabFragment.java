@@ -52,7 +52,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FabFragment extends Fragment {
 
-    private List<CardItemModel> cardItems = new ArrayList<>(30);
+    private List<CardItemModel> cardItems = new ArrayList();
     private List<ListaDeTopicos.Topicos> topicos;
     private ProfileActivity mainActivity;
     private SharedPreferences pref;
@@ -138,44 +138,32 @@ public class FabFragment extends Fragment {
 
     public void getTopicos(final String topic_cat){
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        ServerRequest request = new ServerRequest();
+
         if(getArguments().getString(Constants.TOPIC_CAT, "").equals("-1")){
-            RequestInterface requestInterface = retrofit.create(RequestInterface.class);
-            ServerRequest request = new ServerRequest();
             request.setOperation("getTopicosIndex");
             request.setUnique_id(pref.getString(Constants.UNIQUE_ID,""));
+        }
+        else {
+            request.setOperation("getTopicos");
+            request.setTopic_cat(topic_cat);
+        }
 
-            Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
+        Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
 
-            response.enqueue(new Callback<ListaDeTopicos>() {
+        response.enqueue(new Callback<ListaDeTopicos>() {
 
                 @Override
                 public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
                     System.out.println(response.body());
                     ListaDeTopicos ListaDeTopicos = response.body();
                     topicos = ListaDeTopicos.getTopicos();
-                    String[] nomeTopicos = new String[topicos.size()];
-                    String[] nomeProfessor = new String[topicos.size()];
                     System.out.println(topicos.size());
                     for (int i = 0; i < topicos.size(); i++) {
-                        nomeProfessor[i]= "Professor(a): "+topicos.get(i).getNomeProfessor();
-                        nomeTopicos[i] = topicos.get(i).getTopic_subject();
-                        System.out.println(nomeTopicos[i]);
-                        System.out.println( nomeProfessor[i]);
+                        addItem(topicos.get(i).getTopic_subject(), "Professor(a): "+topicos.get(i).getNomeProfessor());
                     }
 
-
-
-                    final int length = nomeTopicos.length;
-                    for (int i = 0; i < length; i++) {
-                        addItem(nomeTopicos[i], nomeProfessor[i]);
-
-
-                    }
-
-
-                    //populateSpinner();
-                    //
-                    // System.out.println(resp.getCurso().getNome());
                 }
 
                 @Override
@@ -188,57 +176,6 @@ public class FabFragment extends Fragment {
             });
 
         }
-        else
-            {
-            RequestInterface requestInterface = retrofit.create(RequestInterface.class);
-            ServerRequest request = new ServerRequest();
-            request.setOperation("getTopicos");
-            request.setTopic_cat(topic_cat);
-
-        Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
-
-        response.enqueue(new Callback<ListaDeTopicos>() {
-
-                @Override
-                public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
-                    System.out.println(response.body());
-                    ListaDeTopicos ListaDeTopicos = response.body();
-                    topicos = ListaDeTopicos.getTopicos();
-                    String[] nomeTopicos = new String[topicos.size()];
-                    String[] nomeProfessor = new String[topicos.size()];
-                    System.out.println(topicos.size());
-                    for (int i = 0; i < topicos.size(); i++) {
-                        nomeProfessor[i]= "Professor(a): "+topicos.get(i).getNomeProfessor();
-                        nomeTopicos[i] = topicos.get(i).getTopic_subject();
-                        System.out.println(nomeTopicos[i]);
-                        System.out.println( nomeProfessor[i]);
-                    }
-
-
-
-                    final int length = nomeTopicos.length;
-                    for (int i = 0; i < length; i++) {
-                        addItem(nomeTopicos[i], nomeProfessor[i]);
-
-
-                    }
-
-
-                    //populateSpinner();
-                    //
-                    // System.out.println(resp.getCurso().getNome());
-                }
-
-                @Override
-                public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
-
-                    // progress.setVisibility(View.INVISIBLE);
-//                Log.d(Constants.TAG, t.getLocalizedMessage());
-                    //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
-                }
-            });
-
-        }}
 
 
 
