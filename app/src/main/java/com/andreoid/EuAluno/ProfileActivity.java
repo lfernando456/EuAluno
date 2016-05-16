@@ -74,10 +74,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         if (pref.getBoolean("novoCadastro", false)) {
 
-            if (Integer.parseInt(pref.getString("tipo", "")) == 0) {
+            if (Integer.parseInt(pref.getString(Constants.TIPO, "")) == 0) {
                 showConfigAlunoDialogAluno(pref.getString(Constants.UNIQUE_ID, ""));
             }
-            if (Integer.parseInt(pref.getString("tipo", "")) == 1) {
+            if (Integer.parseInt(pref.getString(Constants.TIPO, "")) == 1) {
                 showConfigAlunoDialogProfessor(pref.getString(Constants.UNIQUE_ID, ""));
             }
         }
@@ -120,7 +120,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         switch (position) {
             case 2:
-                mFragment = FabFragment.newInstance("2");
+                mFragment = FabFragment.newInstance("0","-1");;
 
                 break;
             case 7:

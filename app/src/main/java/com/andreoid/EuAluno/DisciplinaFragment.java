@@ -169,7 +169,8 @@ public class DisciplinaFragment extends Fragment{
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         getActivity().setTitle(itemValue);
-                        Fragment mFragment = FabFragment.newInstance(disciplinas.get(position).getIdDisciplina());
+
+                        Fragment mFragment = FabFragment.newInstance(pref.getString(Constants.TIPO,""),disciplinas.get(position).getIdDisciplina());
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.container, mFragment);
