@@ -2,7 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/menuLogout" android:title="Logout" />
-
+    <item
+        android:id="@+id/deselectAll"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="DESEL" />
+    <item
+        android:id="@+id/selectAll"
+        android:orderInCategory="1"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="SEL" />
     <item
         android:id="@+id/voltar"
         android:orderInCategory="1"

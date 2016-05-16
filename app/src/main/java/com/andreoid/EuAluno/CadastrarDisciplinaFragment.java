@@ -67,7 +67,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
     String unique_id;
     String acao;
     String idCursoSelected,idTurmaSelected;
-
+    int onDisciplinas=0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,7 +78,10 @@ public class CadastrarDisciplinaFragment extends Fragment{
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         menu.findItem(R.id.voltar).setVisible(true);
-
+        if(onDisciplinas==1){
+            menu.findItem(R.id.selectAll).setVisible(true);
+            menu.findItem(R.id.deselectAll).setVisible(true);
+        }
         super.onPrepareOptionsMenu(menu);
 
     }
@@ -89,9 +92,19 @@ public class CadastrarDisciplinaFragment extends Fragment{
             case R.id.voltar:
                 getCursos();
                 textView.setText("");
-
+                onDisciplinas=0;
                 loading(false);
                 relativeLay.setVisibility(View.GONE);
+                break;
+            case R.id.selectAll:
+                for (int i = 0; i < nomes.length; i++) {
+                    listView.setItemChecked(i, true);
+                }
+                break;
+            case R.id.deselectAll:
+                for (int i = 0; i < nomes.length; i++) {
+                    listView.setItemChecked(i, false);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -242,7 +255,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
                     //idTurma[i] = turmas.get(i).getIdTurma();
                 }
-                //getActivity().
+
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
                 // Assign adapter to ListView
@@ -306,7 +319,8 @@ public class CadastrarDisciplinaFragment extends Fragment{
                 for (int i = 0; i < disciplinas.size(); i++) {
                     nomes[i] = disciplinas.get(i).getNome();
                 }
-
+                onDisciplinas=1;
+                getActivity().invalidateOptionsMenu();
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_list_item_multiple_choice, android.R.id.text1, nomes);
                 // Assign adapter to ListView
@@ -393,6 +407,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             progressBar.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
             textView.setVisibility(View.GONE);
+            getActivity().invalidateOptionsMenu();
         }else{
             progressBar.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
