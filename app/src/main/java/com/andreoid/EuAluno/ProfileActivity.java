@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andreoid.EuAluno.fragment.FabFragment;
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -138,6 +137,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         }
 
         if (mFragment != null) {
+            setTitle(mHelpLiveo.get(position).getName());
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.container, mFragment);

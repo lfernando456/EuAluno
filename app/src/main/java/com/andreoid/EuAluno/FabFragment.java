@@ -1,4 +1,4 @@
-package com.andreoid.EuAluno.fragment;
+package com.andreoid.EuAluno;
 
 
 import android.app.Activity;
@@ -73,7 +73,7 @@ public class FabFragment extends Fragment {
                 fabClick(view);
             }
         });
-        floatingActionButton.setVisibility(View.INVISIBLE);
+        //floatingActionButton.setVisibility(View.INVISIBLE);
         fixFloatingActionButtonMargin();
         if(bt ==0){
             recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);

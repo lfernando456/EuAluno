@@ -142,7 +142,7 @@ public class DisciplinaFragment extends Fragment{
                     if( pref.getString("tipo","").equals("1")) {
 
 
-                        nomes[i] = disciplinas.get(i).getNome() + "--" + nomesTurmas[i];
+                        nomes[i] = disciplinas.get(i).getNome() + " -> " + nomesTurmas[i];
                     }else{
                         nomes[i] = disciplinas.get(i).getNome(); 
                     }
