@@ -108,8 +108,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         //DrawerLayout mList = (DrawerLayout) findViewById(R.id.drawerLayout);
         //mList.setFitsSystemWindows(false);
-
         this.setElevationToolBar(15);
+
         verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
     }
 
@@ -144,7 +144,8 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             ft.commit();
         }
 
-        setElevationToolBar(15);
+        if(position==5)setElevationToolBar(0);
+        else setElevationToolBar(15);
     }
 
     private OnPrepareOptionsMenuLiveo onPrepare = new OnPrepareOptionsMenuLiveo() {
