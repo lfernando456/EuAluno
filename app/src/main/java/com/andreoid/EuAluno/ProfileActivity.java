@@ -147,7 +147,6 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             ft.replace(R.id.container, mFragment);
             ft.commit();
         }
-
         if(position==5)setElevationToolBar(0);
         else setElevationToolBar(15);
     }

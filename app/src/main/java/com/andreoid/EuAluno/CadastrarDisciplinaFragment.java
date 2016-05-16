@@ -406,7 +406,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
         if(isLoading){
             progressBar.setVisibility(View.VISIBLE);
             listView.setVisibility(View.GONE);
-            textView.setVisibility(View.GONE);
+            //textView.setVisibility(View.GONE);
             getActivity().invalidateOptionsMenu();
         }else{
             progressBar.setVisibility(View.GONE);
