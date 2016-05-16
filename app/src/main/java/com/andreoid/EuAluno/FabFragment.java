@@ -64,7 +64,20 @@ public class FabFragment extends Fragment {
     //private View thisView;
 
 
-
+    public static FabFragment newInstance(String text){
+        FabFragment mFragment = new FabFragment();
+        Bundle mBundle = new Bundle();
+        mBundle.putString("topic_cat", text);
+        mFragment.setArguments(mBundle);
+        return mFragment;
+    }
+    public static FabFragment newInstance(){
+        FabFragment mFragment = new FabFragment();
+        Bundle mBundle = new Bundle();
+        mBundle.putString("topic_cat", "todas");
+        mFragment.setArguments(mBundle);
+        return mFragment;
+    }
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -112,7 +125,7 @@ public class FabFragment extends Fragment {
     private void setupRecyclerView(){
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setHasFixedSize(true);
-        getTopicos("2");
+        getTopicos(getArguments().getString("topic_cat"));
         recyclerAdapter = new RecyclerAdapter(cardItems);
         recyclerView.setAdapter(recyclerAdapter);
     }

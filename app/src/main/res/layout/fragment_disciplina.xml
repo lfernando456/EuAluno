@@ -30,6 +30,14 @@
             android:visibility="gone"
             android:choiceMode="multipleChoice" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Disciplinas não encontradas"
+            android:id="@+id/textView3"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <RelativeLayout

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class DisciplinaFragment extends Fragment{
     Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
+    TextView textView;
     private SharedPreferences pref;
 
    private View view;
@@ -113,6 +115,7 @@ public class DisciplinaFragment extends Fragment{
         btn_logout.setOnClickListener(this);*/
         listView = (ListView) view.findViewById(R.id.listView);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        textView = (TextView) view.findViewById(R.id.textView3);
         //btn_concluir = (Button) view.findViewById(R.id.bSalvar);
 
 
@@ -166,14 +169,18 @@ public class DisciplinaFragment extends Fragment{
                                 "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
                                 .show();
                         getActivity().setTitle(itemValue);
-                        ProfileActivity pa = new ProfileActivity();
-                        getTopicos(disciplinas.get(position).getIdDisciplina());
+                        Fragment mFragment = FabFragment.newInstance(disciplinas.get(position).getIdDisciplina());
+
+                        FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.replace(R.id.container, mFragment);
+                        ft.commit();
+                        //getTopicos(disciplinas.get(position).getIdDisciplina());
 
 
                     }
 
                 });
-
+                if(response.message().equals("Cant get disciplinas"))textView.setVisibility(View.VISIBLE);
 
                 loading(false);
                 //populateSpinner();
