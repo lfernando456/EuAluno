@@ -85,13 +85,13 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         mHelpLiveo = new HelpLiveo();
         mHelpLiveo.add(getString(R.string.inbox), R.mipmap.ic_inbox_black_24dp, 100);
         mHelpLiveo.addSubHeader(getString(R.string.categories)); //Item subHeader
-        mHelpLiveo.add("Inicio", R.mipmap.ic_star_black_24dp);
+        mHelpLiveo.add("Inicio", R.drawable.ic_book_multiple_black_24dp);
         mHelpLiveo.add(getString(R.string.grades), R.mipmap.ic_send_black_24dp);
 
-        mHelpLiveo.add(getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
-        mHelpLiveo.add("Cadastrar " + getString(R.string.disciplines), R.mipmap.ic_drafts_black_24dp);
+        mHelpLiveo.add(getString(R.string.disciplines), R.drawable.ic_book_black_24dp);
+        mHelpLiveo.add("Cadastrar " + getString(R.string.disciplines), R.drawable.ic_book_plus_black_24dp);
         mHelpLiveo.addSeparator(); // Item separator
-        mHelpLiveo.add(getString(R.string.myProfile), R.mipmap.ic_delete_black_24dp);
+        mHelpLiveo.add(getString(R.string.myProfile), R.drawable.ic_account_black_24dp);
         //mHelpLiveo.add(getString(R.string.spam), R.mipmap.ic_report_black_24dp, 120);
 
         with(this).startingPosition(2) //Starting position in the list
