@@ -3,6 +3,7 @@ package com.andreoid.EuAluno;
 
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ListaDeDisciplinas;
+import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ListaDeTurmas;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -26,4 +27,6 @@ public interface RequestInterface {
     Call<ListaDeDisciplinas> getDisciplinas(@Body ServerRequest request);
     @POST("TestePHP/")
     Call<ListaDeTopicos> getTopicos(@Body ServerRequest request);
+    @POST("TestePHP/")
+    Call<ListaDeReplies> getReplies(@Body ServerRequest request);
 }

@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +33,15 @@ import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.adapter.RecyclerAdapter;
 import com.andreoid.EuAluno.models.CardItemModel;
 import com.andreoid.EuAluno.models.ListaDeDisciplinas;
+import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
+import com.andreoid.EuAluno.models.ServerResponse;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -54,6 +60,7 @@ public class FabFragment extends Fragment {
 
     private List<CardItemModel> cardItems = new ArrayList();
     private List<ListaDeTopicos.Topicos> topicos;
+    private List<ListaDeReplies.Replies> replies;
     private ProfileActivity mainActivity;
     private SharedPreferences pref;
     private RecyclerView recyclerView;
@@ -126,6 +133,7 @@ public class FabFragment extends Fragment {
 
 
     private void setupRecyclerView(){
+
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setHasFixedSize(true);
 
@@ -217,18 +225,57 @@ public class FabFragment extends Fragment {
 
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(mainActivity, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.dialog_title));
+        builder.setTitle("Adicionar novo tópico");
         builder.setView(dialogView);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
+                    RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+                    ServerRequest request = new ServerRequest();
 
-                    String titleText = ((EditText) dialogView.findViewById(R.id.title_text_input))
-                            .getText().toString().trim();
-                    String contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
-                            .getText().toString().trim();
-                    addItem("-1",titleText, contentText,"Professor","Disciplina","Views");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date data = new Date();
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(data);
+                    Date data_atual = cal.getTime();
+                    String data_completa = dateFormat.format(data_atual);
+                    Log.i("data_completa", data_completa);
+                    EditText titleText = ((EditText) dialogView.findViewById(R.id.title_text_input));
+                    EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input));
+                    //EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
+                    request.setOperation("insertTopicos");
+                    request.setTopic_cat(getArguments().getString(Constants.TOPIC_CAT, ""));
+                    request.setTopic_date(data_completa);
+                    request.setTopic_subject(titleText.getText().toString().trim());
+                    request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
+                    request.setReply_content(contentText.getText().toString().trim());
+                    Call<ServerResponse> response = requestInterface.operation(request);
+                    response.enqueue(new Callback<ServerResponse>() {
+
+                        @Override
+                        public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                            System.out.println(response.body());
+                            ServerResponse resp = response.body();
+//
+
+
+                        }
+
+
+                        @Override
+                        public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                            System.out.println(call.request().body());
+
+                            Log.d(Constants.TAG, t.getMessage());
+
+
+                        }
+                    });
+
+
+
 
                 }
             }
