@@ -108,6 +108,7 @@ public class FabFragment extends Fragment {
 
 
             recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
+
         retrofit= new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)
@@ -131,7 +132,9 @@ public class FabFragment extends Fragment {
             getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
         recyclerAdapter = new RecyclerAdapter(cardItems);
+
         recyclerView.setAdapter(recyclerAdapter);
+
     }
 
     public void getTopicos(final String topic_cat){
@@ -159,7 +162,14 @@ public class FabFragment extends Fragment {
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());
                     for (int i = 0; i < topicos.size(); i++) {
-                        addItem(topicos.get(i).getTopic_subject(), "Professor(a): "+topicos.get(i).getNomeProfessor());
+                        addItem(
+                                topicos.get(i).getIdTopics(),
+                                topicos.get(i).getTopic_subject(),
+                                "Conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo",
+                                "Professor(a): "+topicos.get(i).getNomeProfessor(),
+                                topicos.get(i).getNomeDisciplina(),
+                                "1.486 Views"
+                        );
                     }
 
                 }
@@ -177,8 +187,8 @@ public class FabFragment extends Fragment {
 
 
 
-    public void addItem(String title,String content){
-        recyclerAdapter.cardItems.add(new CardItemModel(title, content));
+    public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views){
+        recyclerAdapter.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views));
         recyclerAdapter.notifyDataSetChanged();
     }
 
@@ -218,7 +228,7 @@ public class FabFragment extends Fragment {
                             .getText().toString().trim();
                     String contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
                             .getText().toString().trim();
-                    addItem(titleText, contentText);
+                    addItem("-1",titleText, contentText,"Professor","Disciplina","Views");
 
                 }
             }

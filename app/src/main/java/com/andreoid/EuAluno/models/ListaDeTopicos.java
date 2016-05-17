@@ -13,15 +13,18 @@ public class ListaDeTopicos {
         return topicos;
     }
     public class Topicos {
-        private String idTopics;
+        private String idtopics;
         private String topic_subject;
         private String topic_date;
         private String topic_cat;
         private String topic_by;
         private String nomeProfessor;
-
+        private String nomeDisciplina;
         public String getNomeProfessor() {
             return nomeProfessor;
+        }
+        public String getNomeDisciplina() {
+            return nomeDisciplina;
         }
 
         public void setNomeProfessor(String nomeProfessor) {
@@ -29,11 +32,11 @@ public class ListaDeTopicos {
         }
 
         public String getIdTopics() {
-            return idTopics;
+            return idtopics;
         }
 
         public void setIdTopics(String idTopics) {
-            this.idTopics = idTopics;
+            this.idtopics = idTopics;
         }
 
         public String getTopic_subject() {

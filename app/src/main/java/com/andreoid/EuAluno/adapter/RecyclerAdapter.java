@@ -1,6 +1,7 @@
 package com.andreoid.EuAluno.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,27 +21,49 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.cardItems = cardItems;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView content;
+        TextView professor;
+        TextView disciplina;
+        TextView views;
         public ViewHolder(View itemView) {
             super(itemView);
             this.title = (TextView)itemView.findViewById(R.id.card_title);
             this.content = (TextView)itemView.findViewById(R.id.card_content);
+            this.professor = (TextView)itemView.findViewById(R.id.card_professor);
+            this.disciplina = (TextView)itemView.findViewById(R.id.card_disciplina);
+            this.views = (TextView)itemView.findViewById(R.id.card_views);
+            itemView.findViewById(R.id.relativeLayout).setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            System.out.println(cardItems.get(getAdapterPosition()).idTopico);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item,parent,false);
+
         ViewHolder viewHolder = new ViewHolder(view);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.title.setText(cardItems.get(position).title);
         holder.content.setText(cardItems.get(position).content);
+        holder.professor.setText(cardItems.get(position).professor);
+        holder.disciplina.setText(cardItems.get(position).disciplina);
+        holder.views.setText(cardItems.get(position).views);
+        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("CLICADOOO\n"+position+"\n"+holder.title.getText());
+            }
+        });*/
     }
 
     @Override
