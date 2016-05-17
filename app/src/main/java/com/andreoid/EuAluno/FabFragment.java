@@ -62,8 +62,6 @@ public class FabFragment extends Fragment {
     private RecyclerAdapter recyclerAdapter;
     private View dialogView;
     Retrofit retrofit;
-    Bundle mBundle = new Bundle();
-    //private View thisView;
 
 
     public static FabFragment newInstance(String tipo,String text){
@@ -156,7 +154,7 @@ public class FabFragment extends Fragment {
 
                 @Override
                 public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
-                    System.out.println(response.body());
+
                     ListaDeTopicos ListaDeTopicos = response.body();
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());

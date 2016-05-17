@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -68,7 +69,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
     String acao;
     String idCursoSelected,idTurmaSelected;
     int onDisciplinas=0;
-
+    boolean isChecked=false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +78,21 @@ public class CadastrarDisciplinaFragment extends Fragment{
     }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.voltar).setVisible(true);
+
         if(onDisciplinas==1){
-            menu.findItem(R.id.selectAll).setVisible(true);
-            menu.findItem(R.id.deselectAll).setVisible(true);
+            menu.findItem(R.id.voltar).setVisible(true);
+            //menu.findItem(R.id.selectAll).setVisible(true);
+            //menu.findItem(R.id.deselectAll).setVisible(true);
+            menu.findItem(R.id.item2).setVisible(true);
+            menu.findItem(R.id.item2).getActionView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < nomes.length; i++) {
+                        listView.setItemChecked(i, !isChecked);
+                    }
+                    isChecked = !isChecked;
+                }
+            });
         }
         super.onPrepareOptionsMenu(menu);
 
@@ -96,15 +108,9 @@ public class CadastrarDisciplinaFragment extends Fragment{
                 loading(false);
                 relativeLay.setVisibility(View.GONE);
                 break;
-            case R.id.selectAll:
-                for (int i = 0; i < nomes.length; i++) {
-                    listView.setItemChecked(i, true);
-                }
-                break;
-            case R.id.deselectAll:
-                for (int i = 0; i < nomes.length; i++) {
-                    listView.setItemChecked(i, false);
-                }
+
+            case R.id.item2:
+
                 break;
         }
         return super.onOptionsItemSelected(item);
