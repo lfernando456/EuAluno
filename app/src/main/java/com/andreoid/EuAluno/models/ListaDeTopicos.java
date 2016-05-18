@@ -20,11 +20,16 @@ public class ListaDeTopicos {
         private String topic_by;
         private String nomeProfessor;
         private String nomeDisciplina;
+        private String content;
+
         public String getNomeProfessor() {
             return nomeProfessor;
         }
         public String getNomeDisciplina() {
             return nomeDisciplina;
+        }
+        public String getContent() {
+            return content;
         }
 
         public void setNomeProfessor(String nomeProfessor) {

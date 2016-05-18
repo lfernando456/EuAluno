@@ -173,7 +173,7 @@ public class FabFragment extends Fragment {
                         addItem(
                                 topicos.get(i).getIdTopics(),
                                 topicos.get(i).getTopic_subject(),
-                                "Conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo",
+                                topicos.get(i).getContent(),
                                 "Professor(a): "+topicos.get(i).getNomeProfessor(),
                                 topicos.get(i).getNomeDisciplina(),
                                 "1.486 Views"
@@ -234,19 +234,12 @@ public class FabFragment extends Fragment {
                     RequestInterface requestInterface = retrofit.create(RequestInterface.class);
                     ServerRequest request = new ServerRequest();
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                    Date data = new Date();
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(data);
-                    Date data_atual = cal.getTime();
-                    String data_completa = dateFormat.format(data_atual);
-                    Log.i("data_completa", data_completa);
                     EditText titleText = ((EditText) dialogView.findViewById(R.id.title_text_input));
                     EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input));
                     //EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
                     request.setOperation("insertTopicos");
                     request.setTopic_cat(getArguments().getString(Constants.TOPIC_CAT, ""));
-                    request.setTopic_date(data_completa);
+
                     request.setTopic_subject(titleText.getText().toString().trim());
                     request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
                     request.setReply_content(contentText.getText().toString().trim());
