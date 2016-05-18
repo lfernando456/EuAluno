@@ -20,6 +20,7 @@ import com.andreoid.EuAluno.models.ListaDeDisciplinas;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
 
+
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -167,7 +168,7 @@ public class DisciplinaFragment extends Fragment{
                         // Show Alert
 
 
-                        Fragment mFragment = FabFragment.newInstance(pref.getString(Constants.TIPO,""),disciplinas.get(position).getIdDisciplina());
+                        Fragment mFragment = FabFragment.newInstance(pref.getString(Constants.TIPO, ""), disciplinas.get(position).getIdDisciplina());
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.container, mFragment);
