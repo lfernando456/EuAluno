@@ -11,14 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
-import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
-import com.andreoid.EuAluno.models.CardItemTopicoModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ServerRequest;
 
@@ -38,7 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TopicosFragment extends Fragment {
+public class RepliesFragment extends Fragment {
 
     private List<CardItemReplyModel> cardItems = new ArrayList();
 
@@ -57,8 +53,8 @@ public class TopicosFragment extends Fragment {
     String[] feitoPor;
 
 
-    public static TopicosFragment newInstance(String tipo, String idTopico){
-        TopicosFragment mFragment = new TopicosFragment();
+    public static RepliesFragment newInstance(String tipo, String idTopico){
+        RepliesFragment mFragment = new RepliesFragment();
         Bundle mBundle = new Bundle();
 
         mBundle.putString(Constants.TIPO, tipo);
