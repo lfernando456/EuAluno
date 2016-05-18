@@ -2,21 +2,32 @@ package com.andreoid.EuAluno;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ServerRequest;
+import com.andreoid.EuAluno.models.ServerResponse;
 
 
 import java.util.ArrayList;
@@ -47,6 +58,7 @@ public class RepliesFragment extends Fragment {
     private List<ListaDeReplies.Replies> replies;
     private RecyclerAdapterReplies recyclerAdapterReplies;
     private View dialogView;
+
     Retrofit retrofit;
     String [] comentario;
     String [] conteudo;
@@ -79,17 +91,22 @@ public class RepliesFragment extends Fragment {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-
-        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
-
         retrofit= new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
+        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
 
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fabClick(view);
+            }
+        });
 
         setupRecyclerView();
 
@@ -114,6 +131,112 @@ public class RepliesFragment extends Fragment {
     public void removeItem(){
         recyclerAdapterReplies.cardItems.remove(recyclerAdapterReplies.cardItems.size() - 1);
         recyclerAdapterReplies.notifyDataSetChanged();
+    }
+    public void fabClick(View view){
+
+        setupDialog();
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(mainActivity, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle("Adicionar novo comentário");
+        builder.setView(dialogView);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (!isEmpty()) {
+                    RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+                    ServerRequest request = new ServerRequest();
+
+
+                    EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input));
+                    //EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
+                    request.setOperation("insertReplies");
+                    request.setReply_topic(getArguments().getString(Constants.IDTOPIC, ""));
+                    request.setReply_content(contentText.getText().toString().trim());
+                    request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
+                    Call<ServerResponse> response = requestInterface.operation(request);
+                    response.enqueue(new Callback<ServerResponse>() {
+
+                        @Override
+                        public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                            System.out.println(response.body());
+                            ServerResponse resp = response.body();
+//
+
+
+                        }
+
+
+                        @Override
+                        public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                            System.out.println(call.request().body());
+
+                            Log.d(Constants.TAG, t.getMessage());
+
+
+                        }
+                    });
+
+                }
+            }
+        });//second parameter used for onclicklistener
+        builder.setNegativeButton("Cancel", null);
+        //Show dialog and launch keyboard
+        builder.show().getWindow().setSoftInputMode(WindowManager.LayoutParams
+                .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+
+    }
+    private void setupDialog(){
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
+
+
+        final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
+
+
+        contentInputLayout.setErrorEnabled(true);
+
+
+        EditText contentInput = (EditText)dialogView.findViewById(R.id.content_text_input);
+
+
+        contentInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence == null || charSequence.toString().equals("")) {
+                    contentInputLayout.setError(getString(R.string.edittext_error));
+                } else {
+                    contentInputLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+    private boolean isEmpty(){
+
+        String contentText = ((EditText)dialogView.findViewById(R.id.content_text_input))
+                .getText().toString().trim();
+
+        if((contentText==null||contentText.equals(""))){
+            Snackbar.make(getView().findViewById(R.id.fab_coordinator_layout),
+                    getString(R.string.title_content_error), Snackbar.LENGTH_LONG).show();
+            return true;
+        }else
+        if(contentText==null||contentText.equals("")){
+            Snackbar.make(getView().findViewById(R.id.fab_coordinator_layout),
+                    getString(R.string.contenttext_error),Snackbar.LENGTH_LONG).show();
+            return true;
+        }
+        return false;
     }
     private void getReplies(final String reply_topic) {
 
