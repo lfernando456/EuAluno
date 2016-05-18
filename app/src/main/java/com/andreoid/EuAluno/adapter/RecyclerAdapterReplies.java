@@ -60,6 +60,9 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        if(position==0){
+            holder.itemView.findViewById(R.id.layDownload).setVisibility(View.VISIBLE);
+        }
         holder.author.setText(cardItems.get(position).author);
         holder.reply_content.setText(cardItems.get(position).reply_content);
         holder.data_reply.setText(cardItems.get(position).data_reply);
