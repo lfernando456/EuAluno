@@ -157,7 +157,7 @@ public class DisciplinaFragment extends Fragment{
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
 
-
+                //asdasdasdasdasd
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
