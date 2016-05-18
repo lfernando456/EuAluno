@@ -59,7 +59,6 @@
     <string name="fab_fragment_title">FAB</string>
 
 
-
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
 
@@ -74,4 +73,7 @@
     <string name="title_content_error">Titulo &#038; Conteúdo não pode estar vazio</string>
     <string name="text_success">Item adicionado</string>
     <string name="text_undo">DESFAZER</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -14,6 +14,7 @@ public class Constants {
     public static final String TOPIC_CAT = "topic_cat";
     public static final String NAME = "name";
     public static final String EMAIL = "email";
+    public static final String IDTOPIC = "idTopic";
     public static final String UNIQUE_ID = "unique_id";
     public static final String TAG = "EuAluno";
     public static final String IS_ALUNO = "0";

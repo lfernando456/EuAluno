@@ -165,10 +165,7 @@ public class DisciplinaFragment extends Fragment{
                         // ListView Clicked item value
                         String itemValue = (String) listView.getItemAtPosition(position);
                         // Show Alert
-                        Toast.makeText(getActivity(),
-                                "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
-                                .show();
-                        getActivity().setTitle(itemValue);
+
 
                         Fragment mFragment = FabFragment.newInstance(pref.getString(Constants.TIPO,""),disciplinas.get(position).getIdDisciplina());
 

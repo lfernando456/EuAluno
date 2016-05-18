@@ -1,5 +1,7 @@
 package com.andreoid.EuAluno.adapter;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.andreoid.EuAluno.Constants;
+import com.andreoid.EuAluno.FabFragment;
+import com.andreoid.EuAluno.ProfileActivity;
 import com.andreoid.EuAluno.R;
+import com.andreoid.EuAluno.TopicosFragment;
 import com.andreoid.EuAluno.models.CardItemModel;
 
 import java.util.List;
@@ -39,7 +45,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            System.out.println(cardItems.get(getAdapterPosition()).idTopico);
+            /**Fragment mFragment = TopicosFragment.newInstance(Constants.IDTOPIC);
+
+
+            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+            ft.replace(R.id.container, mFragment);
+            ft.commit();**/
         }
     }
 

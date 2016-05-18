@@ -140,7 +140,6 @@ public class FabFragment extends Fragment {
             getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
         recyclerAdapter = new RecyclerAdapter(cardItems);
-
         recyclerView.setAdapter(recyclerAdapter);
 
     }
@@ -348,6 +347,7 @@ public class FabFragment extends Fragment {
         }else if(titleText==null||titleText.equals("")){
             Snackbar.make(getView().findViewById(R.id.fab_coordinator_layout),
                     getString(R.string.titletext_error),Snackbar.LENGTH_LONG).show();
+
             return true;
         }else if(contentText==null||contentText.equals("")){
             Snackbar.make(getView().findViewById(R.id.fab_coordinator_layout),
