@@ -1,5 +1,6 @@
 package com.andreoid.EuAluno.adapter;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
 import com.andreoid.EuAluno.Constants;
 import com.andreoid.EuAluno.FabFragment;
 import com.andreoid.EuAluno.ProfileActivity;
 import com.andreoid.EuAluno.R;
+
 import com.andreoid.EuAluno.TopicosFragment;
 import com.andreoid.EuAluno.models.CardItemModel;
 
@@ -20,11 +23,12 @@ import java.util.List;
 
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-
+    private Context mContext;
     public List<CardItemModel> cardItems;
 
-    public RecyclerAdapter(List<CardItemModel> cardItems){
+    public RecyclerAdapter(List<CardItemModel> cardItems,Context context){
         this.cardItems = cardItems;
+        this.mContext=context;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -45,12 +49,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
         @Override
         public void onClick(View view) {
-            /**Fragment mFragment = TopicosFragment.newInstance(Constants.IDTOPIC);
+
+            Fragment mFragment = FabFragment.newInstance("0","-1");
 
 
-            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = ((ProfileActivity)mContext).getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.container, mFragment);
-            ft.commit();**/
+            ft.commit();
         }
     }
 

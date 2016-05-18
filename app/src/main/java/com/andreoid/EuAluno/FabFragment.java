@@ -139,7 +139,7 @@ public class FabFragment extends Fragment {
 
             getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
-        recyclerAdapter = new RecyclerAdapter(cardItems);
+        recyclerAdapter = new RecyclerAdapter(cardItems,getContext());
         recyclerView.setAdapter(recyclerAdapter);
 
     }

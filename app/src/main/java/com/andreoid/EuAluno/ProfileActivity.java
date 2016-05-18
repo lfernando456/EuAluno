@@ -120,7 +120,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         switch (position) {
             case 2:
-                mFragment = FabFragment.newInstance("0","-1");;
+                mFragment = FabFragment.newInstance("0","-1");
 
                 break;
             case 7:
@@ -401,6 +401,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         });
 
     }
+
 
 
 }
