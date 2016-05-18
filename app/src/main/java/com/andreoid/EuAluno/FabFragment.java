@@ -175,7 +175,8 @@ public class FabFragment extends Fragment {
                                 topicos.get(i).getContent(),
                                 "Professor(a): "+topicos.get(i).getNomeProfessor(),
                                 topicos.get(i).getNomeDisciplina(),
-                                "1.486 Views"
+                                "420",
+                                topicos.get(i).getTopic_replies_number()
                         );
                     }
 
@@ -194,8 +195,8 @@ public class FabFragment extends Fragment {
 
 
 
-    public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views){
-        recyclerAdapter.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views));
+    public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
+        recyclerAdapter.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views,replies_number));
         recyclerAdapter.notifyDataSetChanged();
     }
 

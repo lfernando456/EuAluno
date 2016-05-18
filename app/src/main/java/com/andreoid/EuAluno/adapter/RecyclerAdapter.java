@@ -37,6 +37,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView professor;
         TextView disciplina;
         TextView views;
+        TextView replies_number;
         public ViewHolder(View itemView) {
             super(itemView);
             this.title = (TextView)itemView.findViewById(R.id.card_title);
@@ -44,6 +45,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             this.professor = (TextView)itemView.findViewById(R.id.card_professor);
             this.disciplina = (TextView)itemView.findViewById(R.id.card_disciplina);
             this.views = (TextView)itemView.findViewById(R.id.card_views);
+            this.replies_number = (TextView)itemView.findViewById(R.id.card_replies_number);
             itemView.findViewById(R.id.relativeLayout).setOnClickListener(this);
         }
 
@@ -74,6 +76,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.professor.setText(cardItems.get(position).professor);
         holder.disciplina.setText(cardItems.get(position).disciplina);
         holder.views.setText(cardItems.get(position).views);
+        holder.replies_number.setText(cardItems.get(position).replies_number);
         /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

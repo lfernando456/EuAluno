@@ -21,6 +21,7 @@ public class ListaDeTopicos {
         private String nomeProfessor;
         private String nomeDisciplina;
         private String content;
+        private String topic_replies_number;
 
         public String getNomeProfessor() {
             return nomeProfessor;
@@ -30,6 +31,10 @@ public class ListaDeTopicos {
         }
         public String getContent() {
             return content;
+        }
+
+        public String getTopic_replies_number() {
+            return topic_replies_number;
         }
 
         public void setNomeProfessor(String nomeProfessor) {
