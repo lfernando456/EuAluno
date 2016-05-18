@@ -79,7 +79,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula."
-                        android:id="@+id/card_reply_content" />
+                        android:id="@+id/card_reply_content"
+                        android:textColor="#000000" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
