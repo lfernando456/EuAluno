@@ -8,17 +8,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.andreoid.EuAluno.R;
-import com.andreoid.EuAluno.models.CardItemModel;
+import com.andreoid.EuAluno.models.CardItemTopicoModel;
 
 import java.util.List;
 
 
 public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapterTopicos.ViewHolder> {
 
-    public List<CardItemModel> cardItems;
+    public List<CardItemTopicoModel> cardItems;
     private AdapterCallback mAdapterCallback;
 
-    public RecyclerAdapterTopicos(List<CardItemModel> cardItems, Context context){
+    public RecyclerAdapterTopicos(List<CardItemTopicoModel> cardItems, Context context){
         this.cardItems = cardItems;
 
         try {
@@ -75,7 +75,7 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
         /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("CLICADOOO\n"+position+"\n"+holder.title.getText());
+                System.out.println("CLICADOOO\n"+position+"\n"+holder.author.getText());
             }
         });*/
     }

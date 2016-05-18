@@ -24,7 +24,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
-import com.andreoid.EuAluno.models.CardItemModel;
+import com.andreoid.EuAluno.models.CardItemTopicoModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -48,7 +48,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FabFragment extends Fragment {
 
-    private List<CardItemModel> cardItems = new ArrayList();
+    private List<CardItemTopicoModel> cardItems = new ArrayList();
     private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeReplies.Replies> replies;
     private ProfileActivity mainActivity;
@@ -186,7 +186,7 @@ public class FabFragment extends Fragment {
 
 
     public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
-        recyclerAdapterTopicos.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views,replies_number));
+        recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico,title, content, professor, disciplina, views,replies_number));
         recyclerAdapterTopicos.notifyDataSetChanged();
     }
 

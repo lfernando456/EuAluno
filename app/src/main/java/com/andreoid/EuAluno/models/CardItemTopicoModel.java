@@ -1,6 +1,6 @@
 package com.andreoid.EuAluno.models;
 
-public class CardItemModel {
+public class CardItemTopicoModel {
     public String idTopico;
     public String title;
     public String content;
@@ -9,7 +9,7 @@ public class CardItemModel {
     public String views;
     public String replies_number;
 
-    public CardItemModel(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number) {
+    public CardItemTopicoModel(String idTopico, String title, String content, String professor, String disciplina, String views, String replies_number) {
         this.idTopico = idTopico;
         this.title = title;
         this.content = content;

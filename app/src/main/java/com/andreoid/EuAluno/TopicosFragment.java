@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
-import com.andreoid.EuAluno.models.CardItemModel;
+import com.andreoid.EuAluno.models.CardItemReplyModel;
+import com.andreoid.EuAluno.models.CardItemTopicoModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ServerRequest;
 
@@ -37,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class TopicosFragment extends Fragment {
 
-    private List<CardItemModel> cardItems = new ArrayList();
+    private List<CardItemReplyModel> cardItems = new ArrayList();
 
 
     private ProfileActivity mainActivity;
@@ -46,7 +49,7 @@ public class TopicosFragment extends Fragment {
     ListView listView ;
     private FloatingActionButton floatingActionButton;
     private List<ListaDeReplies.Replies> replies;
-    private RecyclerAdapterTopicos recyclerAdapterTopicos;
+    private RecyclerAdapterReplies recyclerAdapterReplies;
     private View dialogView;
     Retrofit retrofit;
     String [] comentario;
@@ -81,8 +84,8 @@ public class TopicosFragment extends Fragment {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        listView = (ListView) view.findViewById(R.id.listView22);
-        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
+
+        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
 
         retrofit= new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -90,11 +93,31 @@ public class TopicosFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        getReplies(getArguments().getString(Constants.IDTOPIC));
 
 
+        setupRecyclerView();
 
         return view;
+    }
+    private void setupRecyclerView(){
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
+        recyclerView.setHasFixedSize(true);
+
+        getReplies(getArguments().getString(Constants.IDTOPIC));
+
+        recyclerAdapterReplies= new RecyclerAdapterReplies(cardItems,getContext());
+        recyclerView.setAdapter(recyclerAdapterReplies);
+
+    }
+    public void addItem(String idReply, String author, String reply_content, String data_reply){
+        recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply));
+        recyclerAdapterReplies.notifyDataSetChanged();
+    }
+
+    public void removeItem(){
+        recyclerAdapterReplies.cardItems.remove(recyclerAdapterReplies.cardItems.size() - 1);
+        recyclerAdapterReplies.notifyDataSetChanged();
     }
     private void getReplies(final String reply_topic) {
 
@@ -113,28 +136,14 @@ public class TopicosFragment extends Fragment {
                 ListaDeReplies ListaDeReplies = response.body();
                 replies = ListaDeReplies.getReplies();
 
-                comentario = new String[replies.size()];
-                conteudo = new String[replies.size()];
-                feitoPor = new String[replies.size()];
+
                 for (int i = 0; i < replies.size(); i++) {
-                    conteudo[i] = replies.get(i).getReply_content();
-                    feitoPor[i] = replies.get(i).getAutorComentario();
-                    comentario[i] = "Autor: " + replies.get(i).getAutorComentario() + " Comentário: " + replies.get(i).getReply_content();
-                    System.out.println(comentario[i]);
+                    addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date());
+
+                    System.out.println(replies.get(i).getIdreplies());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, comentario);
 
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    }
-
-                });
-                listView.setVisibility(View.VISIBLE);
             }
 
             @Override

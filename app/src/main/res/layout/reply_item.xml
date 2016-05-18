@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="Andre"
-                    android:id="@+id/textView4"
+                    android:id="@+id/card_author"
                     android:layout_alignTop="@+id/imageView3"
                     android:layout_toRightOf="@+id/imageView3"
                     android:layout_toEndOf="@+id/imageView3"
@@ -56,11 +56,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Qua 18/05, 14:35"
-                    android:id="@+id/textView8"
+                    android:id="@+id/card_data_reply"
                     android:textColor="@android:color/darker_gray"
-                    android:layout_below="@+id/textView4"
-                    android:layout_toEndOf="@+id/textView4"
-                    android:layout_alignLeft="@+id/textView4"
+                    android:layout_below="@+id/card_author"
+                    android:layout_toEndOf="@+id/card_author"
+                    android:layout_alignLeft="@+id/card_author"
                     android:layout_marginTop="10dp" />
 
             </RelativeLayout>
@@ -79,7 +79,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula."
-                        android:id="@+id/textView9"
+                        android:id="@+id/card_reply_content"
                         android:textSize="12sp" />
                 </LinearLayout>
 

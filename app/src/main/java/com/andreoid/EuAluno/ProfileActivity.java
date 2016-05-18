@@ -63,8 +63,9 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        tipo = Integer.parseInt(pref.getString(Constants.TIPO, ""));
+
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+        tipo = Integer.parseInt(pref.getString(Constants.TIPO, ""));
         name=pref.getString(Constants.NAME, "");
         email=pref.getString(Constants.EMAIL, "");
         // User Information
