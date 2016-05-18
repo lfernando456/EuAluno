@@ -11,7 +11,7 @@ public class ServerRequest {
     private User user;
     private ListaDeDisciplinas listaDeDisciplinas;
     private String topic_subject,topic_date,topic_cat,reply_content;
-
+    private String reply_topic;
     private String unique_id;
     private String disciplina_idDisciplina;
 
@@ -24,7 +24,13 @@ public class ServerRequest {
     }
 
 
+    public String getReply_topic() {
+        return reply_topic;
+    }
 
+    public void setReply_topic(String reply_topic) {
+        this.reply_topic = reply_topic;
+    }
 
     public String getTopic_date() {
         return topic_date;

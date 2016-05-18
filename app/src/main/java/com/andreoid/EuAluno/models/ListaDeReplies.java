@@ -18,6 +18,15 @@ public class ListaDeReplies {
         private  String reply_date;
         private String reply_topic;
         private String reply_by;
+        private String autorComentario;
+
+        public String getAutorComentario() {
+            return autorComentario;
+        }
+
+        public void setAutorComentario(String autorComentario) {
+            this.autorComentario = autorComentario;
+        }
 
         public String getIdreplies() {
             return idreplies;

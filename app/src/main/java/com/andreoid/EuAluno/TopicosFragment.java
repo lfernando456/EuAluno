@@ -3,32 +3,23 @@ package com.andreoid.EuAluno;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.EditText;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapter;
 import com.andreoid.EuAluno.models.CardItemModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
-import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
-import com.andreoid.EuAluno.models.ServerResponse;
 
 
 import java.util.ArrayList;
@@ -49,16 +40,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TopicosFragment extends Fragment {
 
     private List<CardItemModel> cardItems = new ArrayList();
-    private List<ListaDeTopicos.Topicos> topicos;
-    private List<ListaDeReplies.Replies> replies;
+
+
     private ProfileActivity mainActivity;
     private SharedPreferences pref;
     private RecyclerView recyclerView;
-
+    ListView listView ;
     private FloatingActionButton floatingActionButton;
+    private List<ListaDeReplies.Replies> replies;
     private RecyclerAdapter recyclerAdapter;
     private View dialogView;
     Retrofit retrofit;
+    String [] comentario;
+    String [] conteudo;
+    String[] feitoPor;
 
 
     public static TopicosFragment newInstance(String tipo){
@@ -88,21 +83,7 @@ public class TopicosFragment extends Fragment {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
-
-        floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-        if(getArguments().getString(Constants.TIPO, "").equals(Constants.IS_ALUNO)){
-            floatingActionButton.setVisibility(View.INVISIBLE);
-        }
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-        //floatingActionButton.setVisibility(View.INVISIBLE);
-
-
+        listView = (ListView) view.findViewById(R.id.listView2);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
 
         retrofit= new Retrofit.Builder()
@@ -111,11 +92,61 @@ public class TopicosFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
+        getReplies("30");
 
 
 
         return view;
+    }
+    private void getReplies(final String reply_topic) {
+
+
+        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
+        final ServerRequest request = new ServerRequest();
+        request.setOperation("getReplies");
+        request.setReply_topic(reply_topic);
+        Call<ListaDeReplies> response = requestInterface.getReplies(request);
+
+        response.enqueue(new Callback<ListaDeReplies>() {
+
+            @Override
+            public void onResponse(Call<ListaDeReplies> call, Response<ListaDeReplies> response) {
+
+                ListaDeReplies ListaDeReplies = response.body();
+                replies = ListaDeReplies.getReplies();
+                comentario = new String[replies.size()];
+                conteudo =new String[replies.size()];
+                feitoPor = new String[replies.size()];
+                for (int i = 0; i < replies.size(); i++) {
+                    conteudo [i] = replies.get(i).getReply_content();
+                    feitoPor [i] = replies.get(i).getAutorComentario();
+                        comentario[i] = "Autor: "+replies.get(i).getAutorComentario()+ " Comentário: " +replies.get(i).getReply_content();;
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_list_item_1, android.R.id.text1, comentario);
+
+                listView.setAdapter(adapter);
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    }
+
+                });
+                listView.setVisibility(View.VISIBLE);
+            }
+            @Override
+            public void onFailure(Call<ListaDeReplies> call, Throwable t) {
+
+
+                // progress.setVisibility(View.INVISIBLE);
+//                Log.d(Constants.TAG, t.getLocalizedMessage());
+                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
+
+
     }
 
 }
