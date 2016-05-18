@@ -47,7 +47,7 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
             itemView.findViewById(R.id.relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idTopico);
+                    mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idTopico,cardItems.get(getAdapterPosition()).title);
 
                 }
             });
@@ -85,6 +85,6 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
         return cardItems.size();
     }
     public static interface AdapterCallback {
-        void onMethodCallback(String idTopico);
+        void onMethodCallback(String idTopico, String title);
     }
 }

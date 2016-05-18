@@ -17,11 +17,14 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
@@ -63,7 +66,7 @@ public class RepliesFragment extends Fragment {
     String [] comentario;
     String [] conteudo;
     String[] feitoPor;
-
+    ProgressBar progressBar;
 
     public static RepliesFragment newInstance(String tipo, String idTopico){
         RepliesFragment mFragment = new RepliesFragment();
@@ -100,16 +103,16 @@ public class RepliesFragment extends Fragment {
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
-
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 fabClick(view);
             }
         });
-
+        getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
-
+setHasOptionsMenu(true);
         return view;
     }
     private void setupRecyclerView(){
@@ -117,11 +120,31 @@ public class RepliesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setHasFixedSize(true);
 
-        getReplies(getArguments().getString(Constants.IDTOPIC));
+
 
         recyclerAdapterReplies= new RecyclerAdapterReplies(cardItems,getContext());
         recyclerView.setAdapter(recyclerAdapterReplies);
 
+    }
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+
+        menu.findItem(R.id.refresh).setVisible(true);
+
+
+        super.onPrepareOptionsMenu(menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                getReplies(getArguments().getString(Constants.IDTOPIC));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
     public void addItem(String idReply, String author, String reply_content, String data_reply){
         recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply));
@@ -162,7 +185,8 @@ public class RepliesFragment extends Fragment {
                             System.out.println(response.body());
                             ServerResponse resp = response.body();
 //
-
+                            Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            getReplies(getArguments().getString(Constants.IDTOPIC));
 
                         }
 
@@ -240,7 +264,7 @@ public class RepliesFragment extends Fragment {
     }
     private void getReplies(final String reply_topic) {
 
-
+        progressBar.setVisibility(View.VISIBLE);
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         final ServerRequest request = new ServerRequest();
         request.setOperation("getReplies");
@@ -255,11 +279,12 @@ public class RepliesFragment extends Fragment {
                 ListaDeReplies ListaDeReplies = response.body();
                 replies = ListaDeReplies.getReplies();
 
-
+                recyclerAdapterReplies.cardItems = new ArrayList<>();
                 for (int i = 0; i < replies.size(); i++) {
                     addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date());
 
                     System.out.println(replies.get(i).getIdreplies());
+                    progressBar.setVisibility(View.GONE);
                 }
 
 

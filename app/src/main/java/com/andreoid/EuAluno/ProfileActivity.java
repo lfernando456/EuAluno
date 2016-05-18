@@ -407,7 +407,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
     }
     @Override
-    public void onMethodCallback(String idTopico) {
+    public void onMethodCallback(String idTopico, String title) {
+        setTitle(title);
         Fragment mFragment = RepliesFragment.newInstance(tipo + "", idTopico);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();

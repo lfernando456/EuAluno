@@ -18,10 +18,13 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemTopicoModel;
@@ -59,7 +62,7 @@ public class FabFragment extends Fragment {
     private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
     Retrofit retrofit;
-
+ProgressBar progressBar;
 
     public static FabFragment newInstance(String tipo,String text){
         FabFragment mFragment = new FabFragment();
@@ -103,7 +106,7 @@ public class FabFragment extends Fragment {
         //floatingActionButton.setVisibility(View.INVISIBLE);
         fixFloatingActionButtonMargin();
 
-
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
             recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
 
         retrofit= new Retrofit.Builder()
@@ -113,13 +116,32 @@ public class FabFragment extends Fragment {
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-
+        getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
-
+setHasOptionsMenu(true);
         return view;
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
 
+
+            menu.findItem(R.id.refresh).setVisible(true);
+
+
+        super.onPrepareOptionsMenu(menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                getTopicos(getArguments().getString(Constants.TOPIC_CAT));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
     private void setupRecyclerView(){
@@ -127,7 +149,7 @@ public class FabFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         recyclerView.setHasFixedSize(true);
 
-            getTopicos(getArguments().getString(Constants.TOPIC_CAT));
+
 
         recyclerAdapterTopicos = new RecyclerAdapterTopicos(cardItems,getContext());
         recyclerView.setAdapter(recyclerAdapterTopicos);
@@ -135,6 +157,7 @@ public class FabFragment extends Fragment {
     }
 
     public void getTopicos(final String topic_cat){
+        progressBar.setVisibility(View.VISIBLE);
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -158,6 +181,7 @@ public class FabFragment extends Fragment {
                     ListaDeTopicos ListaDeTopicos = response.body();
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());
+                    recyclerAdapterTopicos.cardItems = new ArrayList<>();
                     for (int i = 0; i < topicos.size(); i++) {
                         addItem(
                                 topicos.get(i).getIdTopics(),
@@ -169,6 +193,7 @@ public class FabFragment extends Fragment {
                                 topicos.get(i).getTopic_replies_number()
                         );
                     }
+                    progressBar.setVisibility(View.GONE);
 
                 }
 
@@ -221,6 +246,7 @@ public class FabFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
+
                     RequestInterface requestInterface = retrofit.create(RequestInterface.class);
                     ServerRequest request = new ServerRequest();
 
@@ -241,7 +267,8 @@ public class FabFragment extends Fragment {
                             System.out.println(response.body());
                             ServerResponse resp = response.body();
 //
-
+                            Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_SHORT).show();
+                            getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
                         }
 

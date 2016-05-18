@@ -80,7 +80,9 @@
                 android:id="@+id/card_professor"
                 android:layout_below="@+id/linearLayout2"
                 android:layout_alignLeft="@+id/linearLayout2"
-                android:layout_alignStart="@+id/linearLayout2" />
+                android:layout_alignStart="@+id/linearLayout2"
+                android:layout_toLeftOf="@+id/textView6"
+                android:layout_toStartOf="@+id/textView6" />
 
             <TextView
                 android:layout_width="wrap_content"
