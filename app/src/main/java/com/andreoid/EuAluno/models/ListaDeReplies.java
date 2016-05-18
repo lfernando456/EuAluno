@@ -7,10 +7,10 @@ import java.util.List;
  * Created by luisf on 17/05/2016.
  */
 public class ListaDeReplies {
-    private List<Replies> topicos = new ArrayList<Replies>();
+    private List<Replies> replies = new ArrayList<Replies>();
 
     public List<Replies> getReplies() {
-        return topicos;
+        return replies;
     }
     public class Replies {
         private String idreplies;

@@ -2,12 +2,10 @@ package com.andreoid.EuAluno;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.andreoid.EuAluno.adapter.RecyclerAdapter;
+import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -48,7 +46,7 @@ public class TopicosFragment extends Fragment {
     ListView listView ;
     private FloatingActionButton floatingActionButton;
     private List<ListaDeReplies.Replies> replies;
-    private RecyclerAdapter recyclerAdapter;
+    private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
     Retrofit retrofit;
     String [] comentario;
@@ -56,12 +54,12 @@ public class TopicosFragment extends Fragment {
     String[] feitoPor;
 
 
-    public static TopicosFragment newInstance(String tipo){
+    public static TopicosFragment newInstance(String tipo, String idTopico){
         TopicosFragment mFragment = new TopicosFragment();
         Bundle mBundle = new Bundle();
 
         mBundle.putString(Constants.TIPO, tipo);
-
+        mBundle.putString(Constants.IDTOPIC,idTopico);
 
         mFragment.setArguments(mBundle);
         return mFragment;
@@ -83,7 +81,7 @@ public class TopicosFragment extends Fragment {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        listView = (ListView) view.findViewById(R.id.listView2);
+        listView = (ListView) view.findViewById(R.id.listView22);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
 
         retrofit= new Retrofit.Builder()
@@ -92,7 +90,7 @@ public class TopicosFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        getReplies("30");
+        getReplies(getArguments().getString(Constants.IDTOPIC));
 
 
 
@@ -114,13 +112,15 @@ public class TopicosFragment extends Fragment {
 
                 ListaDeReplies ListaDeReplies = response.body();
                 replies = ListaDeReplies.getReplies();
+
                 comentario = new String[replies.size()];
-                conteudo =new String[replies.size()];
+                conteudo = new String[replies.size()];
                 feitoPor = new String[replies.size()];
                 for (int i = 0; i < replies.size(); i++) {
-                    conteudo [i] = replies.get(i).getReply_content();
-                    feitoPor [i] = replies.get(i).getAutorComentario();
-                        comentario[i] = "Autor: "+replies.get(i).getAutorComentario()+ " Comentário: " +replies.get(i).getReply_content();;
+                    conteudo[i] = replies.get(i).getReply_content();
+                    feitoPor[i] = replies.get(i).getAutorComentario();
+                    comentario[i] = "Autor: " + replies.get(i).getAutorComentario() + " Comentário: " + replies.get(i).getReply_content();
+                    System.out.println(comentario[i]);
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
@@ -136,6 +136,7 @@ public class TopicosFragment extends Fragment {
                 });
                 listView.setVisibility(View.VISIBLE);
             }
+
             @Override
             public void onFailure(Call<ListaDeReplies> call, Throwable t) {
 

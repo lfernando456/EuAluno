@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ProfileActivity extends NavigationLiveo implements OnItemClickListener {
+public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterTopicos.AdapterCallback {
 
     //Textview to show currently logged in user
     private TextView textView;
@@ -48,6 +49,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
     Retrofit retrofit;
     private List<ListaDeCursos.Curso> cursos;
     int a;
+    int tipo;
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
@@ -61,7 +63,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
+        tipo = Integer.parseInt(pref.getString(Constants.TIPO, ""));
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         name=pref.getString(Constants.NAME, "");
         email=pref.getString(Constants.EMAIL, "");
@@ -74,10 +76,10 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
 
         if (pref.getBoolean("novoCadastro", false)) {
 
-            if (Integer.parseInt(pref.getString(Constants.TIPO, "")) == 0) {
+            if (tipo == 0) {
                 showConfigAlunoDialogAluno(pref.getString(Constants.UNIQUE_ID, ""));
             }
-            if (Integer.parseInt(pref.getString(Constants.TIPO, "")) == 1) {
+            if (tipo == 1) {
                 showConfigAlunoDialogProfessor(pref.getString(Constants.UNIQUE_ID, ""));
             }
         }
@@ -94,7 +96,7 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         mHelpLiveo.add(getString(R.string.myProfile), R.drawable.ic_account_black_24dp);
         //mHelpLiveo.add(getString(R.string.spam), R.mipmap.ic_report_black_24dp, 120);
 
-        with(this).startingPosition(2) //Starting position in the list
+        with(onItemClick).startingPosition(2) //Starting position in the list
                 .addAllHelpItem(mHelpLiveo.getHelp())
 
                 .colorItemSelected(R.color.nliveo_blue_colorPrimary)
@@ -113,43 +115,45 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
         verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
     }
 
-    @Override
-    public void onItemClick(int position) {
-        Fragment mFragment;
-        //FragmentManager mFragmentManager = getSupportFragmentManager();
+    private OnItemClickListener onItemClick = new OnItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+            Fragment mFragment;
+            //FragmentManager mFragmentManager = getSupportFragmentManager();
 
-        switch (position) {
-            case 2:
-                mFragment = FabFragment.newInstance("0","-1");
+            switch (position) {
+                case 2:
+                    mFragment = FabFragment.newInstance("0", "-1");
 
-                break;
-            case 7:
-                mFragment = new ProfileFragment();
-                break;
-            case 4:
-                mFragment = new DisciplinaFragment();
-                break;
-            case 5:
-                mFragment = new CadastrarDisciplinaFragment();
-                break;
-            case 66:
-                mFragment = new FabFragment();
-                break;
-            default:
-                mFragment = MainFragment.newInstance(position + "");
-                break;
+                    break;
+                case 7:
+                    mFragment = new ProfileFragment();
+                    break;
+                case 4:
+                    mFragment = new DisciplinaFragment();
+                    break;
+                case 5:
+                    mFragment = new CadastrarDisciplinaFragment();
+                    break;
+                case 66:
+                    mFragment = new FabFragment();
+                    break;
+                default:
+                    mFragment = MainFragment.newInstance(position + "");
+                    break;
+            }
+
+            if (mFragment != null) {
+                setTitle(mHelpLiveo.get(position).getName());
+
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.container, mFragment);
+                ft.commit();
+            }
+            if (position == 5) setElevationToolBar(0);
+            else setElevationToolBar(15);
         }
-
-        if (mFragment != null) {
-            setTitle(mHelpLiveo.get(position).getName());
-
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, mFragment);
-            ft.commit();
-        }
-        if(position==5)setElevationToolBar(0);
-        else setElevationToolBar(15);
-    }
+    };
 
     private OnPrepareOptionsMenuLiveo onPrepare = new OnPrepareOptionsMenuLiveo() {
         @Override
@@ -400,6 +404,14 @@ public class ProfileActivity extends NavigationLiveo implements OnItemClickListe
             }
         });
 
+    }
+    @Override
+    public void onMethodCallback(String idTopico) {
+        Fragment mFragment = TopicosFragment.newInstance(tipo+"",idTopico);
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.container, mFragment);
+        ft.commit();
     }
 
 

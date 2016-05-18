@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
-import com.andreoid.EuAluno.adapter.RecyclerAdapter;
+import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
@@ -56,7 +56,7 @@ public class FabFragment extends Fragment {
     private RecyclerView recyclerView;
 
     private FloatingActionButton floatingActionButton;
-    private RecyclerAdapter recyclerAdapter;
+    private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
     Retrofit retrofit;
 
@@ -129,8 +129,8 @@ public class FabFragment extends Fragment {
 
             getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
-        recyclerAdapter = new RecyclerAdapter(cardItems,getContext());
-        recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapterTopicos = new RecyclerAdapterTopicos(cardItems,getContext());
+        recyclerView.setAdapter(recyclerAdapterTopicos);
 
     }
 
@@ -186,13 +186,13 @@ public class FabFragment extends Fragment {
 
 
     public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
-        recyclerAdapter.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views,replies_number));
-        recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapterTopicos.cardItems.add(new CardItemModel(idTopico,title, content, professor, disciplina, views,replies_number));
+        recyclerAdapterTopicos.notifyDataSetChanged();
     }
 
     public void removeItem(){
-        recyclerAdapter.cardItems.remove(recyclerAdapter.cardItems.size() - 1);
-        recyclerAdapter.notifyDataSetChanged();
+        recyclerAdapterTopicos.cardItems.remove(recyclerAdapterTopicos.cardItems.size() - 1);
+        recyclerAdapterTopicos.notifyDataSetChanged();
     }
 
     public void fixFloatingActionButtonMargin(){

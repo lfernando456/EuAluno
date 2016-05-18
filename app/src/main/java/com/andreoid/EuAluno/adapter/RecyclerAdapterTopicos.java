@@ -1,66 +1,59 @@
 package com.andreoid.EuAluno.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-import com.andreoid.EuAluno.Constants;
-import com.andreoid.EuAluno.FabFragment;
-import com.andreoid.EuAluno.ProfileActivity;
 import com.andreoid.EuAluno.R;
-
-import com.andreoid.EuAluno.TopicosFragment;
 import com.andreoid.EuAluno.models.CardItemModel;
-import com.andreoid.EuAluno.models.ListaDeTopicos;
 
 import java.util.List;
 
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    private Context mContext;
-    public List<CardItemModel> cardItems;
+public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapterTopicos.ViewHolder> {
 
-    public RecyclerAdapter(List<CardItemModel> cardItems,Context context){
+    public List<CardItemModel> cardItems;
+    private AdapterCallback mAdapterCallback;
+
+    public RecyclerAdapterTopicos(List<CardItemModel> cardItems, Context context){
         this.cardItems = cardItems;
-        this.mContext=context;
+
+        try {
+            this.mAdapterCallback = ((AdapterCallback) context);
+        } catch (ClassCastException e) {
+            throw new ClassCastException("AdapterCallback não implementado.");
+        }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title;
         TextView content;
         TextView professor;
         TextView disciplina;
         TextView views;
         TextView replies_number;
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
+
             this.title = (TextView)itemView.findViewById(R.id.card_title);
             this.content = (TextView)itemView.findViewById(R.id.card_content);
             this.professor = (TextView)itemView.findViewById(R.id.card_professor);
             this.disciplina = (TextView)itemView.findViewById(R.id.card_disciplina);
             this.views = (TextView)itemView.findViewById(R.id.card_views);
             this.replies_number = (TextView)itemView.findViewById(R.id.card_replies_number);
-            itemView.findViewById(R.id.relativeLayout).setOnClickListener(this);
+            itemView.findViewById(R.id.relativeLayout).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idTopico);
+
+                }
+            });
         }
 
-        @Override
-        public void onClick(View view) {
 
-            Fragment mFragment = TopicosFragment.newInstance("0");
-
-
-            FragmentTransaction ft = ((ProfileActivity)mContext).getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.container, mFragment);
-            ft.commit();
-        }
     }
 
     @Override
@@ -90,5 +83,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     @Override
     public int getItemCount() {
         return cardItems.size();
+    }
+    public static interface AdapterCallback {
+        void onMethodCallback(String idTopico);
     }
 }
