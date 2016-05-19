@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -33,6 +34,7 @@ import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +75,7 @@ public class RepliesFragment extends Fragment {
         Bundle mBundle = new Bundle();
 
         mBundle.putString(Constants.TIPO, tipo);
-        mBundle.putString(Constants.IDTOPIC,idTopico);
+        mBundle.putString(Constants.IDTOPIC, idTopico);
 
         mFragment.setArguments(mBundle);
         return mFragment;
@@ -110,6 +112,7 @@ public class RepliesFragment extends Fragment {
                 fabClick(view);
             }
         });
+
         getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
 setHasOptionsMenu(true);
@@ -216,7 +219,19 @@ setHasOptionsMenu(true);
 
 
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
+        final Button btSend = (Button)dialogView.findViewById(R.id.buttonSendDoc);
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
+                    @Override public void fileSelected(final File file) {
+                        // do something with the file\
+                    }
+                    }).showDialog();
+
+            }
+        });
 
         contentInputLayout.setErrorEnabled(true);
 

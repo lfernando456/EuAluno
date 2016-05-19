@@ -2,6 +2,11 @@ package com.andreoid.EuAluno;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -13,13 +18,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
+
+import java.io.File;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +43,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private EditText et_old_password,et_new_password;
     private AlertDialog dialog;
     private ProgressBar progress;
+    private Button button;
+    ImageView iv;
+    private String encoded_string, image_name;
+    private Bitmap bitmap;
+    private File file;
+    private Uri file_uri;
+
 
 
     @Override
@@ -41,6 +57,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
         initViews(view);
+
         return view;
     }
 
@@ -49,8 +66,19 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NAME,""));
-        tv_email.setText(pref.getString(Constants.EMAIL,""));
-        tv_uid.setText(pref.getString(Constants.UNIQUE_ID,""));
+        tv_email.setText(pref.getString(Constants.EMAIL, ""));
+        tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));
+        button = (Button) view.findViewById(R.id.btn_sendImg);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                getFileUri();
+                i.putExtra(MediaStore.EXTRA_OUTPUT,"");
+                startActivityForResult(i, 10);
+            }
+        });
 
     }
 
@@ -92,22 +120,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String old_password = et_old_password.getText().toString();
-                    String new_password = et_new_password.getText().toString();
-                    if(!old_password.isEmpty() && !new_password.isEmpty()){
+            @Override
+            public void onClick(View v) {
+                String old_password = et_old_password.getText().toString();
+                String new_password = et_new_password.getText().toString();
+                if (!old_password.isEmpty() && !new_password.isEmpty()) {
 
-                        progress.setVisibility(View.VISIBLE);
-                        changePasswordProcess(pref.getString(Constants.EMAIL,""),old_password,new_password);
+                    progress.setVisibility(View.VISIBLE);
+                    changePasswordProcess(pref.getString(Constants.EMAIL, ""), old_password, new_password);
 
-                    }else {
+                } else {
 
-                        tv_message.setVisibility(View.VISIBLE);
-                        tv_message.setText("Campos vazios!");
-                    }
+                    tv_message.setVisibility(View.VISIBLE);
+                    tv_message.setText("Campos vazios!");
                 }
-            });
+            }
+        });
     }
 
     @Override
@@ -121,6 +149,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void getFileUri() {
+        image_name = "testing123.jpg";
+        file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                + File.separator + image_name
+        );
+
+        file_uri = Uri.fromFile(file);
+    }
 
     private void changePasswordProcess(String email,String old_password,String new_password){
 
