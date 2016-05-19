@@ -31,7 +31,9 @@
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignBottom="@+id/linearLayout2">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -78,13 +80,6 @@
                 android:layout_alignParentStart="true">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DISCIPLINA"
-                    android:id="@+id/card_disciplina"
-                    android:layout_alignEnd="@+id/card_content" />
-
-                <TextView
                     android:id="@+id/card_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -124,6 +119,16 @@
                     android:paddingTop="24dp" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="DISCIPLINA"
+                android:id="@+id/card_disciplina"
+                android:layout_alignEnd="@+id/card_content"
+                android:layout_gravity="right"
+                android:singleLine="false"
+                android:textAlignment="textEnd" />
 
         </RelativeLayout>
 
