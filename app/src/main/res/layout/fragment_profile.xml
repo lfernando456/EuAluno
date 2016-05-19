@@ -5,16 +5,19 @@
     android:layout_marginRight="40dp"
     android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:weightSum="1">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
         android:id="@+id/imageView3"
         android:src="@mipmap/ic_no_user"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.28" />
 
     <TextView
         android:id="@+id/tv_name"
@@ -51,14 +54,6 @@
         android:id="@+id/btn_logout"
         android:layout_marginTop="20dp"
         android:text="Logout"
-        android:background="@color/colorPrimary"
-        android:textColor="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/btn_sendImg"
-        android:layout_marginTop="20dp"
-        android:text="Foto Perfil"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:layout_width="match_parent"
