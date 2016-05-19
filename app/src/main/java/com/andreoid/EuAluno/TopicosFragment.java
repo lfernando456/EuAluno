@@ -50,7 +50,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FabFragment extends Fragment {
+public class TopicosFragment extends Fragment {
 
     private List<CardItemTopicoModel> cardItems = new ArrayList();
     private List<ListaDeTopicos.Topicos> topicos;
@@ -67,8 +67,8 @@ public class FabFragment extends Fragment {
     private SwipeRefreshLayout swipeContainer;
 
 
-    public static FabFragment newInstance(String tipo,String text){
-        FabFragment mFragment = new FabFragment();
+    public static TopicosFragment newInstance(String tipo,String text){
+        TopicosFragment mFragment = new TopicosFragment();
         Bundle mBundle = new Bundle();
             mBundle.putString(Constants.TOPIC_CAT, text);
             mBundle.putString(Constants.TIPO, tipo);
@@ -89,7 +89,7 @@ public class FabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_fab, container, false);
+        View view = inflater.inflate(R.layout.fragment_topicos, container, false);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
