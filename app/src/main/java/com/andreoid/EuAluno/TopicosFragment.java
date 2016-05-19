@@ -178,6 +178,7 @@ setHasOptionsMenu(true);
 
     public void getTopicos(final String topic_cat){
         progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -202,6 +203,7 @@ setHasOptionsMenu(true);
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());
                     recyclerAdapterTopicos.cardItems.clear();
+                    recyclerAdapterTopicos.notifyDataSetChanged();
                     for (int i = 0; i < topicos.size(); i++) {
                         addItem(
                                 topicos.get(i).getIdTopics(),
@@ -215,15 +217,19 @@ setHasOptionsMenu(true);
                     }
                     progressBar.setVisibility(View.GONE);
                     swipeContainer.setRefreshing(false);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setupRecyclerView();
 
                 }
 
                 @Override
                 public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
 
-                    // progress.setVisibility(View.INVISIBLE);
-//                Log.d(Constants.TAG, t.getLocalizedMessage());
-                    //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    swipeContainer.setRefreshing(false);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setupRecyclerView();
+                    Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
                 }
             });
 
@@ -310,7 +316,7 @@ setHasOptionsMenu(true);
 
                 }
             }
-        });//second parameter used for onclicklistener
+        });
         builder.setNegativeButton("Cancel", null);
         //Show dialog and launch keyboard
         builder.show().getWindow().setSoftInputMode(WindowManager.LayoutParams
@@ -319,7 +325,7 @@ setHasOptionsMenu(true);
     }
 
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout,null,false);
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout, new RecyclerView(recyclerView.getContext()));
 
         final TextInputLayout titleInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_title);
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);

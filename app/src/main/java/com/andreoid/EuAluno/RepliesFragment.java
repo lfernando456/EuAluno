@@ -232,7 +232,7 @@ setHasOptionsMenu(true);
 
     }
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,new RecyclerView(recyclerView.getContext()));
 
 
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
@@ -299,14 +299,17 @@ setHasOptionsMenu(true);
                 ListaDeReplies ListaDeReplies = response.body();
                 replies = ListaDeReplies.getReplies();
 
-                recyclerAdapterReplies.cardItems = new ArrayList<>();
+                recyclerAdapterReplies.cardItems.clear();
+                recyclerAdapterReplies.notifyDataSetChanged();
                 for (int i = 0; i < replies.size(); i++) {
                     addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date());
 
-                    System.out.println(replies.get(i).getIdreplies());
-                    progressBar.setVisibility(View.GONE);
-                    swipeContainer.setRefreshing(false);
+                    //System.out.println(replies.get(i).getIdreplies());
+
                 }
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+                setupRecyclerView();
 
 
             }
