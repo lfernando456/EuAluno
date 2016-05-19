@@ -103,14 +103,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:paddingBottom="24dp"
                     android:text="Conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo"
                     android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
                     android:layout_below="@+id/card_title"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:paddingTop="16dp" />
+                    android:paddingTop="16dp"
+                    android:visibility="gone" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -120,7 +120,8 @@
                     android:layout_below="@+id/linearLayout2"
                     android:layout_alignStart="@+id/linearLayout2"
                     android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_alignParentEnd="true"
+                    android:paddingTop="24dp" />
 
             </LinearLayout>
 
