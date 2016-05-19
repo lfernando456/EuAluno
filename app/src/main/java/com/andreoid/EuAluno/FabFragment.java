@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,9 @@ public class FabFragment extends Fragment {
     private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
     Retrofit retrofit;
-ProgressBar progressBar;
+    ProgressBar progressBar;
+    private SwipeRefreshLayout swipeContainer;
+
 
     public static FabFragment newInstance(String tipo,String text){
         FabFragment mFragment = new FabFragment();
@@ -107,8 +110,8 @@ ProgressBar progressBar;
         fixFloatingActionButtonMargin();
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-            recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
-
+        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         retrofit= new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)
@@ -118,7 +121,9 @@ ProgressBar progressBar;
 
         getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
+        setupSwipeRefresh();
 setHasOptionsMenu(true);
+
         return view;
     }
 
@@ -143,7 +148,22 @@ setHasOptionsMenu(true);
         return super.onOptionsItemSelected(item);
     }
 
+    private void setupSwipeRefresh(){
 
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                getTopicos(getArguments().getString(Constants.TOPIC_CAT));
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
+
+    }
     private void setupRecyclerView(){
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
@@ -181,7 +201,7 @@ setHasOptionsMenu(true);
                     ListaDeTopicos ListaDeTopicos = response.body();
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());
-                    recyclerAdapterTopicos.cardItems = new ArrayList<>();
+                    recyclerAdapterTopicos.cardItems.clear();
                     for (int i = 0; i < topicos.size(); i++) {
                         addItem(
                                 topicos.get(i).getIdTopics(),
@@ -194,6 +214,7 @@ setHasOptionsMenu(true);
                         );
                     }
                     progressBar.setVisibility(View.GONE);
+                    swipeContainer.setRefreshing(false);
 
                 }
 

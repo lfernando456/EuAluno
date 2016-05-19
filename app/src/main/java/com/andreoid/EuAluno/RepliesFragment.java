@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -67,6 +68,7 @@ public class RepliesFragment extends Fragment {
     String [] conteudo;
     String[] feitoPor;
     ProgressBar progressBar;
+    private SwipeRefreshLayout swipeContainer;
 
     public static RepliesFragment newInstance(String tipo, String idTopico){
         RepliesFragment mFragment = new RepliesFragment();
@@ -104,6 +106,7 @@ public class RepliesFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,6 +115,7 @@ public class RepliesFragment extends Fragment {
         });
         getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
+        setupSwipeRefresh();
 setHasOptionsMenu(true);
         return view;
     }
@@ -124,6 +128,22 @@ setHasOptionsMenu(true);
 
         recyclerAdapterReplies= new RecyclerAdapterReplies(cardItems,getContext());
         recyclerView.setAdapter(recyclerAdapterReplies);
+
+    }
+    private void setupSwipeRefresh(){
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                getReplies(getArguments().getString(Constants.IDTOPIC));
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
 
     }
     @Override
@@ -285,6 +305,7 @@ setHasOptionsMenu(true);
 
                     System.out.println(replies.get(i).getIdreplies());
                     progressBar.setVisibility(View.GONE);
+                    swipeContainer.setRefreshing(false);
                 }
 
 
