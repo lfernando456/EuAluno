@@ -124,7 +124,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
             switch (position) {
                 case 2:
-                    mFragment = FabFragment.newInstance("0", "-1");
+                    mFragment = TopicosFragment.newInstance("0", "-1");
 
                     break;
                 case 7:
@@ -137,7 +137,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                     mFragment = new CadastrarDisciplinaFragment();
                     break;
                 case 66:
-                    mFragment = new FabFragment();
+                    mFragment = new TopicosFragment();
                     break;
                 default:
                     mFragment = MainFragment.newInstance(position + "");

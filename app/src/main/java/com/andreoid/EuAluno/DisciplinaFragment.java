@@ -168,7 +168,7 @@ public class DisciplinaFragment extends Fragment{
                         // Show Alert
 
 
-                        Fragment mFragment = FabFragment.newInstance(pref.getString(Constants.TIPO, ""), disciplinas.get(position).getIdDisciplina());
+                        Fragment mFragment = TopicosFragment.newInstance(pref.getString(Constants.TIPO, ""), disciplinas.get(position).getIdDisciplina());
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.replace(R.id.container, mFragment);

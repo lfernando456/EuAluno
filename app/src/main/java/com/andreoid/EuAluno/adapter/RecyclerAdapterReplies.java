@@ -41,7 +41,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
                 @Override
                 public void onClick(View view) {
                    // mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idReply);
-                    System.out.println(cardItems.get(getAdapterPosition()).author);
+                    //System.out.println(cardItems.get(getAdapterPosition()).author);
 
                 }
             });
@@ -60,6 +60,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        System.out.println(position);
         if(position==0){
             holder.itemView.findViewById(R.id.layDownload).setVisibility(View.VISIBLE);
         }

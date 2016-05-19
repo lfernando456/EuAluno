@@ -10,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -69,6 +70,7 @@ public class RepliesFragment extends Fragment {
     String [] conteudo;
     String[] feitoPor;
     ProgressBar progressBar;
+    private SwipeRefreshLayout swipeContainer;
 
     public static RepliesFragment newInstance(String tipo, String idTopico){
         RepliesFragment mFragment = new RepliesFragment();
@@ -92,7 +94,7 @@ public class RepliesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_topicos, container, false);
+        View view = inflater.inflate(R.layout.fragment_replies, container, false);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -106,6 +108,7 @@ public class RepliesFragment extends Fragment {
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -115,6 +118,7 @@ public class RepliesFragment extends Fragment {
 
         getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
+        setupSwipeRefresh();
 setHasOptionsMenu(true);
         return view;
     }
@@ -127,6 +131,22 @@ setHasOptionsMenu(true);
 
         recyclerAdapterReplies= new RecyclerAdapterReplies(cardItems,getContext());
         recyclerView.setAdapter(recyclerAdapterReplies);
+
+    }
+    private void setupSwipeRefresh(){
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                getReplies(getArguments().getString(Constants.IDTOPIC));
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
 
     }
     @Override
@@ -215,7 +235,7 @@ setHasOptionsMenu(true);
 
     }
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,new RecyclerView(recyclerView.getContext()));
 
 
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
@@ -294,13 +314,17 @@ setHasOptionsMenu(true);
                 ListaDeReplies ListaDeReplies = response.body();
                 replies = ListaDeReplies.getReplies();
 
-                recyclerAdapterReplies.cardItems = new ArrayList<>();
+                recyclerAdapterReplies.cardItems.clear();
+                recyclerAdapterReplies.notifyDataSetChanged();
                 for (int i = 0; i < replies.size(); i++) {
                     addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date());
 
-                    System.out.println(replies.get(i).getIdreplies());
-                    progressBar.setVisibility(View.GONE);
+                    //System.out.println(replies.get(i).getIdreplies());
+
                 }
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+                setupRecyclerView();
 
 
             }

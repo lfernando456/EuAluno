@@ -28,20 +28,56 @@
             style="@style/Base.Widget.AppCompat.Button.Borderless">
 
             <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignBottom="@+id/linearLayout2">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView6"
+                    android:src="@drawable/ic_comment_outline_grey600_18dp"
+                    android:layout_marginRight="3dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="6"
+                    android:id="@+id/card_replies_number"
+                    android:layout_marginRight="3dp" />
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/nliveo_gray"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="2dp" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView7"
+                    android:textSize="12sp"
+                    android:src="@drawable/ic_eye_grey600_18dp"
+                    android:layout_marginRight="3dp"
+                    android:layout_marginLeft="3dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="420"
+                    android:id="@+id/card_views" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/linearLayout2"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DISCIPLINA"
-                    android:id="@+id/card_disciplina"
-                    android:layout_alignEnd="@+id/card_content"
-                    android:layout_gravity="right" />
 
                 <TextView
                     android:id="@+id/card_title"
@@ -62,70 +98,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    android:paddingBottom="24dp"
                     android:text="Conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo conteudo"
                     android:layout_alignParentRight="false"
                     android:layout_alignParentEnd="false"
                     android:layout_below="@+id/card_title"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
-                    android:paddingTop="16dp" />
+                    android:paddingTop="16dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Professor"
+                    android:id="@+id/card_professor"
+                    android:layout_below="@+id/linearLayout2"
+                    android:layout_alignStart="@+id/linearLayout2"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:paddingTop="24dp" />
 
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Professor"
-                android:id="@+id/card_professor"
-                android:layout_below="@+id/linearLayout2"
-                android:layout_alignLeft="@+id/linearLayout2"
-                android:layout_alignStart="@+id/linearLayout2"
-                android:layout_toLeftOf="@+id/textView6"
-                android:layout_toStartOf="@+id/textView6" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="420"
-                android:id="@+id/card_views"
+                android:text="DISCIPLINA"
+                android:id="@+id/card_disciplina"
+                android:layout_alignEnd="@+id/card_content"
                 android:layout_gravity="right"
-                android:layout_alignRight="@+id/linearLayout2"
-                android:layout_alignEnd="@+id/linearLayout2"
-                android:textIsSelectable="false"
-                android:textSize="12sp"
-                android:layout_alignTop="@+id/textView7" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="6"
-                android:id="@+id/card_replies_number"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_toRightOf="@+id/textView6"
-                android:layout_alignTop="@+id/textView6" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Respostas:"
-                android:id="@+id/textView6"
-                android:layout_below="@+id/linearLayout2"
-                android:layout_toLeftOf="@+id/card_views"
-                android:layout_toStartOf="@+id/card_views"
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Views:"
-                android:id="@+id/textView7"
-                android:layout_below="@+id/textView6"
-                android:layout_alignLeft="@+id/textView6"
-                android:layout_alignStart="@+id/textView6"
-                android:textSize="12sp" />
+                android:singleLine="false"
+                android:textAlignment="textEnd" />
 
         </RelativeLayout>
 

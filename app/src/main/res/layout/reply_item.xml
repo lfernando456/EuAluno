@@ -29,16 +29,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/relativeLayout"
-                style="@style/Base.Widget.AppCompat.Button.Borderless">
+                android:padding="12dp">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:id="@+id/imageView3"
                     android:src="@mipmap/ic_no_user"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true" />
+                    android:layout_alignParentStart="true"
+                    android:scaleType="fitXY"
+                    android:layout_marginRight="10dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -48,8 +50,7 @@
                     android:id="@+id/card_author"
                     android:layout_alignTop="@+id/imageView3"
                     android:layout_toEndOf="@+id/imageView3"
-                    android:layout_marginLeft="5dp"
-                    android:paddingTop="6dp" />
+                    android:layout_marginTop="3dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -60,8 +61,7 @@
                     android:layout_toEndOf="@+id/card_author"
                     android:layout_alignLeft="@+id/card_author"
                     android:layout_marginTop="10dp"
-                    android:layout_alignBottom="@+id/imageView3"
-                    android:paddingBottom="6dp" />
+                    android:layout_alignBottom="@+id/imageView3" />
 
             </RelativeLayout>
 
@@ -73,14 +73,18 @@
                     android:layout_below="@+id/relativeLayout"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:paddingBottom="16dp">
+                    android:paddingBottom="16dp"
+                    android:paddingTop="10dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula."
                         android:id="@+id/card_reply_content"
-                        android:textColor="#000000" />
+                        android:textColor="#000000"
+                        android:nestedScrollingEnabled="false"
+                        android:autoText="false"
+                        android:allowUndo="false" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"

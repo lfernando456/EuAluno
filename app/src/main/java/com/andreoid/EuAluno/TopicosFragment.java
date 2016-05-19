@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,7 +50,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FabFragment extends Fragment {
+public class TopicosFragment extends Fragment {
 
     private List<CardItemTopicoModel> cardItems = new ArrayList();
     private List<ListaDeTopicos.Topicos> topicos;
@@ -62,10 +63,12 @@ public class FabFragment extends Fragment {
     private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
     Retrofit retrofit;
-ProgressBar progressBar;
+    ProgressBar progressBar;
+    private SwipeRefreshLayout swipeContainer;
 
-    public static FabFragment newInstance(String tipo,String text){
-        FabFragment mFragment = new FabFragment();
+
+    public static TopicosFragment newInstance(String tipo,String text){
+        TopicosFragment mFragment = new TopicosFragment();
         Bundle mBundle = new Bundle();
             mBundle.putString(Constants.TOPIC_CAT, text);
             mBundle.putString(Constants.TIPO, tipo);
@@ -86,7 +89,7 @@ ProgressBar progressBar;
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_fab, container, false);
+        View view = inflater.inflate(R.layout.fragment_topicos, container, false);
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
@@ -107,8 +110,8 @@ ProgressBar progressBar;
         fixFloatingActionButtonMargin();
 
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-            recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
-
+        recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
         retrofit= new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)
@@ -118,7 +121,9 @@ ProgressBar progressBar;
 
         getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
+        setupSwipeRefresh();
 setHasOptionsMenu(true);
+
         return view;
     }
 
@@ -143,7 +148,22 @@ setHasOptionsMenu(true);
         return super.onOptionsItemSelected(item);
     }
 
+    private void setupSwipeRefresh(){
 
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                getTopicos(getArguments().getString(Constants.TOPIC_CAT));
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.colorPrimary);
+
+    }
     private void setupRecyclerView(){
 
         recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
@@ -158,6 +178,7 @@ setHasOptionsMenu(true);
 
     public void getTopicos(final String topic_cat){
         progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
         RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
@@ -181,7 +202,8 @@ setHasOptionsMenu(true);
                     ListaDeTopicos ListaDeTopicos = response.body();
                     topicos = ListaDeTopicos.getTopicos();
                     System.out.println(topicos.size());
-                    recyclerAdapterTopicos.cardItems = new ArrayList<>();
+                    recyclerAdapterTopicos.cardItems.clear();
+                    recyclerAdapterTopicos.notifyDataSetChanged();
                     for (int i = 0; i < topicos.size(); i++) {
                         addItem(
                                 topicos.get(i).getIdTopics(),
@@ -194,15 +216,20 @@ setHasOptionsMenu(true);
                         );
                     }
                     progressBar.setVisibility(View.GONE);
+                    swipeContainer.setRefreshing(false);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setupRecyclerView();
 
                 }
 
                 @Override
                 public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
 
-                    // progress.setVisibility(View.INVISIBLE);
-//                Log.d(Constants.TAG, t.getLocalizedMessage());
-                    //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                    swipeContainer.setRefreshing(false);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    setupRecyclerView();
+                    Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
                 }
             });
 
@@ -289,7 +316,7 @@ setHasOptionsMenu(true);
 
                 }
             }
-        });//second parameter used for onclicklistener
+        });
         builder.setNegativeButton("Cancel", null);
         //Show dialog and launch keyboard
         builder.show().getWindow().setSoftInputMode(WindowManager.LayoutParams
@@ -298,7 +325,7 @@ setHasOptionsMenu(true);
     }
 
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout,null,false);
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout, new RecyclerView(recyclerView.getContext()));
 
         final TextInputLayout titleInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_title);
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
