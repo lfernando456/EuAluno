@@ -2,10 +2,15 @@ package com.andreoid.EuAluno;
 
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -27,15 +32,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
 import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +70,8 @@ public class RepliesFragment extends Fragment {
     private List<ListaDeReplies.Replies> replies;
     private RecyclerAdapterReplies recyclerAdapterReplies;
     private View dialogView;
-
+    Button buttonSendDocs;
+    TextView path_tv;
     Retrofit retrofit;
     String [] comentario;
     String [] conteudo;
@@ -77,7 +84,7 @@ public class RepliesFragment extends Fragment {
         Bundle mBundle = new Bundle();
 
         mBundle.putString(Constants.TIPO, tipo);
-        mBundle.putString(Constants.IDTOPIC, idTopico);
+        mBundle.putString(Constants.IDTOPIC,idTopico);
 
         mFragment.setArguments(mBundle);
         return mFragment;
@@ -115,11 +122,10 @@ public class RepliesFragment extends Fragment {
                 fabClick(view);
             }
         });
-
         getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
         setupSwipeRefresh();
-setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         return view;
     }
     private void setupRecyclerView(){
@@ -235,24 +241,12 @@ setHasOptionsMenu(true);
 
     }
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,new RecyclerView(recyclerView.getContext()));
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
 
 
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
-        final Button btSend = (Button)dialogView.findViewById(R.id.buttonSendDoc);
-        btSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                new FileChooser(getActivity()).setFileListener(new FileChooser.FileSelectedListener() {
-                    @Override public void fileSelected(final File file) {
-                        // do something with the file\
-                    }
-                    }).showDialog();
-
-            }
-        });
-
+        buttonSendDocs = (Button)dialogView.findViewById(R.id.buttonSendDoc);
+        path_tv = (TextView)dialogView.findViewById(R.id.path_tv);
         contentInputLayout.setErrorEnabled(true);
 
 
@@ -277,6 +271,22 @@ setHasOptionsMenu(true);
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+
+        buttonSendDocs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), FilePickerActivity.class);
+
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+                i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+
+                i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+                startActivityForResult(i, 0);
             }
         });
     }
@@ -342,6 +352,14 @@ setHasOptionsMenu(true);
 
     }
 
-}
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            Uri uri = data.getData();
+            path_tv.setText(uri+"");
 
+        }
+    }
+
+}
 

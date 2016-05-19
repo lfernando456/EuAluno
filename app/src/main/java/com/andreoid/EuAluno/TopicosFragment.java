@@ -325,7 +325,7 @@ setHasOptionsMenu(true);
     }
 
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout, new RecyclerView(recyclerView.getContext()));
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
 
         final TextInputLayout titleInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_title);
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
