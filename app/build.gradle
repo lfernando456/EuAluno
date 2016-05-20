@@ -31,5 +31,5 @@ dependencies {
     compile 'br.com.liveo:navigationdrawer-material:2.5.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
     compile 'com.nononsenseapps:filepicker:2.5.2'
-    compile project(':PhotoUtil')
+
 }

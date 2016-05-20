@@ -2,25 +2,16 @@ package com.andreoid.EuAluno;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.net.Uri;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,16 +21,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
-import com.kosalgeek.android.photoutil.GalleryPhoto;
-import com.kosalgeek.android.photoutil.ImageLoader;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
+import br.liveo.ui.RoundedImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -54,7 +43,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private AlertDialog dialog;
     private ProgressBar progress;
     private Button btnSend;
-    private GalleryPhoto galleryPhoto;
     private ImageView ivImage;
     final int GALLERY_REQUEST = 2200;
     private String selectedImage;
@@ -66,9 +54,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         initViews(view);
         super.onCreate(savedInstanceState);
 
-        galleryPhoto = new GalleryPhoto(getContext());
-
-        ivImage = (ImageView)view.findViewById(R.id.imageView3);
+        ivImage = (RoundedImageView)view.findViewById(R.id.imageView3);
 
 
 
@@ -76,8 +62,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
-                Intent in = galleryPhoto.openGalleryIntent();
-                startActivityForResult(in, GALLERY_REQUEST);
+
+                Intent intent = new Intent();
+
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+
             }
         });
         return view;
@@ -87,47 +79,22 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
 
 
-            if (reqCode == GALLERY_REQUEST) {
-                galleryPhoto.setPhotoUri(data.getData());
-                String photoPath = galleryPhoto.getPath();
-                try {
-                    Bitmap bitmap = ImageLoader.init().from(photoPath).requestSize(512, 512).getBitmap();
 
-                    ivImage.setImageBitmap(getRoundedShape(bitmap));
-                    //ivImage.setImageBitmap(bitmap);
-                    selectedImage = photoPath;
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+        System.out.println(resCode);
+        if (reqCode == 1 && resCode == -1 && data != null && data.getData() != null) {
 
-}
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+
+                ivImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
-   public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-        // TODO Auto-generated method stub
 
-
-        int targetWidth = 450;
-        int targetHeight = 600;
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        Path path = new Path();
-        path.addCircle(((float) targetWidth) / 2,
-                ((float) targetHeight) / 2,
-                (Math.min(((float) targetWidth),
-                        ((float) targetHeight)) / 2),
-                Path.Direction.CCW);
-
-        canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
-                new Rect(0, 0, targetWidth,
-                        targetHeight), null);
-        return targetBitmap;
-    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
