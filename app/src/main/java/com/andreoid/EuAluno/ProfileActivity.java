@@ -60,6 +60,17 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         C2.setOnClickListener(listener);
         return this;
     }
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putString("TITLE", getTitle().toString());
+        savedInstanceState.putInt("POSITION", currentPosition);
+
+        super.onSaveInstanceState(savedInstanceState);
+    }
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+
+    }
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
@@ -137,6 +148,13 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
         verificadorAD(pref.getString(Constants.UNIQUE_ID, ""));
         setUserPhoto();
+        if (savedInstanceState != null) {
+            setTitle(savedInstanceState.getString("TITLE"));
+            currentPosition = savedInstanceState.getInt("POSITION");
+        } else {
+
+        }
+        if(currentPosition==5)setElevationToolBar(0);
     }
 
     private void setUserPhoto() {
@@ -179,11 +197,10 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 setTitle(mHelpLiveo.get(position).getName());
                 currentPosition = position;
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, mFragment).addToBackStack( "tag" );
+                ft.replace(R.id.container, mFragment).addToBackStack( getTitle().toString() );
                 ft.commit();
             }
-            if (position == 5) setElevationToolBar(0);
-            else setElevationToolBar(15);
+            if(position==5)setElevationToolBar(0);
         }
     };
 
@@ -443,16 +460,17 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         Fragment mFragment = RepliesFragment.newInstance(tipo + "", idTopico);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, mFragment).addToBackStack( "tag" ).commit();
+        ft.replace(R.id.container, mFragment).addToBackStack( title ).commit();
 
     }
     @Override
     public void onBackPressed(){
         if (getSupportFragmentManager().getBackStackEntryCount() == 1){
             finish();
-        }
-        else {
+        } else {
             super.onBackPressed();
+            int index = getSupportFragmentManager().getBackStackEntryCount()-1;
+            setTitle(getSupportFragmentManager().getBackStackEntryAt(index).getName());
         }
     }
 
