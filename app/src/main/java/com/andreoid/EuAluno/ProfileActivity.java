@@ -446,13 +446,14 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         ft.replace(R.id.container, mFragment).addToBackStack( "tag" ).commit();
 
     }
-    /*@Override
+    @Override
     public void onBackPressed(){
-        // code here to show dialog
-        if(currentPosition==0 || currentPosition==3 || currentPosition==4 || currentPosition==5 || currentPosition==7){
-
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
+            finish();
         }
-        super.onBackPressed();  // optional depending on your needs
-    }*/
+        else {
+            super.onBackPressed();
+        }
+    }
 
 }
