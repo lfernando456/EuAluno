@@ -22,6 +22,15 @@ public class ListaDeTopicos {
         private String nomeDisciplina;
         private String content;
         private String topic_replies_number;
+        private String topics_view_number;
+
+        public String getTopics_view_number() {
+            return topics_view_number;
+        }
+
+        public void setTopics_view_number(String topics_view_number) {
+            this.topics_view_number = topics_view_number;
+        }
 
         public String getNomeProfessor() {
             return nomeProfessor;

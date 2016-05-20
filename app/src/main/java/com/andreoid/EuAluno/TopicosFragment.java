@@ -211,7 +211,7 @@ setHasOptionsMenu(true);
                                 topicos.get(i).getContent(),
                                 "Professor(a): "+topicos.get(i).getNomeProfessor(),
                                 topicos.get(i).getNomeDisciplina(),
-                                "420",
+                                topicos.get(i).getTopics_view_number(),
                                 topicos.get(i).getTopic_replies_number()
                         );
                     }
@@ -234,19 +234,14 @@ setHasOptionsMenu(true);
             });
 
         }
-
-
-
     public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
         recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico,title, content, professor, disciplina, views,replies_number));
         recyclerAdapterTopicos.notifyDataSetChanged();
     }
-
     public void removeItem(){
         recyclerAdapterTopicos.cardItems.remove(recyclerAdapterTopicos.cardItems.size() - 1);
         recyclerAdapterTopicos.notifyDataSetChanged();
     }
-
     public void fixFloatingActionButtonMargin(){
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams)
@@ -256,7 +251,6 @@ setHasOptionsMenu(true);
             floatingActionButton.setLayoutParams(p);
         }
     }
-
     public static int dpToPx(Context context, float dp) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) ((dp * scale) + 0.5f);
@@ -323,7 +317,6 @@ setHasOptionsMenu(true);
                 .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
-
     private void setupDialog(){
         dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
 
@@ -378,7 +371,6 @@ setHasOptionsMenu(true);
             }
         });
     }
-
     private boolean isEmpty(){
         String titleText = ((EditText)dialogView.findViewById(R.id.title_text_input))
                 .getText().toString().trim();
