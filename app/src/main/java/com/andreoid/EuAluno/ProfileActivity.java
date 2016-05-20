@@ -6,15 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +29,7 @@ import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -100,10 +92,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         parent.addView(view, index);
 
         C2 = (ImageView) view.findViewById(R.id.userPhoto2);
-        Resources res = getResources();
-        Bitmap src = BitmapFactory.decodeResource(res, R.drawable.ic_no_user);
-        RoundedBitmapDrawable dr = getRoundedShape(res, src);
-        C2.setImageDrawable(dr);
+
+
 
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
         //this.userBackground.setImageResource(R.color.colorPrimary); Fundo do cabeçalho com a cor primaria
@@ -148,15 +138,21 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         //mList.setFitsSystemWindows(false);
         this.setElevationToolBar(15);
 
-        verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
+        verificadorAD(pref.getString(Constants.UNIQUE_ID, ""));
+        setUserPhoto();
     }
 
-        public static RoundedBitmapDrawable getRoundedShape(Resources res, Bitmap bitmap){
-            RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);
-            roundBitMap.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 1.25f);
-            roundBitMap.setAntiAlias(true);
-            return roundBitMap;
-        }
+    private void setUserPhoto() {
+        Context context = getApplicationContext();
+        Glide.with(context)
+                //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
+                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.ic_no_user)
+                //.transform(new CircleTransform(context))
+                .into(C2);
+    }
+
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {

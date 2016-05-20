@@ -5,23 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,10 +28,10 @@ import android.widget.TextView;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
+import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 
-import br.liveo.ui.RoundedImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -64,12 +56,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
         initViews(view);
         super.onCreate(savedInstanceState);
+        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+        ivImage = (ImageView)view.findViewById(R.id.userPhoto);
 
-        ivImage = (ImageView)view.findViewById(R.id.imageView3);
-        Resources res = getResources();
-        Bitmap src = BitmapFactory.decodeResource(res, R.drawable.ic_no_user);
-        RoundedBitmapDrawable dr = getRoundedShape(res, src);
-        ivImage.setImageDrawable(dr);
 
 
         ivImage.setOnClickListener(new View.OnClickListener() {
@@ -102,26 +91,30 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                ivImage.setImageDrawable(getRoundedShape(getResources(),bitmap));
+                ivImage.setImageBitmap(ImageUtils.getCircularBitmapImage(bitmap));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    public static RoundedBitmapDrawable getRoundedShape(Resources res, Bitmap bitmap){
-        RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);
-        roundBitMap.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 1.25f);
-        roundBitMap.setAntiAlias(true);
-        return roundBitMap;
-    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
-        pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+
         tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NAME,""));
         tv_email.setText(pref.getString(Constants.EMAIL,""));
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));
+        Context context = getContext();
+        Glide.with(context)
+                //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
+                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.ic_no_user)
+                //.transform(new CircleTransform(context))
+                .into(ivImage);
+
 
     }
 

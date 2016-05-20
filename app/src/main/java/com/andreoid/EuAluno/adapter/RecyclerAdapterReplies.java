@@ -1,17 +1,24 @@
 package com.andreoid.EuAluno.adapter;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andreoid.EuAluno.CircleTransform;
+import com.andreoid.EuAluno.Constants;
+import com.andreoid.EuAluno.ImageUtils;
 import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
 import com.andreoid.EuAluno.models.CardItemTopicoModel;
+import com.bumptech.glide.Glide;
 
 import java.util.List;
 
@@ -20,10 +27,10 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
 
     public List<CardItemReplyModel> cardItems;
     private AdapterCallback mAdapterCallback;
-
+    private Context mcontext;
     public RecyclerAdapterReplies(List<CardItemReplyModel> cardItems, Context context){
         this.cardItems = cardItems;
-
+        this.mcontext = context;
 
     }
 
@@ -32,6 +39,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
         TextView reply_content;
         TextView data_reply;
         RelativeLayout layDownload;
+        ImageView userPhoto;
         public ViewHolder(final View itemView) {
             super(itemView);
 
@@ -39,14 +47,16 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
             this.reply_content = (TextView)itemView.findViewById(R.id.card_reply_content);
             this.data_reply = (TextView)itemView.findViewById(R.id.card_data_reply);
             this.layDownload = (RelativeLayout) itemView.findViewById(R.id.layDownload);
+            this.userPhoto = (ImageView) itemView.findViewById(R.id.userPhoto);
             itemView.findViewById(R.id.card_author).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                   // mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idReply);
+                    // mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idReply);
                     //System.out.println(cardItems.get(getAdapterPosition()).author);
 
                 }
             });
+
         }
 
 
@@ -70,12 +80,14 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
         holder.reply_content.setText(cardItems.get(position).reply_content);
         holder.data_reply.setText(cardItems.get(position).data_reply);
 
-        /*holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("CLICADOOO\n"+position+"\n"+holder.author.getText());
-            }
-        });*/
+
+        Glide.with(mcontext)
+                //.load(Constants.BASE_URL+cardItems.get(position).unique_id)
+                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+                .placeholder(R.drawable.ic_no_user)
+                //.transform(new CircleTransform(context))
+                .into(holder.userPhoto);
+
     }
 
     @Override
