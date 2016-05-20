@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -17,6 +18,8 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,7 +100,10 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         parent.addView(view, index);
 
         C2 = (ImageView) view.findViewById(R.id.userPhoto2);
-        C2.setImageBitmap(getRoundedShape(BitmapFactory.decodeResource(getResources(),R.drawable.ic_no_user)));
+        Resources res = getResources();
+        Bitmap src = BitmapFactory.decodeResource(res, R.drawable.ic_no_user);
+        RoundedBitmapDrawable dr = getRoundedShape(res, src);
+        C2.setImageDrawable(dr);
 
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
         //this.userBackground.setImageResource(R.color.colorPrimary); Fundo do cabeçalho com a cor primaria
@@ -144,28 +150,12 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
         verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
     }
-    public Bitmap getRoundedShape(Bitmap bitmap) {
 
-            final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                    bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-            final Canvas canvas = new Canvas(output);
-
-            final int color = Color.RED;
-            final Paint paint = new Paint();
-            final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-            final RectF rectF = new RectF(rect);
-
-            paint.setAntiAlias(true);
-            canvas.drawARGB(0, 0, 0, 0);
-            paint.setColor(color);
-            canvas.drawOval(rectF, paint);
-
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-            canvas.drawBitmap(bitmap, rect, rect, paint);
-
-            bitmap.recycle();
-
-            return output;
+        public static RoundedBitmapDrawable getRoundedShape(Resources res, Bitmap bitmap){
+            RoundedBitmapDrawable roundBitMap = RoundedBitmapDrawableFactory.create(res, bitmap);
+            roundBitMap.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 1.25f);
+            roundBitMap.setAntiAlias(true);
+            return roundBitMap;
         }
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
