@@ -6,9 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -28,7 +25,7 @@ import android.widget.TextView;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
@@ -91,7 +88,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                ivImage.setImageBitmap(ImageUtils.getCircularBitmapImage(bitmap));
+                ivImage.setImageDrawable(ImageUtils.getRoundedShape(getResources(),bitmap));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -106,13 +103,14 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NAME,""));
         tv_email.setText(pref.getString(Constants.EMAIL,""));
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));
-        Context context = getContext();
-        Glide.with(context)
+
+        Picasso.with(this.getContext())
                 //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
                 .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
-                .thumbnail(0.1f)
+
                 .placeholder(R.drawable.ic_no_user)
-                //.transform(new CircleTransform(context))
+                .transform(new CircleTransform())
+
                 .into(ivImage);
 
 

@@ -1,26 +1,46 @@
 package com.andreoid.EuAluno;
 
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+
+import com.squareup.picasso.Transformation;
+
 /**
  * Created by André on 20/05/2016.
  */
-import android.content.Context;
-import android.graphics.Bitmap;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-public class CircleTransform extends BitmapTransformation {
-    Context context;
-    public CircleTransform(Context context) {
+public class CircleTransform implements Transformation {
+    @Override
+    public Bitmap transform(Bitmap source) {
+        int size = Math.min(source.getWidth(), source.getHeight());
 
-        super(context);
-        this.context = context;
+        int x = (source.getWidth() - size) / 2;
+        int y = (source.getHeight() - size) / 2;
+
+        Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+        if (squaredBitmap != source) {
+            source.recycle();
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint();
+        BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+        paint.setShader(shader);
+        paint.setAntiAlias(true);
+
+        float r = size/2f;
+        canvas.drawCircle(r, r, r, paint);
+
+        squaredBitmap.recycle();
+        return bitmap;
     }
+
     @Override
-    protected Bitmap transform(BitmapPool pool, Bitmap source, int outWidth, int outHeight) {
-        //return ImageUtils.getCircularBitmapImage(source);
-        return ImageUtils.getCircularBitmapImage(source);
-    }
-    @Override
-    public String getId() {
-        return getId();
+    public String key() {
+        return "circle";
     }
 }

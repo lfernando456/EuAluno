@@ -93,6 +93,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="gson-2.6.1" level="project" />
     <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="picasso-2.5.2" level="project" />
     <orderEntry type="library" exported="" name="navigationdrawer-material-2.5.1" level="project" />
     <orderEntry type="library" exported="" name="retrofit-2.0.0" level="project" />
     <orderEntry type="library" exported="" name="material-ripple-1.0.2" level="project" />

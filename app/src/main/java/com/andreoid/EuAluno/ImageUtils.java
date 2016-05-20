@@ -15,7 +15,7 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 public class ImageUtils {
     public static Bitmap getCircularBitmapImage(Bitmap bitmap) {
         final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+                bitmap.getHeight(), Bitmap.Config.RGB_565);
         final Canvas canvas = new Canvas(output);
 
         final int color = Color.RED;

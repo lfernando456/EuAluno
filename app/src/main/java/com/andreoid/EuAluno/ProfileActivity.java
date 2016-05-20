@@ -4,13 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +25,7 @@ import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -143,13 +139,13 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     }
 
     private void setUserPhoto() {
-        Context context = getApplicationContext();
-        Glide.with(context)
+        Picasso.with(this)
                 //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
                 .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
-                .thumbnail(0.1f)
+
                 .placeholder(R.drawable.ic_no_user)
-                //.transform(new CircleTransform(context))
+                .transform(new CircleTransform())
+
                 .into(C2);
     }
 
