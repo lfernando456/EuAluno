@@ -100,6 +100,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         C2.setImageBitmap(getRoundedShape(BitmapFactory.decodeResource(getResources(),R.drawable.ic_no_user)));
 
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
+        //this.userBackground.setImageResource(R.color.colorPrimary); Fundo do cabeçalho com a cor primaria
 
 
         if (pref.getBoolean("novoCadastro", false)) {

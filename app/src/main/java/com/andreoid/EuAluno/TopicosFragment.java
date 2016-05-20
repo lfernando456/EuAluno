@@ -228,7 +228,6 @@ setHasOptionsMenu(true);
                     progressBar.setVisibility(View.GONE);
                     swipeContainer.setRefreshing(false);
                     recyclerView.setVisibility(View.VISIBLE);
-                    setupRecyclerView();
                     Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
                 }
             });

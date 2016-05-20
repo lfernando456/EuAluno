@@ -314,6 +314,7 @@ public class RepliesFragment extends Fragment {
         final ServerRequest request = new ServerRequest();
         request.setOperation("getReplies");
         request.setReply_topic(reply_topic);
+        request.setUnique_id(pref.getString(Constants.UNIQUE_ID,""));
         Call<ListaDeReplies> response = requestInterface.getReplies(request);
 
         response.enqueue(new Callback<ListaDeReplies>() {
@@ -334,7 +335,6 @@ public class RepliesFragment extends Fragment {
                 }
                 progressBar.setVisibility(View.GONE);
                 swipeContainer.setRefreshing(false);
-                setupRecyclerView();
 
 
             }

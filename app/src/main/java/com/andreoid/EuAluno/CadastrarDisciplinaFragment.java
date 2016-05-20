@@ -105,7 +105,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
                 getCursos();
                 textView.setText("");
                 onDisciplinas=0;
-                loading(false);
+
                 relativeLay.setVisibility(View.GONE);
                 break;
 
