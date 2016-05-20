@@ -64,7 +64,7 @@
         android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/relativeLayout2"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <Button
             android:layout_width="fill_parent"
