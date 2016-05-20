@@ -68,7 +68,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
+                startActivityForResult(Intent.createChooser(intent, "Seleciona uma imagem"), 1);
 
             }
         });
@@ -77,10 +77,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int reqCode, int resCode, Intent data) {
 
-
-
-
-        System.out.println(resCode);
         if (reqCode == 1 && resCode == -1 && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -88,7 +84,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                ivImage.setImageDrawable(ImageUtils.getRoundedShape(getResources(),bitmap));
+                ivImage.setImageBitmap(CircleTransform.transformStatic(bitmap));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -178,6 +174,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_chg_password:
                 showDialog();
+                break;
+            case R.id.btn_logout:
+                getActivity();
                 break;
 
         }

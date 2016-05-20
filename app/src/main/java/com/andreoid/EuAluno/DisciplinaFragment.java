@@ -171,8 +171,8 @@ public class DisciplinaFragment extends Fragment{
                         Fragment mFragment = TopicosFragment.newInstance(pref.getString(Constants.TIPO, ""), disciplinas.get(position).getIdDisciplina());
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.container, mFragment);
-                        ft.commit();
+                        ft.replace(R.id.container, mFragment).addToBackStack( "tag" ).commit();
+
                         //getTopicos(disciplinas.get(position).getIdDisciplina());
 
 

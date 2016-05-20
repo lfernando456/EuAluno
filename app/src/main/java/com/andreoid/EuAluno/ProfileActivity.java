@@ -46,6 +46,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     //Textview to show currently logged in user
     private TextView textView;
     private HelpLiveo mHelpLiveo;
+    int currentPosition;
+    Fragment mFragment;
     private SharedPreferences pref;
     public String name;
     public String email;
@@ -152,16 +154,13 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Fragment mFragment;
-            //FragmentManager mFragmentManager = getSupportFragmentManager();
 
+            //FragmentManager mFragmentManager = getSupportFragmentManager();
+            if(mFragment!=null)mFragment.getFragmentManager().popBackStackImmediate();
+            mFragment=null;
             switch (position) {
                 case 2:
                     mFragment = TopicosFragment.newInstance("0", "-1");
-
-                    break;
-                case 7:
-                    mFragment = new ProfileFragment();
                     break;
                 case 4:
                     mFragment = new DisciplinaFragment();
@@ -169,19 +168,20 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 case 5:
                     mFragment = new CadastrarDisciplinaFragment();
                     break;
-                case 66:
-                    mFragment = new TopicosFragment();
+                case 7:
+                    mFragment = new ProfileFragment();
                     break;
                 default:
                     mFragment = MainFragment.newInstance(position + "");
+
                     break;
             }
 
             if (mFragment != null) {
                 setTitle(mHelpLiveo.get(position).getName());
-
+                currentPosition = position;
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, mFragment);
+                ft.replace(R.id.container, mFragment).addToBackStack("tag");
                 ft.commit();
             }
             if (position == 5) setElevationToolBar(0);
@@ -359,7 +359,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 Fragment mFragment = new CadastrarDisciplinaFragment();
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, mFragment);
+                ft.replace(R.id.container, mFragment).addToBackStack("tag");
                 ft.commit();
 
             }
@@ -389,7 +389,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 Fragment mFragment = new CadastrarDisciplinaFragment();
 
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, mFragment);
+                ft.replace(R.id.container, mFragment).addToBackStack("tag");
                 ft.commit();
             }
         });
@@ -445,10 +445,15 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         Fragment mFragment = RepliesFragment.newInstance(tipo + "", idTopico);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, mFragment);
-        ft.commit();
+        ft.replace(R.id.container, mFragment).addToBackStack( "tag" ).commit();
+
     }
-
-
+    @Override
+    public void onBackPressed(){
+        // code here to show dialog
+        if((currentPosition==0 || currentPosition==3 || currentPosition==4 || currentPosition==5 || currentPosition==7)&&mFragment.getFragmentManager().getBackStackEntryCount() == 1){
+            onItemClick.onItemClick(2);
+        }else super.onBackPressed();  // optional depending on your needs
+    }
 
 }
