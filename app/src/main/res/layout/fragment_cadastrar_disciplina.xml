@@ -60,15 +60,15 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/relativeLayout2"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <Button
-            android:layout_width="160dp"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text="@string/fish"
             android:id="@+id/bSalvar"
             android:visibility="visible"
@@ -78,7 +78,10 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary" />
 
         <View
             android:layout_width="match_parent"
