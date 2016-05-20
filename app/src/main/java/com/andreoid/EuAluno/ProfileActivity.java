@@ -4,6 +4,16 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,7 +23,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +62,12 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     private List<ListaDeCursos.Curso> cursos;
     int a;
     int tipo;
+    ImageView C2;
+    @Override
+    public NavigationLiveo setOnClickUser(View.OnClickListener listener){
+        C2.setOnClickListener(listener);
+        return this;
+    }
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
@@ -71,7 +89,16 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         // User Information
         this.userName.setText(name);
         this.userEmail.setText(email);
-        this.userPhoto.setImageResource(R.mipmap.ic_no_user);
+
+        ViewGroup parent = (ViewGroup) this.userPhoto.getParent();
+        int index = parent.indexOfChild(this.userPhoto);
+        parent.removeView(this.userPhoto);
+        View view = getLayoutInflater().inflate(R.layout.imageview, parent, false);
+        parent.addView(view, index);
+
+        C2 = (ImageView) view.findViewById(R.id.userPhoto2);
+        C2.setImageBitmap(getRoundedShape(BitmapFactory.decodeResource(getResources(),R.drawable.ic_no_user)));
+
         this.userBackground.setImageResource(R.drawable.ic_user_background_first);
 
 
@@ -104,6 +131,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 .colorNameSubHeader(R.color.nliveo_blue_colorPrimary)
                 .footerItem(R.string.settings, R.mipmap.ic_settings_black_24dp)
                 .setOnClickUser(onClickPhoto)
+
                 .setOnPrepareOptionsMenu(onPrepare)
                 .setOnClickFooter(onClickFooter)
 
@@ -115,7 +143,29 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
         verificadorAD(pref.getString(Constants.UNIQUE_ID,""));
     }
+    public Bitmap getRoundedShape(Bitmap bitmap) {
 
+            final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                    bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+            final Canvas canvas = new Canvas(output);
+
+            final int color = Color.RED;
+            final Paint paint = new Paint();
+            final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+            final RectF rectF = new RectF(rect);
+
+            paint.setAntiAlias(true);
+            canvas.drawARGB(0, 0, 0, 0);
+            paint.setColor(color);
+            canvas.drawOval(rectF, paint);
+
+            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+            canvas.drawBitmap(bitmap, rect, rect, paint);
+
+            bitmap.recycle();
+
+            return output;
+        }
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
