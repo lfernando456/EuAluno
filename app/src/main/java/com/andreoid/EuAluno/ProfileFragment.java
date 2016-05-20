@@ -176,7 +176,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 showDialog();
                 break;
             case R.id.btn_logout:
-                getActivity();
+                //getActivity();
                 break;
 
         }

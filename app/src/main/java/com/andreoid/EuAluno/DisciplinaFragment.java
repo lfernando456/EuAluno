@@ -171,7 +171,7 @@ public class DisciplinaFragment extends Fragment{
                         Fragment mFragment = TopicosFragment.newInstance(pref.getString(Constants.TIPO, ""), disciplinas.get(position).getIdDisciplina());
 
                         FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        ft.replace(R.id.container, mFragment).addToBackStack( "tag" ).commit();
+                        ft.replace(R.id.container, mFragment).addToBackStack("tag").commit();
 
                         //getTopicos(disciplinas.get(position).getIdDisciplina());
 
@@ -201,69 +201,6 @@ public class DisciplinaFragment extends Fragment{
     }
 
 
-    private void getTopicos (final String topic_cat) {
-        loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
-        ServerRequest request = new ServerRequest();
-        request.setOperation("getTopicos");
-        request.setTopic_cat(topic_cat);
-
-        Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
-
-        response.enqueue(new Callback<ListaDeTopicos>() {
-
-            @Override
-            public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
-                //System.out.println(response.body());
-                ListaDeTopicos ListaDeTopicos = response.body();
-                topicos = ListaDeTopicos.getTopicos();
-                String[] nomeTopicos = new String[ topicos.size()];
-                System.out.println(topicos.size());
-                for (int i = 0; i <  topicos.size(); i++) {
-
-                    nomeTopicos [i]=  topicos.get(i).getTopic_subject();
-                    System.out.println( nomeTopicos [i]);
-                }
-
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1,nomeTopicos);
-
-                // Assign adapter to ListView
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // ListView Clicked item index
-                        //disciplinas.get(position).getNome();
-                        // ListView Clicked item value
-                        String itemValue = (String) listView.getItemAtPosition(position);
-                        // Show Alert
-                        Toast.makeText(getActivity(),
-                                "Position: " + position + " ListItem: " + itemValue, Toast.LENGTH_SHORT)
-                                .show();
-                        //getTurmas(cursos.get(itemPosition).getIdCurso());
-
-                    }
-
-                });
-                loading(false);
-
-                //populateSpinner();
-                //
-                // System.out.println(resp.getCurso().getNome());
-            }
-
-            @Override
-            public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
-
-                loading(false);
-                // progress.setVisibility(View.INVISIBLE);
-//                Log.d(Constants.TAG, t.getLocalizedMessage());
-                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
-            }
-        });
-
-    }
     private void loading(boolean isLoading){
         if(isLoading){
             progressBar.setVisibility(View.VISIBLE);
