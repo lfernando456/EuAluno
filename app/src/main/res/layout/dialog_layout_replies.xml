@@ -24,7 +24,7 @@
 
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -38,10 +38,15 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/path_tv" />
+                android:layout_height="fill_parent"
+                android:id="@+id/path_tv"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/buttonSendDoc"
+                android:layout_toEndOf="@+id/buttonSendDoc" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </LinearLayout>
 

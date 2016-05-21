@@ -3,7 +3,7 @@
     <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
 
         android:id="@+id/userPhoto2"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_launcher"
         android:layout_width="@dimen/userPhoto_layout_width"
         android:layout_height="@dimen/userPhoto_layout_height"
         android:layout_alignParentStart="true"

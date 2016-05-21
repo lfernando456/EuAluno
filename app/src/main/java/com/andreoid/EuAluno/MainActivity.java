@@ -15,8 +15,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
+        //getWindow().setWindowAnimations(R.anim.fade_out);
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         initFragment();
     }
@@ -24,13 +27,17 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment(){
         if(pref.getBoolean(Constants.IS_LOGGED_IN,false)){
             //Starting login activity
+            setTheme(R.style.AppTheme);
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             finish();
+
             startActivity(intent);
         }else {
+            setTheme(R.style.AppTheme);
             Fragment fragment;
             fragment = new LoginFragment();
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
             ft.replace(R.id.fragment_frame, fragment);
             ft.commit();
         }

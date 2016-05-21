@@ -5,7 +5,8 @@
     android:id="@+id/fab_coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.andreoid.EuAluno.models.FabFragment">
+    tools:context="com.andreoid.EuAluno.models.FabFragment"
+    android:background="@android:color/white">
     <ProgressBar
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"

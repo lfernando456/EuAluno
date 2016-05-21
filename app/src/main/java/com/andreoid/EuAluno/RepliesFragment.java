@@ -88,7 +88,7 @@ public class RepliesFragment extends Fragment {
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
     private RequestInterface requestInterface;
-    private String hasAnexo = "0";
+    private int hasAnexo = 0;
     private Uri uri;
 
     public static RepliesFragment newInstance(String tipo, String idTopico){
@@ -201,7 +201,7 @@ public class RepliesFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
-                    if (hasAnexo.equals("1")) {
+                    if (hasAnexo==1) {
                         uploadAnexo();
                     } else {
                         insertReply(null);
@@ -415,8 +415,8 @@ public class RepliesFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
             uri = data.getData();
-            path_tv.setText(uri+"");
-            hasAnexo="1";
+            path_tv.setText(uri.getPath()+"");
+            hasAnexo=1;
 
         }
     }

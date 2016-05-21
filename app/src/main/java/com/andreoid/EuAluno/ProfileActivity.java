@@ -58,6 +58,11 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
     RequestInterface requestInterface;
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        super.onCreate(savedInstanceState);
+    }
+    @Override
     public NavigationLiveo setOnClickUser(View.OnClickListener listener){
         C2.setOnClickListener(listener);
         return this;
@@ -76,6 +81,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         requestInterface = RetroClient.getApiService();
 
 
@@ -165,6 +171,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     private OnItemClickListener onItemClick = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
+
             Fragment mFragment;
             //FragmentManager mFragmentManager = getSupportFragmentManager();
 
@@ -188,6 +195,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
             }
 
             if (mFragment != null) {
+                getSupportFragmentManager().popBackStack();
                 setTitle(mHelpLiveo.get(position).getName());
                 currentPosition = position;
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -457,7 +465,12 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     @Override
     public void onBackPressed(){
         if (getSupportFragmentManager().getBackStackEntryCount() == 1){
-            finish();
+            if(currentPosition==0||currentPosition==3||currentPosition==4||currentPosition==5||currentPosition==7){
+                onItemClick.onItemClick(2);
+                setCheckedItemNavigation(2,true);
+            }else {
+                finish();
+            }
         } else {
             super.onBackPressed();
             int index = getSupportFragmentManager().getBackStackEntryCount()-1;

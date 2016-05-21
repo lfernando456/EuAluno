@@ -106,11 +106,11 @@ context = getContext();
         if (reqCode == 1 && resCode == -1 && data != null && data.getData() != null) {
 
             uri = data.getData();
-
+            System.out.println(uri);
             //try {
                 //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                Picasso.with(getActivity()).load(uri).transform(new CircleTransform()).into(ivImage);
+                Picasso.with(getActivity()).load(uri.getPath()).transform(new CircleTransform()).into(ivImage);
             saveRelativeLayout.setVisibility(View.VISIBLE);
                 //ivImage.setImageBitmap(CircleTransform.transformStatic(bitmap));
             //} catch (IOException e) {
