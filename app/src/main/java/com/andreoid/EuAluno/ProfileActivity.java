@@ -60,6 +60,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         super.onCreate(savedInstanceState);
     }
     @Override
@@ -434,6 +435,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
                 } else {
                     a = 0;
                 }
+                setTheme(R.style.AppTheme);
                 //if (resp.getMessage() != null)
                 //Toast.makeText(, resp.getMessage(), Toast.LENGTH_LONG).show();
 
@@ -445,7 +447,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
                 System.out.println(call.request().body());
 
-                Log.d(Constants.TAG, t.getMessage());
+                Log.d(Constants.TAG, t.getLocalizedMessage());
+                setTheme(R.style.AppTheme);
                 //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
 
 

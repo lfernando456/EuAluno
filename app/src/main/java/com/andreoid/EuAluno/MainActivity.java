@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         setContentView(R.layout.activity_main);
         //getWindow().setWindowAnimations(R.anim.fade_out);
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private void initFragment(){
         if(pref.getBoolean(Constants.IS_LOGGED_IN,false)){
             //Starting login activity
-            setTheme(R.style.AppTheme);
+
             Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
             finish();
 
