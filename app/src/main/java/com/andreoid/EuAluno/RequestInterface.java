@@ -35,5 +35,6 @@ public interface RequestInterface {
     Call<ListaDeReplies> getReplies(@Body ServerRequest request);
     @Multipart
     @POST("TestePHP/upload.php")
-    Call<Result> uploadImage(@Part MultipartBody.Part file/*, @Part("result") Result result*/);
+    Call<ServerResponse> upload(@Part MultipartBody.Part file, @Part("request") ServerRequest request);
+    //Call<Result> upload(@Part MultipartBody.Part file/*, @Part("result") Result result*/);
 }

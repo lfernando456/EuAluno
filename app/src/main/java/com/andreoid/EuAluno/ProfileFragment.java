@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,17 +25,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.andreoid.EuAluno.models.Result;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
-import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -295,14 +291,14 @@ context = getContext();
             // MultipartBody.Part is used to send also the actual file name
             MultipartBody.Part body =
                     MultipartBody.Part.createFormData("uploaded_profile_picture", pref.getString(Constants.UNIQUE_ID, "")+".png", requestFile);
-            //ServerRequest request = new ServerRequest();
-            //request.setOperation("uploadPhoto");
+            ServerRequest request = new ServerRequest();
+            request.setOperation("uploadPhoto");
 
-            Call<Result> resultCall = requestInterface.uploadImage(body);
+            Call<ServerResponse> resultCall = requestInterface.upload(body, request);
 
-            resultCall.enqueue(new Callback<Result>() {
+            resultCall.enqueue(new Callback<ServerResponse>() {
                 @Override
-                public void onResponse(Call<Result> call, Response<Result> response) {
+                public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
                     progressDialog.dismiss();
                     System.out.println(response.body().getResult());
@@ -332,7 +328,7 @@ context = getContext();
                 }
 
                 @Override
-                public void onFailure(Call<Result> call, Throwable t) {
+                public void onFailure(Call<ServerResponse> call, Throwable t) {
                     progressDialog.dismiss();
                 }
             });
