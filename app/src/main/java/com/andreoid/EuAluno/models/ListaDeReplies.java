@@ -20,6 +20,7 @@ public class ListaDeReplies {
         private String reply_by;
         private String autorComentario;
         private String unique_id;
+        private String anexo;
         public String getAutorComentario() {
             return autorComentario;
         }
@@ -70,6 +71,14 @@ public class ListaDeReplies {
 
         public String getUnique_id() {
             return unique_id;
+        }
+
+        public String getAnexo() {
+            return anexo;
+        }
+
+        public void setAnexo(String anexo) {
+            this.anexo = anexo;
         }
     }
 }

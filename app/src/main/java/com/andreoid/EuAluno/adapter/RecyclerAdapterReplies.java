@@ -36,6 +36,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
         TextView author;
         TextView reply_content;
         TextView data_reply;
+        TextView nomeAnexo;
         RelativeLayout layDownload;
         ImageView userPhoto;
 
@@ -47,7 +48,8 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
             this.data_reply = (TextView)itemView.findViewById(R.id.card_data_reply);
             this.layDownload = (RelativeLayout) itemView.findViewById(R.id.layDownload);
             this.userPhoto = (ImageView) itemView.findViewById(R.id.userPhoto);
-            itemView.findViewById(R.id.card_author).setOnClickListener(new View.OnClickListener() {
+            this.nomeAnexo = (TextView) itemView.findViewById(R.id.nomeAnexo);
+            itemView.findViewById(R.id.bt_anexo).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     // mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idReply);
@@ -72,8 +74,9 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         System.out.println(position);
-        if(position==0){
+        if(cardItems.get(position).anexo!=null){
             holder.layDownload.setVisibility(View.VISIBLE);
+            holder.nomeAnexo.setText(cardItems.get(position).anexo);
         }else holder.layDownload.setVisibility(View.GONE);
         holder.author.setText(cardItems.get(position).author);
         holder.reply_content.setText(cardItems.get(position).reply_content);

@@ -14,6 +14,8 @@ public class ServerRequest {
     private String reply_topic;
     private String unique_id;
     private String disciplina_idDisciplina;
+    private String has_anexo;
+    private String anexo;
 
     public String getReply_content() {
         return reply_content;
@@ -78,4 +80,15 @@ public class ServerRequest {
         this.user = user;
     }
 
+    public String getHas_anexo() {
+        return has_anexo;
+    }
+
+    public void setHas_anexo(String has_anexo) {
+        this.has_anexo = has_anexo;
+    }
+
+    public void setAnexo(String anexo) {
+        this.anexo = anexo;
+    }
 }

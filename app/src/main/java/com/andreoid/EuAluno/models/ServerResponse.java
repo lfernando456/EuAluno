@@ -9,6 +9,7 @@ public class ServerResponse {
     private User user;
     private ListaDeCursos cursos;
     private ListaDeDisciplinas listaDeDisciplinas;
+    private String name;
 
     public String getResult() {
         return result;
@@ -32,5 +33,9 @@ public class ServerResponse {
 
     public ListaDeDisciplinas getListaDeDisciplinas() {
         return listaDeDisciplinas;
+    }
+
+    public String getName() {
+        return name;
     }
 }
