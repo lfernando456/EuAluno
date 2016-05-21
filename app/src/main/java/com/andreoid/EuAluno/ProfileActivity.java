@@ -153,7 +153,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
     public void setUserPhoto() {
         Picasso.with(this)
-                .load(Constants.BASE_URL+"TestePHP/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
+                .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
                 //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
 
                 .placeholder(R.drawable.ic_no_user)

@@ -81,7 +81,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
 
 
         Picasso.with(mcontext)
-                .load(Constants.BASE_URL+"TestePHP/"+cardItems.get(position).unique_id+".png")
+                .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+cardItems.get(position).unique_id+".png")
                         //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
 
                 .placeholder(R.drawable.ic_no_user)
