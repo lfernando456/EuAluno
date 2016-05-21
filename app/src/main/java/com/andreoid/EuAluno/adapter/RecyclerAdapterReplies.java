@@ -1,6 +1,7 @@
 package com.andreoid.EuAluno.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.andreoid.EuAluno.CircleTransform;
+import com.andreoid.EuAluno.Constants;
 import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
 import com.squareup.picasso.Picasso;
@@ -22,9 +24,11 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
     public List<CardItemReplyModel> cardItems;
     private AdapterCallback mAdapterCallback;
     private Context mcontext;
+    private SharedPreferences pref;
     public RecyclerAdapterReplies(List<CardItemReplyModel> cardItems, Context context){
         this.cardItems = cardItems;
         this.mcontext = context;
+        pref = context.getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
     }
 
@@ -34,6 +38,7 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
         TextView data_reply;
         RelativeLayout layDownload;
         ImageView userPhoto;
+
         public ViewHolder(final View itemView) {
             super(itemView);
 
@@ -76,8 +81,8 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
 
 
         Picasso.with(mcontext)
-                //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
-                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+                .load(Constants.BASE_URL+"TestePHP/"+cardItems.get(position).unique_id+".png")
+                        //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
 
                 .placeholder(R.drawable.ic_no_user)
                 .transform(new CircleTransform())

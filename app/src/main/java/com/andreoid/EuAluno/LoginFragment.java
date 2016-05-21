@@ -35,6 +35,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private TextView tv_register;
     private ProgressBar progress;
     private SharedPreferences pref;
+    private RequestInterface requestInterface;
 
 
     @Override
@@ -43,6 +44,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_login,container,false);
         initViews(view);
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+        requestInterface = RetroClient.getApiService();
+
 
         et_email.setText(pref.getString(Constants.EMAIL,""));
         return view;
@@ -89,18 +92,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }
     }
     private void loginProcess(String email,String password){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setEmail(email);

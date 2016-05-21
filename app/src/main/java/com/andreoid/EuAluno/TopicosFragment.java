@@ -65,6 +65,7 @@ public class TopicosFragment extends Fragment {
     Retrofit retrofit;
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
+    private RequestInterface requestInterface;
 
 
     public static TopicosFragment newInstance(String tipo,String text){
@@ -90,9 +91,7 @@ public class TopicosFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topicos, container, false);
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        requestInterface = RetroClient.getApiService();
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
@@ -112,12 +111,6 @@ public class TopicosFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        retrofit= new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
@@ -180,7 +173,6 @@ setHasOptionsMenu(true);
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
 
         if(getArguments().getString(Constants.TOPIC_CAT, "").equals("-1")){
@@ -267,7 +259,6 @@ setHasOptionsMenu(true);
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
 
-                    RequestInterface requestInterface = retrofit.create(RequestInterface.class);
                     ServerRequest request = new ServerRequest();
 
                     EditText titleText = ((EditText) dialogView.findViewById(R.id.title_text_input));

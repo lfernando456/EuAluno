@@ -46,13 +46,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CadastrarDisciplinaFragment extends Fragment{
     private List<ListaDeDisciplinas.Disciplina> disciplinas;
-    private List<ListaDeTopicos.Topicos> topicos;
     private List<ListaDeCursos.Curso> cursos;
     private List<ListaDeTurmas.Turma> turmas;
 
     Button btn_concluir;
 
-    Retrofit retrofit;
     ListView listView ;
     RelativeLayout relativeLay;
     ProgressBar progressBar;
@@ -61,15 +59,14 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
    private View view;
     String[] nomes;
-    String[] nomesTurmas;
-    String[] idCurso;
-    String[] idTurma;
-    String auxTurma;
+
     String unique_id;
-    String acao;
+
     String idCursoSelected,idTurmaSelected;
     int onDisciplinas=0;
     boolean isChecked=false;
+    private RequestInterface requestInterface;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,16 +114,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        retrofit= new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        requestInterface = RetroClient.getApiService();
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
@@ -182,7 +170,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
     }
     private void getCursos() {
         loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
        /* AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getActivity());
         alertDialogBuilder.setMessage("Você ainda não cadastrou suas disciplinas, por favor selecione-as a seguir");
@@ -239,7 +226,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
     }
     private void getTurmas(final String idCurso) {
         loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
 
 
@@ -307,7 +293,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
     private void getDisciplinas(final String turma) {
 
         loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinas");
         request.setTurma(turma);
@@ -374,7 +359,6 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
 
         loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ListaDeDisciplinas listaDeDisciplinas=new ListaDeDisciplinas();
         listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();

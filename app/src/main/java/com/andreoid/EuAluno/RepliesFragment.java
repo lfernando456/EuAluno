@@ -78,6 +78,7 @@ public class RepliesFragment extends Fragment {
     String[] feitoPor;
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
+    private RequestInterface requestInterface;
 
     public static RepliesFragment newInstance(String tipo, String idTopico){
         RepliesFragment mFragment = new RepliesFragment();
@@ -102,15 +103,8 @@ public class RepliesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_replies, container, false);
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        retrofit= new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        requestInterface = RetroClient.getApiService();
+
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -175,8 +169,8 @@ public class RepliesFragment extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void addItem(String idReply, String author, String reply_content, String data_reply){
-        recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply));
+    public void addItem(String idReply, String author, String reply_content, String data_reply,String unique_id){
+        recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply,unique_id));
         recyclerAdapterReplies.notifyDataSetChanged();
     }
 
@@ -196,7 +190,6 @@ public class RepliesFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
-                    RequestInterface requestInterface = retrofit.create(RequestInterface.class);
                     ServerRequest request = new ServerRequest();
 
 
@@ -310,7 +303,6 @@ public class RepliesFragment extends Fragment {
     private void getReplies(final String reply_topic) {
 
         progressBar.setVisibility(View.VISIBLE);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         final ServerRequest request = new ServerRequest();
         request.setOperation("getReplies");
         request.setReply_topic(reply_topic);
@@ -328,7 +320,7 @@ public class RepliesFragment extends Fragment {
                 recyclerAdapterReplies.cardItems.clear();
                 recyclerAdapterReplies.notifyDataSetChanged();
                 for (int i = 0; i < replies.size(); i++) {
-                    addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date());
+                    addItem(replies.get(i).getIdreplies(), replies.get(i).getAutorComentario(), replies.get(i).getReply_content(), replies.get(i).getReply_date(), replies.get(i).getUnique_id());
 
                     //System.out.println(replies.get(i).getIdreplies());
 

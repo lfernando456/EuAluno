@@ -6,11 +6,12 @@ public class CardItemReplyModel {
     public String author;
     public String reply_content;
     public String data_reply;
-    public CardItemReplyModel(String idReply, String author, String reply_content, String data_reply) {
+    public String unique_id;
+    public CardItemReplyModel(String idReply, String author, String reply_content, String data_reply,String unique_id) {
         this.idReply = idReply;
         this.author = author;
         this.reply_content = reply_content;
         this.data_reply = data_reply;
-
+        this.unique_id = unique_id;
     }
 }

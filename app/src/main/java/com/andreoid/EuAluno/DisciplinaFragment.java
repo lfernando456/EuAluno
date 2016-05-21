@@ -35,7 +35,6 @@ public class DisciplinaFragment extends Fragment{
     private List<ListaDeDisciplinas.Disciplina> disciplinas;
     private List<ListaDeTopicos.Topicos> topicos;
 
-    Retrofit retrofit;
     ListView listView ;
     ProgressBar progressBar;
     TextView textView;
@@ -45,7 +44,7 @@ public class DisciplinaFragment extends Fragment{
     String[] nomes;
     String[] nomesTurmas;
     String unique_id;
-
+    private RequestInterface requestInterface;
 
 
     @Override
@@ -72,16 +71,7 @@ public class DisciplinaFragment extends Fragment{
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        retrofit= new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        requestInterface = RetroClient.getApiService();
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 
@@ -125,7 +115,6 @@ public class DisciplinaFragment extends Fragment{
     private void getDisciplinasAP(final String unique_id) {
 
         loading(true);
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinasAP");
         request.setUnique_id(unique_id);

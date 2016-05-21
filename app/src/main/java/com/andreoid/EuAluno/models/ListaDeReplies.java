@@ -19,7 +19,7 @@ public class ListaDeReplies {
         private String reply_topic;
         private String reply_by;
         private String autorComentario;
-
+        private String unique_id;
         public String getAutorComentario() {
             return autorComentario;
         }
@@ -66,6 +66,10 @@ public class ListaDeReplies {
 
         public void setReply_by(String reply_by) {
             this.reply_by = reply_by;
+        }
+
+        public String getUnique_id() {
+            return unique_id;
         }
     }
 }

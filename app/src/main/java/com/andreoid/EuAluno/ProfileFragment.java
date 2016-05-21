@@ -1,10 +1,12 @@
 package com.andreoid.EuAluno;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,32 +22,46 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.andreoid.EuAluno.models.Result;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
+import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.Response;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private TextView tv_name,tv_email,tv_uid,tv_message;
     private SharedPreferences pref;
-    private AppCompatButton btn_change_password,btn_logout;
+    private Button btn_change_password,btn_logout,btn_savePhoto,btn_cancel;
+    private RelativeLayout saveRelativeLayout;
     private EditText et_old_password,et_new_password;
     private AlertDialog dialog;
     private ProgressBar progress;
-    private Button btnSend;
+
     private ImageView ivImage;
-    final int GALLERY_REQUEST = 2200;
-    private String selectedImage;
+    private RequestInterface requestInterface;
+    private Uri uri;
+    private String imagePath;
+    private Context context;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +71,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         ivImage = (ImageView)view.findViewById(R.id.userPhoto);
-
+        requestInterface = RetroClient.getApiService();
+context = getContext();
 
 
         ivImage.setOnClickListener(new View.OnClickListener() {
@@ -72,22 +89,37 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+        setCurrentPhoto();
         return view;
     }
+
+    private void setCurrentPhoto() {
+        Picasso.with(getActivity())
+                .load(Constants.BASE_URL+"TestePHP/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
+                        //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+
+                .placeholder(R.drawable.ic_no_user)
+                .transform(new CircleTransform())
+
+                .into(ivImage);
+    }
+
     @Override
     public void onActivityResult(int reqCode, int resCode, Intent data) {
 
         if (reqCode == 1 && resCode == -1 && data != null && data.getData() != null) {
 
-            Uri uri = data.getData();
+            uri = data.getData();
 
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+            //try {
+                //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                ivImage.setImageBitmap(CircleTransform.transformStatic(bitmap));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                Picasso.with(getActivity()).load(uri).transform(new CircleTransform()).into(ivImage);
+            saveRelativeLayout.setVisibility(View.VISIBLE);
+                //ivImage.setImageBitmap(CircleTransform.transformStatic(bitmap));
+            //} catch (IOException e) {
+                //e.printStackTrace();
+            //}
         }
     }
 
@@ -100,14 +132,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tv_email.setText(pref.getString(Constants.EMAIL,""));
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));
 
-        Picasso.with(this.getContext())
-                //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
-                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
 
-                .placeholder(R.drawable.ic_no_user)
-                .transform(new CircleTransform())
-
-                .into(ivImage);
 
 
     }
@@ -117,8 +142,13 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         tv_name = (TextView)view.findViewById(R.id.tv_name);
         tv_email = (TextView)view.findViewById(R.id.tv_email);
         tv_uid = (TextView)view.findViewById(R.id.tv_uid);
+        saveRelativeLayout = (RelativeLayout)view.findViewById(R.id.savePhotoLayout);
         btn_change_password = (AppCompatButton)view.findViewById(R.id.btn_chg_password);
         btn_logout = (AppCompatButton)view.findViewById(R.id.btn_logout);
+        btn_savePhoto = (Button) view.findViewById(R.id.savePhotoButton);
+        btn_cancel = (Button) view.findViewById(R.id.cancelSavePhotoButton);
+        btn_savePhoto.setOnClickListener(this);
+        btn_cancel.setOnClickListener(this);
         btn_change_password.setOnClickListener(this);
         btn_logout.setOnClickListener(this);
 
@@ -154,12 +184,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             public void onClick(View v) {
                 String old_password = et_old_password.getText().toString();
                 String new_password = et_new_password.getText().toString();
-                if(!old_password.isEmpty() && !new_password.isEmpty()){
+                if (!old_password.isEmpty() && !new_password.isEmpty()) {
 
                     progress.setVisibility(View.VISIBLE);
-                    changePasswordProcess(pref.getString(Constants.EMAIL,""),old_password,new_password);
+                    changePasswordProcess(pref.getString(Constants.EMAIL, ""), old_password, new_password);
 
-                }else {
+                } else {
 
                     tv_message.setVisibility(View.VISIBLE);
                     tv_message.setText("Campos vazios!");
@@ -178,19 +208,23 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             case R.id.btn_logout:
                 //getActivity();
                 break;
+            case R.id.savePhotoButton:
+                try {
+                    uploadPhoto(uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.cancelSavePhotoButton:
+                saveRelativeLayout.setVisibility(View.GONE);
+                setCurrentPhoto();
+                break;
 
         }
     }
 
 
     private void changePasswordProcess(String email,String old_password,String new_password){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setEmail(email);
@@ -231,6 +265,78 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             }
         });
+    }
+    private void uploadPhoto(Uri imagePath) throws IOException {
+
+        //if (imagePath!=null||imagePath!="") {
+
+            final ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(getActivity());
+            progressDialog.setMessage("Enviando imagem...");
+            progressDialog.show();
+
+            File file = new File(getActivity().getCacheDir(), pref.getString(Constants.UNIQUE_ID,""));
+            file.createNewFile();
+
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imagePath);
+            //bitmap.setHeight(50);
+            //bitmap.setWidth(50);
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0 , bos);
+            byte[] bitmapdata = bos.toByteArray();
+
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+            // MultipartBody.Part is used to send also the actual file name
+            MultipartBody.Part body =
+                    MultipartBody.Part.createFormData("uploaded_profile_picture", pref.getString(Constants.UNIQUE_ID, "")+".png", requestFile);
+            //ServerRequest request = new ServerRequest();
+            //request.setOperation("uploadPhoto");
+
+            Call<Result> resultCall = requestInterface.uploadImage(body);
+
+            resultCall.enqueue(new Callback<Result>() {
+                @Override
+                public void onResponse(Call<Result> call, Response<Result> response) {
+
+                    progressDialog.dismiss();
+                    System.out.println(response.body().getResult());
+                    if(response.isSuccessful()) {
+                        if (response.body().getResult().equals("success")) {
+                            Toast.makeText(getActivity(), "Upload feito com sucesso", Toast.LENGTH_LONG).show();
+                            saveRelativeLayout.setVisibility(View.GONE);
+
+                            PicassoTools.clearCache(Picasso.with(getActivity()));
+                            Picasso.with(getActivity())
+                                    .load(Constants.BASE_URL+"TestePHP/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
+                                            //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+
+                                    .placeholder(R.drawable.ic_no_user)
+                                    .transform(new CircleTransform())
+
+                                    .into((ImageView) getActivity().findViewById(R.id.userPhoto2));
+
+                        }
+                        else
+                            Toast.makeText(getActivity(), "Falha no upload", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Toast.makeText(getActivity(),"Falha no upload", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<Result> call, Throwable t) {
+                    progressDialog.dismiss();
+                }
+            });
+        //}
     }
 
 }

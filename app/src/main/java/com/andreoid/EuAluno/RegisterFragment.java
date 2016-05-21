@@ -33,12 +33,15 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
     private TextView tv_login;
     private ProgressBar progress;
     private String tipoUsuario="0";
+    private RequestInterface requestInterface;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_register,container,false);
         initViews(view);
+        requestInterface = RetroClient.getApiService();
+
         return view;
     }
 
@@ -106,18 +109,6 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
     }
 
     private void registerProcess(String name, String email,String password,String tipoUsuario){
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setName(name);

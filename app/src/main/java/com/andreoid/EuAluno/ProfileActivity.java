@@ -55,6 +55,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     int a;
     int tipo;
     ImageView C2;
+
+    RequestInterface requestInterface;
     @Override
     public NavigationLiveo setOnClickUser(View.OnClickListener listener){
         C2.setOnClickListener(listener);
@@ -74,16 +76,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        requestInterface = RetroClient.getApiService();
 
-        retrofit= new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         tipo = Integer.parseInt(pref.getString(Constants.TIPO, ""));
@@ -157,10 +151,10 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         if(currentPosition==5)setElevationToolBar(0);
     }
 
-    private void setUserPhoto() {
+    public void setUserPhoto() {
         Picasso.with(this)
-                //.load(Constants.BASE_URL+pref.getString(Constants.UNIQUE_ID, ""))
-                .load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
+                .load(Constants.BASE_URL+"TestePHP/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
+                //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
 
                 .placeholder(R.drawable.ic_no_user)
                 .transform(new CircleTransform())
@@ -281,7 +275,6 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     }
     private void registerAluno(String uniqueId, String matricula) {
 
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setUnique_id(uniqueId);
@@ -321,7 +314,6 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     }
     private void registerProfessor(String uniqueId, String siap) {
 
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
 
         User user = new User();
         user.setUnique_id(uniqueId);
@@ -415,7 +407,6 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
 
     private void verificadorAD(final String unique_id ){
 
-        RequestInterface requestInterface = retrofit.create(RequestInterface.class);
         ServerRequest request = new ServerRequest();
         request.setOperation("verificadorD");
         request.setUnique_id(unique_id);
