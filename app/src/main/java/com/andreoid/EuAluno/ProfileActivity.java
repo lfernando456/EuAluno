@@ -75,8 +75,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     }
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-
-
+        setCheckedItemNavigation(savedInstanceState.getInt("POSITION"), true);
     }
     @Override
     public void onInt(Bundle savedInstanceState) {
@@ -151,6 +150,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
         if (savedInstanceState != null) {
             setTitle(savedInstanceState.getString("TITLE"));
             currentPosition = savedInstanceState.getInt("POSITION");
+            setCheckedItemNavigation(currentPosition,true);
         } else {
 
         }
@@ -464,18 +464,22 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     }
     @Override
     public void onBackPressed(){
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
-            if(currentPosition==0||currentPosition==3||currentPosition==4||currentPosition==5||currentPosition==7){
-                onItemClick.onItemClick(2);
-                setCheckedItemNavigation(2,true);
-            }else {
-                finish();
+        if(!isDrawerOpen()) {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                if (currentPosition == 0 || currentPosition == 3 || currentPosition == 4 || currentPosition == 5 || currentPosition == 7) {
+                    onItemClick.onItemClick(2);
+                    setCheckedItemNavigation(2, true);
+                    currentPosition=2;
+
+                } else {
+                    finish();
+                }
+            } else {
+                super.onBackPressed();
+                int index = getSupportFragmentManager().getBackStackEntryCount() - 1;
+                setTitle(getSupportFragmentManager().getBackStackEntryAt(index).getName());
             }
-        } else {
-            super.onBackPressed();
-            int index = getSupportFragmentManager().getBackStackEntryCount()-1;
-            setTitle(getSupportFragmentManager().getBackStackEntryAt(index).getName());
-        }
+        }else super.onBackPressed();
     }
 
 }
