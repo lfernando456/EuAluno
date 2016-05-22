@@ -21,38 +21,28 @@ import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.fragment.MainFragment;
-import com.andreoid.EuAluno.models.ListaDeCursos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 
-import java.util.List;
-
 import br.liveo.interfaces.OnItemClickListener;
 import br.liveo.interfaces.OnPrepareOptionsMenuLiveo;
 import br.liveo.model.HelpLiveo;
 import br.liveo.navigationliveo.NavigationLiveo;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterTopicos.AdapterCallback {
 
-    //Textview to show currently logged in user
-    private TextView textView;
+
     private HelpLiveo mHelpLiveo;
     int currentPosition;
     private SharedPreferences pref;
     public String name;
     public String email;
-    Retrofit retrofit;
-    private List<ListaDeCursos.Curso> cursos;
     int a;
     int tipo;
     ImageView C2;

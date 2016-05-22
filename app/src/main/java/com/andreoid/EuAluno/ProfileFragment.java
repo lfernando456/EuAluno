@@ -272,6 +272,7 @@ context = getContext();
             final ProgressDialog progressDialog;
             progressDialog = new ProgressDialog(getActivity());
             progressDialog.setMessage("Enviando imagem...");
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             File file = new File(getActivity().getCacheDir(), pref.getString(Constants.UNIQUE_ID,""));

@@ -1,14 +1,11 @@
 package com.andreoid.EuAluno;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -19,35 +16,28 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.andreoid.EuAluno.models.ListaDeCursos;
-import com.andreoid.EuAluno.models.ListaDeDisciplinas;
-import com.andreoid.EuAluno.models.ListaDeTopicos;
-import com.andreoid.EuAluno.models.ListaDeTurmas;
+import com.andreoid.EuAluno.models.Disciplina;
+import com.andreoid.EuAluno.models.Curso;
+import com.andreoid.EuAluno.models.Turma;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CadastrarDisciplinaFragment extends Fragment{
-    private List<ListaDeDisciplinas.Disciplina> disciplinas;
-    private List<ListaDeCursos.Curso> cursos;
-    private List<ListaDeTurmas.Turma> turmas;
+    private List<Disciplina> disciplinas;
+    private List<Curso> cursos;
+    private List<Turma> turmas;
 
     Button btn_concluir;
 
@@ -149,7 +139,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             public void onClick(View v) {
 
 
-                List<ListaDeDisciplinas.Disciplina> selectedItems = new ArrayList<>();
+                List<Disciplina> selectedItems = new ArrayList<>();
 
                 SparseBooleanArray checkedPositions = listView.getCheckedItemPositions();
                 for (int i = 0; i < listView.getCount(); i++) {
@@ -177,15 +167,14 @@ public class CadastrarDisciplinaFragment extends Fragment{
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();*/
         request.setOperation("getCursos");
-        Call<ListaDeCursos> response = requestInterface.getCursos(request);
+        Call<ServerResponse> response = requestInterface.operation(request);
 
-        response.enqueue(new Callback<ListaDeCursos>() {
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeCursos> call, Response<ListaDeCursos> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 //System.out.println(response.body());
-                ListaDeCursos listaDeCursos = response.body();
-                cursos = listaDeCursos.getCursos();
+                cursos = response.body().getListaDeCursos();
                 nomes = new String[cursos.size()];
                 //idCurso = new String[cursos.size()];
                 for (int i = 0; i < cursos.size(); i++) {
@@ -213,7 +202,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<ListaDeCursos> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
                 loading(false);
 
                 // progress.setVisibility(View.INVISIBLE);
@@ -231,15 +220,14 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
         request.setOperation("getTurmas");
         request.setIdCurso(idCurso);
-        Call<ListaDeTurmas> response = requestInterface.getTurmas(request);
-        response.enqueue(new Callback<ListaDeTurmas>() {
+        Call<ServerResponse> response = requestInterface.operation(request);
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeTurmas> call, Response<ListaDeTurmas> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
-                System.out.println(response.body());
-                ListaDeTurmas listaDeTurmas = response.body();
-                turmas = listaDeTurmas.getTurmas();
+
+                turmas = response.body().getListaDeTurmas();
                 nomes = new String[turmas.size()];
                 //idTurma = new String[turmas.size()];
                 for (int i = 0; i < turmas.size(); i++) {
@@ -279,7 +267,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<ListaDeTurmas> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
 
                 loading(false);
                 // progress.setVisibility(View.INVISIBLE);
@@ -296,16 +284,15 @@ public class CadastrarDisciplinaFragment extends Fragment{
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinas");
         request.setTurma(turma);
-        Call<ListaDeDisciplinas> response = requestInterface.getDisciplinas(request);
+        Call<ServerResponse> response = requestInterface.operation(request);
 
-        response.enqueue(new Callback<ListaDeDisciplinas>() {
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeDisciplinas> call, Response<ListaDeDisciplinas> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 //System.out.println(response.body());
                 relativeLay.setVisibility(View.VISIBLE);
-                ListaDeDisciplinas listaDeDisciplinas = response.body();
-                disciplinas = listaDeDisciplinas.getDisciplinas();
+                disciplinas = response.body().getListaDeDisciplinas();
                 nomes = new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
                     nomes[i] = disciplinas.get(i).getNome();
@@ -342,7 +329,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<ListaDeDisciplinas> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
 
                 loading(false);
                 // progress.setVisibility(View.INVISIBLE);
@@ -355,18 +342,16 @@ public class CadastrarDisciplinaFragment extends Fragment{
 
 
     }
-    private void insertDisciplina (List<ListaDeDisciplinas.Disciplina> selectedItems) {
+    private void insertDisciplina (List<Disciplina> selectedItems) {
 
 
         loading(true);
-        ListaDeDisciplinas listaDeDisciplinas=new ListaDeDisciplinas();
-        listaDeDisciplinas.setDisciplinas(selectedItems);
         ServerRequest request = new ServerRequest();
         request.setOperation("insertDisciplina");
         request.setUnique_id(unique_id);
         request.setIdCurso(idCursoSelected);
         request.setIdTurma(idTurmaSelected);
-        request.setListaDeDisciplinas(listaDeDisciplinas);
+        request.setListaDeDisciplinas(selectedItems);
 
         Call<ServerResponse> response = requestInterface.operation(request);
 

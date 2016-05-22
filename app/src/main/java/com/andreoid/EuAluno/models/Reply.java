@@ -1,18 +1,8 @@
 package com.andreoid.EuAluno.models;
 
-import java.util.ArrayList;
-import java.util.List;
 
-/**
- * Created by luisf on 17/05/2016.
- */
-public class ListaDeReplies {
-    private List<Replies> replies = new ArrayList<Replies>();
+public class Reply {
 
-    public List<Replies> getReplies() {
-        return replies;
-    }
-    public class Replies {
         private String idreplies;
         private String reply_content;
         private  String reply_date;
@@ -81,4 +71,4 @@ public class ListaDeReplies {
             this.anexo = anexo;
         }
     }
-}
+

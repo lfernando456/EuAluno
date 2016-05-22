@@ -3,13 +3,11 @@ package com.andreoid.EuAluno;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
@@ -31,21 +29,16 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
-import com.andreoid.EuAluno.models.ListaDeReplies;
+import com.andreoid.EuAluno.models.Reply;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.nononsenseapps.filepicker.FilePickerActivity;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.PicassoTools;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,14 +46,10 @@ import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -74,23 +63,20 @@ public class RepliesFragment extends Fragment {
     private ProfileActivity mainActivity;
     private SharedPreferences pref;
     private RecyclerView recyclerView;
-    ListView listView ;
     private FloatingActionButton floatingActionButton;
-    private List<ListaDeReplies.Replies> replies;
+    private List<Reply> replies;
     private RecyclerAdapterReplies recyclerAdapterReplies;
     private View dialogView;
     Button buttonSendDocs;
     TextView path_tv;
-    Retrofit retrofit;
-    String [] comentario;
-    String [] conteudo;
-    String[] feitoPor;
+
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
     private RequestInterface requestInterface;
     private int hasAnexo = 0;
     private Uri uri;
-
+    TextView tv_naopossui;
+    TextView tv_erro;
     public static RepliesFragment newInstance(String tipo, String idTopico){
         RepliesFragment mFragment = new RepliesFragment();
         Bundle mBundle = new Bundle();
@@ -127,6 +113,9 @@ public class RepliesFragment extends Fragment {
                 fabClick(view);
             }
         });
+
+        tv_naopossui = (TextView) view.findViewById(R.id.tv_naopossui);
+        tv_erro = (TextView) view.findViewById(R.id.tv_erro);
         getReplies(getArguments().getString(Constants.IDTOPIC));
         setupRecyclerView();
         setupSwipeRefresh();
@@ -201,7 +190,7 @@ public class RepliesFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
-                    if (hasAnexo==1) {
+                    if (hasAnexo == 1) {
                         uploadAnexo();
                     } else {
                         insertReply(null);
@@ -363,48 +352,59 @@ public class RepliesFragment extends Fragment {
         return false;
     }
     private void getReplies(final String reply_topic) {
-
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        tv_naopossui.setVisibility(View.GONE);
+        tv_erro.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
         final ServerRequest request = new ServerRequest();
         request.setOperation("getReplies");
         request.setReply_topic(reply_topic);
         request.setUnique_id(pref.getString(Constants.UNIQUE_ID,""));
-        Call<ListaDeReplies> response = requestInterface.getReplies(request);
+        Call<ServerResponse> response = requestInterface.operation(request);
 
-        response.enqueue(new Callback<ListaDeReplies>() {
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeReplies> call, Response<ListaDeReplies> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
-                ListaDeReplies ListaDeReplies = response.body();
-                replies = ListaDeReplies.getReplies();
+                replies = response.body().getListaDeReplies();
+                if (replies != null){
+                    recyclerAdapterReplies.cardItems.clear();
+                    recyclerAdapterReplies.notifyDataSetChanged();
+                    for (int i = 0; i < replies.size(); i++) {
+                        addItem(replies.get(i).getIdreplies(),
+                                replies.get(i).getAutorComentario(),
+                                replies.get(i).getReply_content(),
+                                replies.get(i).getReply_date(),
+                                replies.get(i).getUnique_id(),
+                                replies.get(i).getAnexo());
 
-                recyclerAdapterReplies.cardItems.clear();
-                recyclerAdapterReplies.notifyDataSetChanged();
-                for (int i = 0; i < replies.size(); i++) {
-                    addItem(replies.get(i).getIdreplies(),
-                            replies.get(i).getAutorComentario(),
-                            replies.get(i).getReply_content(),
-                            replies.get(i).getReply_date(),
-                            replies.get(i).getUnique_id(),
-                            replies.get(i).getAnexo());
+                        //System.out.println(replies.get(i).getIdreplies());
 
-                    //System.out.println(replies.get(i).getIdreplies());
-
+                    }
+                }else{
+                    tv_naopossui.setVisibility(View.VISIBLE);
                 }
+                floatingActionButton.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 swipeContainer.setRefreshing(false);
+                recyclerView.setVisibility(View.VISIBLE);
 
 
             }
 
             @Override
-            public void onFailure(Call<ListaDeReplies> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
 
-
+                tv_erro.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+                recyclerView.setVisibility(View.GONE);
                 // progress.setVisibility(View.INVISIBLE);
 //                Log.d(Constants.TAG, t.getLocalizedMessage());
-                //Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(recyclerView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
 

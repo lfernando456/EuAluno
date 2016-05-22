@@ -1,24 +1,7 @@
 package com.andreoid.EuAluno.models;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class ListaDeDisciplinas {
-
-    private List<Disciplina> disciplinas = new ArrayList<>();
-
-    public List<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
-
-    public void setDisciplinas(List<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
-
-
-    public class Disciplina {
+public class Disciplina {
         private String idDisciplina;
         private String idCurso;
         private String nome;
@@ -65,4 +48,3 @@ public class ListaDeDisciplinas {
             this.ano = ano;
         }
     }
-}

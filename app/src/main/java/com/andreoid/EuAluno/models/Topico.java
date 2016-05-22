@@ -1,18 +1,10 @@
 package com.andreoid.EuAluno.models;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by luisf on 25/04/2016.
  */
-public class ListaDeTopicos {
-    private List<Topicos> topicos = new ArrayList<Topicos>();
+public class Topico {
 
-    public List<Topicos> getTopicos() {
-        return topicos;
-    }
-    public class Topicos {
         private String idtopics;
         private String topic_subject;
         private String topic_date;
@@ -91,4 +83,4 @@ public class ListaDeTopicos {
         }
     }
 
-}
+

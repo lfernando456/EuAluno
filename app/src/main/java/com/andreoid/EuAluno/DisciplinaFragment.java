@@ -14,26 +14,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.andreoid.EuAluno.models.ListaDeDisciplinas;
-import com.andreoid.EuAluno.models.ListaDeTopicos;
+import com.andreoid.EuAluno.models.Disciplina;
+import com.andreoid.EuAluno.models.Topico;
 import com.andreoid.EuAluno.models.ServerRequest;
-
+import com.andreoid.EuAluno.models.ServerResponse;
 
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DisciplinaFragment extends Fragment{
-    private List<ListaDeDisciplinas.Disciplina> disciplinas;
-    private List<ListaDeTopicos.Topicos> topicos;
+    private List<Disciplina> disciplinas;
 
     ListView listView ;
     ProgressBar progressBar;
@@ -118,16 +112,15 @@ public class DisciplinaFragment extends Fragment{
         ServerRequest request = new ServerRequest();
         request.setOperation("getDisciplinasAP");
         request.setUnique_id(unique_id);
-        Call<ListaDeDisciplinas> response = requestInterface.getDisciplinas(request);
+        Call<ServerResponse> response = requestInterface.operation(request);
 
-        response.enqueue(new Callback<ListaDeDisciplinas>() {
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeDisciplinas> call, Response<ListaDeDisciplinas> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 //System.out.println(response.body());
                 //btn_concluir.setVisibility(View.VISIBLE);
-                ListaDeDisciplinas listaDeDisciplinas = response.body();
-                disciplinas = listaDeDisciplinas.getDisciplinas();
+                disciplinas = response.body().getListaDeDisciplinas();
                 nomes = new String[disciplinas.size()];
                 nomesTurmas =new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
@@ -177,7 +170,7 @@ public class DisciplinaFragment extends Fragment{
             }
 
             @Override
-            public void onFailure(Call<ListaDeDisciplinas> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
 
                 loading(false);
                 // progress.setVisibility(View.INVISIBLE);

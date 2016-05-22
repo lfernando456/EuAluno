@@ -36,12 +36,10 @@ import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemTopicoModel;
-import com.andreoid.EuAluno.models.ListaDeReplies;
-import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
+import com.andreoid.EuAluno.models.Topico;
 import com.nononsenseapps.filepicker.FilePickerActivity;
-
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,14 +47,10 @@ import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -65,8 +59,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class TopicosFragment extends Fragment {
 
     private List<CardItemTopicoModel> cardItems = new ArrayList();
-    private List<ListaDeTopicos.Topicos> topicos;
-    private List<ListaDeReplies.Replies> replies;
+    private List<Topico> topicos;
     private ProfileActivity mainActivity;
     private SharedPreferences pref;
     private RecyclerView recyclerView;
@@ -74,7 +67,6 @@ public class TopicosFragment extends Fragment {
     private FloatingActionButton floatingActionButton;
     private RecyclerAdapterTopicos recyclerAdapterTopicos;
     private View dialogView;
-    Retrofit retrofit;
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
     private RequestInterface requestInterface;
@@ -82,7 +74,8 @@ public class TopicosFragment extends Fragment {
     private Button buttonSendDocs;
     private TextView path_tv;
     private Uri uri;
-
+    TextView tv_naopossui;
+    TextView tv_erro;
 
     public static TopicosFragment newInstance(String tipo,String text){
         TopicosFragment mFragment = new TopicosFragment();
@@ -108,12 +101,10 @@ public class TopicosFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topicos, container, false);
         requestInterface = RetroClient.getApiService();
-
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
-
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         if(getArguments().getString(Constants.TIPO, "").equals(Constants.IS_ALUNO)){
-            floatingActionButton.setVisibility(View.INVISIBLE);
+            floatingActionButton.setVisibility(View.GONE);
         }
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,10 +114,12 @@ public class TopicosFragment extends Fragment {
         });
         //floatingActionButton.setVisibility(View.INVISIBLE);
         fixFloatingActionButtonMargin();
-
         progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view);
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
+        tv_naopossui = (TextView) view.findViewById(R.id.tv_naopossui);
+        tv_erro = (TextView) view.findViewById(R.id.tv_erro);
 
         getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
@@ -188,6 +181,9 @@ public class TopicosFragment extends Fragment {
     public void getTopicos(final String topic_cat){
         progressBar.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
+        tv_naopossui.setVisibility(View.GONE);
+        tv_erro.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(View.GONE);
         System.out.println(getArguments().getString(Constants.TOPIC_CAT, ""));
         ServerRequest request = new ServerRequest();
 
@@ -200,29 +196,35 @@ public class TopicosFragment extends Fragment {
             request.setTopic_cat(topic_cat);
         }
 
-        Call<ListaDeTopicos> response = requestInterface.getTopicos(request);
+        Call<ServerResponse> response = requestInterface.operation(request);
 
-        response.enqueue(new Callback<ListaDeTopicos>() {
+        response.enqueue(new Callback<ServerResponse>() {
 
             @Override
-            public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
-                ListaDeTopicos ListaDeTopicos = response.body();
-                topicos = ListaDeTopicos.getTopicos();
-                System.out.println(topicos.size());
-                recyclerAdapterTopicos.cardItems.clear();
-                recyclerAdapterTopicos.notifyDataSetChanged();
-                for (int i = 0; i < topicos.size(); i++) {
-                    addItem(
-                            topicos.get(i).getIdTopics(),
-                            topicos.get(i).getTopic_subject(),
-                            topicos.get(i).getContent(),
-                            "Professor(a): " + topicos.get(i).getNomeProfessor(),
-                            topicos.get(i).getNomeDisciplina(),
-                            topicos.get(i).getTopics_view_number(),
-                            topicos.get(i).getTopic_replies_number()
-                    );
+                topicos = response.body().getListaDeTopicos();
+                if(topicos!=null){
+                    recyclerAdapterTopicos.cardItems.clear();
+                    recyclerAdapterTopicos.notifyDataSetChanged();
+                    for (int i = 0; i < topicos.size(); i++) {
+                        addItem(
+                                topicos.get(i).getIdTopics(),
+                                topicos.get(i).getTopic_subject(),
+                                topicos.get(i).getContent(),
+                                "Professor(a): " + topicos.get(i).getNomeProfessor(),
+                                topicos.get(i).getNomeDisciplina(),
+                                topicos.get(i).getTopics_view_number(),
+                                topicos.get(i).getTopic_replies_number()
+                        );
+                    }
+                }else {
+                    tv_naopossui.setVisibility(View.VISIBLE);
                 }
+                if(!getArguments().getString(Constants.TIPO, "").equals(Constants.IS_ALUNO)){
+                    floatingActionButton.setVisibility(View.VISIBLE);
+                }
+
                 progressBar.setVisibility(View.GONE);
                 swipeContainer.setRefreshing(false);
                 recyclerView.setVisibility(View.VISIBLE);
@@ -231,12 +233,13 @@ public class TopicosFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
 
+                tv_erro.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 swipeContainer.setRefreshing(false);
-                recyclerView.setVisibility(View.VISIBLE);
-                Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+                recyclerView.setVisibility(View.GONE);
+                Snackbar.make(recyclerView, t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -279,11 +282,6 @@ public class TopicosFragment extends Fragment {
                     } else {
                         insertTopico(null);
                     }
-
-
-
-
-
                 }
             }
         });
@@ -337,6 +335,7 @@ public class TopicosFragment extends Fragment {
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Enviando anexo...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
         File file = new File(uri.getPath());
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
