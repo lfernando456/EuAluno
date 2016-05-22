@@ -56,9 +56,7 @@ public class DisciplinasListAdapter extends BaseAdapter {
         TextView tv_professor = (TextView) convertView.findViewById(R.id.tv_professor);
         TextView tv_qtdtopicos = (TextView) convertView.findViewById(R.id.tv_qtdtopicos);
 
-        // getting movie data for the row
         Disciplina m = disciplinas.get(position);
-
 
         tv_disciplina.setText(m.getNome());
         tv_turma.setText(m.getNomeTurma());
