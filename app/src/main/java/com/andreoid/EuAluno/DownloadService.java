@@ -135,6 +135,7 @@ public class DownloadService extends IntentService {
         notificationBuilder.setProgress(0,0,false);
         notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_alert));
         notificationBuilder.setContentText("Falha no Download");
+        outputFile.delete();
         notificationManager.notify(0, notificationBuilder.build());
     }
 

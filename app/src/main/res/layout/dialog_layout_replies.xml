@@ -19,7 +19,7 @@
                 android:id="@+id/content_text_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords|textLongMessage|text|textMultiLine"
+                android:inputType="textCapSentences|textLongMessage|text|textMultiLine"
                 android:hint="@string/content_input_hint2"/>
 
         </android.support.design.widget.TextInputLayout>
