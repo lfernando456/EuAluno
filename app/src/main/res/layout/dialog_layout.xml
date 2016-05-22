@@ -20,7 +20,7 @@
                 android:id="@+id/title_text_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text|textAutoComplete|textAutoCorrect"
+                android:inputType="textCapSentences|text"
                 android:hint="@string/title_input_hint"/>
 
         </android.support.design.widget.TextInputLayout>
@@ -34,7 +34,7 @@
                 android:id="@+id/content_text_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text|textAutoComplete|textAutoCorrect|textMultiLine"
+                android:inputType="textCapSentences|textLongMessage|text|textMultiLine"
                 android:hint="@string/content_input_hint"/>
 
         </android.support.design.widget.TextInputLayout>

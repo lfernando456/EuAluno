@@ -115,7 +115,7 @@ public class TopicosFragment extends Fragment {
         getTopicos(getArguments().getString(Constants.TOPIC_CAT));
         setupRecyclerView();
         setupSwipeRefresh();
-setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         return view;
     }
@@ -210,7 +210,7 @@ setHasOptionsMenu(true);
                     progressBar.setVisibility(View.GONE);
                     swipeContainer.setRefreshing(false);
                     recyclerView.setVisibility(View.VISIBLE);
-                    setupRecyclerView();
+                    //setupRecyclerView();
 
                 }
 
@@ -277,7 +277,7 @@ setHasOptionsMenu(true);
                         public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                             System.out.println(response.body());
                             ServerResponse resp = response.body();
-//
+
                             Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_SHORT).show();
                             getTopicos(getArguments().getString(Constants.TOPIC_CAT));
 
@@ -308,7 +308,7 @@ setHasOptionsMenu(true);
 
     }
     private void setupDialog(){
-        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout_replies,null,false);
+        dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout,null,false);
 
         final TextInputLayout titleInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_title);
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);

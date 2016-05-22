@@ -92,12 +92,15 @@ context = getContext();
     private void setCurrentPhoto() {
         Picasso.with(getActivity())
                 .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
-                        //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
-
                 .placeholder(R.drawable.ic_no_user)
                 .transform(new CircleTransform())
-
                 .into(ivImage);
+
+        Picasso.with(getActivity())
+                .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
+                .placeholder(R.drawable.ic_no_user)
+                .transform(new CircleTransform())
+                .into((ImageView) getActivity().findViewById(R.id.userPhoto2));
     }
 
     @Override
@@ -110,7 +113,7 @@ context = getContext();
             //try {
                 //Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
 
-                Picasso.with(getActivity()).load(uri.getPath()).transform(new CircleTransform()).into(ivImage);
+                Picasso.with(getActivity()).load(uri).transform(new CircleTransform()).into(ivImage);
             saveRelativeLayout.setVisibility(View.VISIBLE);
                 //ivImage.setImageBitmap(CircleTransform.transformStatic(bitmap));
             //} catch (IOException e) {
@@ -308,14 +311,7 @@ context = getContext();
                             saveRelativeLayout.setVisibility(View.GONE);
 
                             PicassoTools.clearCache(Picasso.with(getActivity()));
-                            Picasso.with(getActivity())
-                                    .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
-                                            //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
-
-                                    .placeholder(R.drawable.ic_no_user)
-                                    .transform(new CircleTransform())
-
-                                    .into((ImageView) getActivity().findViewById(R.id.userPhoto2));
+                            setCurrentPhoto();
 
                         }
                         else

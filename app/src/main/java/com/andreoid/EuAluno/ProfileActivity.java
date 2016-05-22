@@ -26,6 +26,7 @@ import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
 import com.andreoid.EuAluno.models.User;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.PicassoTools;
 
 import java.util.List;
 
@@ -81,6 +82,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     @Override
     public void onInt(Bundle savedInstanceState) {
         //Fetching email from shared preferences
+
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         requestInterface = RetroClient.getApiService();
 
@@ -153,7 +155,7 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
             currentPosition = savedInstanceState.getInt("POSITION");
             setCheckedItemNavigation(currentPosition,true);
         } else {
-
+            PicassoTools.clearCache(Picasso.with(this));
         }
         if(currentPosition==5)setElevationToolBar(0);
     }
@@ -161,11 +163,8 @@ public class ProfileActivity extends NavigationLiveo implements RecyclerAdapterT
     public void setUserPhoto() {
         Picasso.with(this)
                 .load(Constants.BASE_URL+"TestePHP/FotosDePerfil/"+pref.getString(Constants.UNIQUE_ID, "")+".png")
-                //.load("https://lh3.googleusercontent.com/-CopaXw6seSA/AAAAAAAAAAI/AAAAAAAAAAA/ADhl2ypN6037ye-uMPrcOGvePLklwoWz5Q/s96-c-mo/photo.jpg")
-
                 .placeholder(R.drawable.ic_no_user)
                 .transform(new CircleTransform())
-
                 .into(C2);
     }
 
