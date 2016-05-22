@@ -4,6 +4,7 @@ package com.andreoid.EuAluno;
  * Created by André on 22/05/2016.
  */
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentResolver;
@@ -11,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.NotificationCompat;
 import android.webkit.MimeTypeMap;
@@ -54,11 +56,13 @@ public class DownloadService extends IntentService {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.ic_download_white_18dp)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_download_grey600_48dp))
+                .setSmallIcon(R.drawable.ic_download_white_24dp)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_download_grey600_48dp))
                 .setContentTitle("Download")
-                .setContentText("Baixando Arquivo")
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setContentText("Baixando " + filename)
                 .setAutoCancel(true);
+        if (Build.VERSION.SDK_INT >= 21) notificationBuilder.setVibrate(new long[0]);
         notificationManager.notify(0, notificationBuilder.build());
 
         initDownload(0);
@@ -127,7 +131,9 @@ public class DownloadService extends IntentService {
     private void sendNotification(Download download){
 
         notificationBuilder.setProgress(100,download.getProgress(),false);
-        notificationBuilder.setContentText("Baixando "+filename+": " + download.getCurrentFileSize() + "/" + totalFileSize + " KB");
+        notificationBuilder.setContentText("Baixando " + filename + ": " + download.getCurrentFileSize() + "/" + totalFileSize + " KB");
+        notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT);
+
         notificationManager.notify(0, notificationBuilder.build());
     }
     private void sendNotificationError(){
@@ -154,6 +160,7 @@ public class DownloadService extends IntentService {
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,i2,0);
 
         notificationBuilder.setContentIntent(pendingIntent);
+        notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
         notificationManager.notify(0, notificationBuilder.build());
 
