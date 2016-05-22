@@ -38,7 +38,30 @@
                 android:hint="@string/content_input_hint"/>
 
         </android.support.design.widget.TextInputLayout>
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="16dp">
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sendFile"
+                android:id="@+id/buttonSendDoc"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/path_tv"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_toRightOf="@+id/buttonSendDoc"
+                android:layout_toEndOf="@+id/buttonSendDoc" />
+
+        </RelativeLayout>
     </LinearLayout>
 
 </ScrollView>

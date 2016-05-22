@@ -2,11 +2,15 @@ package com.andreoid.EuAluno;
 
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -24,8 +28,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
 import com.andreoid.EuAluno.models.CardItemTopicoModel;
@@ -33,12 +40,17 @@ import com.andreoid.EuAluno.models.ListaDeReplies;
 import com.andreoid.EuAluno.models.ListaDeTopicos;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,6 +78,10 @@ public class TopicosFragment extends Fragment {
     ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
     private RequestInterface requestInterface;
+    private int hasAnexo=0;
+    private Button buttonSendDocs;
+    private TextView path_tv;
+    private Uri uri;
 
 
     public static TopicosFragment newInstance(String tipo,String text){
@@ -188,45 +204,45 @@ public class TopicosFragment extends Fragment {
 
         response.enqueue(new Callback<ListaDeTopicos>() {
 
-                @Override
-                public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
+            @Override
+            public void onResponse(Call<ListaDeTopicos> call, Response<ListaDeTopicos> response) {
 
-                    ListaDeTopicos ListaDeTopicos = response.body();
-                    topicos = ListaDeTopicos.getTopicos();
-                    System.out.println(topicos.size());
-                    recyclerAdapterTopicos.cardItems.clear();
-                    recyclerAdapterTopicos.notifyDataSetChanged();
-                    for (int i = 0; i < topicos.size(); i++) {
-                        addItem(
-                                topicos.get(i).getIdTopics(),
-                                topicos.get(i).getTopic_subject(),
-                                topicos.get(i).getContent(),
-                                "Professor(a): "+topicos.get(i).getNomeProfessor(),
-                                topicos.get(i).getNomeDisciplina(),
-                                topicos.get(i).getTopics_view_number(),
-                                topicos.get(i).getTopic_replies_number()
-                        );
-                    }
-                    progressBar.setVisibility(View.GONE);
-                    swipeContainer.setRefreshing(false);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    //setupRecyclerView();
-
+                ListaDeTopicos ListaDeTopicos = response.body();
+                topicos = ListaDeTopicos.getTopicos();
+                System.out.println(topicos.size());
+                recyclerAdapterTopicos.cardItems.clear();
+                recyclerAdapterTopicos.notifyDataSetChanged();
+                for (int i = 0; i < topicos.size(); i++) {
+                    addItem(
+                            topicos.get(i).getIdTopics(),
+                            topicos.get(i).getTopic_subject(),
+                            topicos.get(i).getContent(),
+                            "Professor(a): " + topicos.get(i).getNomeProfessor(),
+                            topicos.get(i).getNomeDisciplina(),
+                            topicos.get(i).getTopics_view_number(),
+                            topicos.get(i).getTopic_replies_number()
+                    );
                 }
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+                recyclerView.setVisibility(View.VISIBLE);
+                //setupRecyclerView();
 
-                @Override
-                public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
+            }
 
-                    progressBar.setVisibility(View.GONE);
-                    swipeContainer.setRefreshing(false);
-                    recyclerView.setVisibility(View.VISIBLE);
-                    Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<ListaDeTopicos> call, Throwable t) {
+
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
+                recyclerView.setVisibility(View.VISIBLE);
+                Snackbar.make(getView(), t.getLocalizedMessage(), Snackbar.LENGTH_LONG).show();
+            }
+        });
 
         }
     public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
-        recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico,title, content, professor, disciplina, views,replies_number));
+        recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico, title, content, professor, disciplina, views, replies_number));
         recyclerAdapterTopicos.notifyDataSetChanged();
     }
     public void removeItem(){
@@ -258,42 +274,12 @@ public class TopicosFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (!isEmpty()) {
+                    if (hasAnexo==1) {
+                        uploadAnexo();
+                    } else {
+                        insertTopico(null);
+                    }
 
-                    ServerRequest request = new ServerRequest();
-
-                    EditText titleText = ((EditText) dialogView.findViewById(R.id.title_text_input));
-                    EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input));
-                    //EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
-                    request.setOperation("insertTopicos");
-                    request.setTopic_cat(getArguments().getString(Constants.TOPIC_CAT, ""));
-
-                    request.setTopic_subject(titleText.getText().toString().trim());
-                    request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
-                    request.setReply_content(contentText.getText().toString().trim());
-                    Call<ServerResponse> response = requestInterface.operation(request);
-                    response.enqueue(new Callback<ServerResponse>() {
-
-                        @Override
-                        public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
-                            System.out.println(response.body());
-                            ServerResponse resp = response.body();
-
-                            Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_SHORT).show();
-                            getTopicos(getArguments().getString(Constants.TOPIC_CAT));
-
-                        }
-
-
-                        @Override
-                        public void onFailure(Call<ServerResponse> call, Throwable t) {
-
-                            System.out.println(call.request().body());
-
-                            Log.d(Constants.TAG, t.getMessage());
-
-
-                        }
-                    });
 
 
 
@@ -307,12 +293,96 @@ public class TopicosFragment extends Fragment {
                 .SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
+
+    private void insertTopico(String nome) {
+        ServerRequest request = new ServerRequest();
+
+        EditText titleText = ((EditText) dialogView.findViewById(R.id.title_text_input));
+        EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input));
+        //EditText contentText = ((EditText) dialogView.findViewById(R.id.content_text_input))
+        request.setOperation("insertTopicos");
+        request.setTopic_cat(getArguments().getString(Constants.TOPIC_CAT, ""));
+
+        request.setTopic_subject(titleText.getText().toString().trim());
+        request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
+        request.setReply_content(contentText.getText().toString().trim());
+        if(nome!=null)request.setAnexo(nome);
+        Call<ServerResponse> response = requestInterface.operation(request);
+        response.enqueue(new Callback<ServerResponse>() {
+
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+                System.out.println(response.body());
+                ServerResponse resp = response.body();
+
+                Snackbar.make(getView(), resp.getMessage(), Snackbar.LENGTH_SHORT).show();
+                getTopicos(getArguments().getString(Constants.TOPIC_CAT));
+
+            }
+
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+
+                System.out.println(call.request().body());
+
+                Log.d(Constants.TAG, t.getMessage());
+
+
+            }
+        });
+    }
+
+    private void uploadAnexo() {
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Enviando anexo...");
+        progressDialog.show();
+        File file = new File(uri.getPath());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("uploaded_anexo", file.getName(), requestFile);
+        ServerRequest request = new ServerRequest();
+        request.setOperation("uploadAnexo");
+
+        Call<ServerResponse> resultCall = requestInterface.upload(body, request);
+
+        resultCall.enqueue(new Callback<ServerResponse>() {
+            @Override
+            public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
+
+                progressDialog.dismiss();
+                System.out.println(response.body().getResult());
+                if(response.isSuccessful()) {
+                    if (response.body().getResult().equals("success")) {
+                        Toast.makeText(getActivity(), "Upload feito com sucesso", Toast.LENGTH_LONG).show();
+                        insertTopico(response.body().getName());
+                    }
+                    else
+                        Toast.makeText(getActivity(), "Falha no upload", Toast.LENGTH_LONG).show();
+
+                } else {
+                    Toast.makeText(getActivity(),"Falha no upload", Toast.LENGTH_LONG).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ServerResponse> call, Throwable t) {
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+
     private void setupDialog(){
         dialogView = LayoutInflater.from(mainActivity).inflate(R.layout.dialog_layout,null,false);
 
         final TextInputLayout titleInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_title);
         final TextInputLayout contentInputLayout = (TextInputLayout)dialogView.findViewById(R.id.text_input_content);
-
+        buttonSendDocs = (Button)dialogView.findViewById(R.id.buttonSendDoc);
+        path_tv = (TextView)dialogView.findViewById(R.id.path_tv);
         titleInputLayout.setErrorEnabled(true);
         contentInputLayout.setErrorEnabled(true);
 
@@ -348,9 +418,9 @@ public class TopicosFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence==null||charSequence.toString().equals("")){
+                if (charSequence == null || charSequence.toString().equals("")) {
                     contentInputLayout.setError(getString(R.string.edittext_error));
-                }else{
+                } else {
                     contentInputLayout.setError(null);
                 }
             }
@@ -358,6 +428,21 @@ public class TopicosFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable editable) {
 
+            }
+        });
+        buttonSendDocs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getContext(), FilePickerActivity.class);
+
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+                i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+
+                i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+                startActivityForResult(i, 0);
             }
         });
     }
@@ -382,6 +467,15 @@ public class TopicosFragment extends Fragment {
             return true;
         }
         return false;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            uri = data.getData();
+            path_tv.setText(uri.getPath()+"");
+            hasAnexo=1;
+
+        }
     }
 }
 
