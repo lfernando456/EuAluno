@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 
 public class DownloadService extends IntentService {
 
@@ -32,6 +33,9 @@ public class DownloadService extends IntentService {
     private long total;
     private File outputFile;
     int MAXTRIES = 3;
+    private Response<ResponseBody> request;
+    private String mimetype;
+
     public DownloadService() {
         super("Download Service");
     }
@@ -65,7 +69,10 @@ public class DownloadService extends IntentService {
 
 
         try {
-            downloadFile(requestInterface.download(filename).execute().body());
+            request = requestInterface.download(filename).execute();
+            mimetype = request.headers().get("Content-Type");
+            System.out.println(mimetype);
+            downloadFile(request.body());
         } catch (IOException e) {
             e.printStackTrace();
             if(tries<=MAXTRIES)initDownload(tries+1);
@@ -142,7 +149,7 @@ public class DownloadService extends IntentService {
 
         Intent i2 = new Intent();
         i2.setAction(android.content.Intent.ACTION_VIEW);
-        i2.setDataAndType(Uri.fromFile(outputFile), getMimeType(Uri.fromFile(outputFile)));
+        i2.setDataAndType(Uri.fromFile(outputFile), mimetype);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,i2,0);
 
         notificationBuilder.setContentIntent(pendingIntent);
