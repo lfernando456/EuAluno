@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.andreoid.EuAluno.adapter.DisciplinasListAdapter;
 import com.andreoid.EuAluno.models.Disciplina;
 import com.andreoid.EuAluno.models.Topico;
 import com.andreoid.EuAluno.models.ServerRequest;
@@ -39,6 +40,7 @@ public class DisciplinaFragment extends Fragment{
     String[] nomesTurmas;
     String unique_id;
     private RequestInterface requestInterface;
+    private DisciplinasListAdapter adapter;
 
 
     @Override
@@ -134,8 +136,7 @@ public class DisciplinaFragment extends Fragment{
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1, nomes);
+                adapter = new DisciplinasListAdapter(getActivity(), disciplinas);
                 // Assign adapter to ListView
                 listView.setAdapter(adapter);
 
@@ -146,7 +147,7 @@ public class DisciplinaFragment extends Fragment{
                         // ListView Clicked item index
                         //disciplinas.get(position).getNome();
                         // ListView Clicked item value
-                        String itemValue = (String) listView.getItemAtPosition(position);
+
                         // Show Alert
 
 

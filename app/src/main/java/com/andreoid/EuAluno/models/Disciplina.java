@@ -6,9 +6,21 @@ public class Disciplina {
         private String idCurso;
         private String nome;
         private String nomeTurma;
+        private String nomeProfessor;
+        private String qtdTopicos;
         private String ano;
 
-        public String getNomeTurma() {
+        public Disciplina( String idDisciplina,String idCurso,String nome,String nomeTurma,String nomeProfessor,String qtdTopicos,String ano) {
+            this.idDisciplina = idDisciplina;
+            this.idCurso = idCurso;
+            this.nome = nome;
+            this.nomeTurma = nomeTurma;
+            this.nomeProfessor = nomeProfessor;
+            this.qtdTopicos = qtdTopicos;
+            this.ano = ano;
+        }
+
+    public String getNomeTurma() {
             return nomeTurma;
         }
 
@@ -47,4 +59,20 @@ public class Disciplina {
         public void setAno(String ano) {
             this.ano = ano;
         }
-    }
+
+        public String getQtdTopicos() {
+            return qtdTopicos;
+        }
+
+        public void setQtdTopicos(String qtdTopicos) {
+            this.qtdTopicos = qtdTopicos;
+        }
+
+        public String getNomeProfessor() {
+            return nomeProfessor;
+        }
+
+        public void setNomeProfessor(String nomeProfessor) {
+            this.nomeProfessor = nomeProfessor;
+        }
+}
