@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.andreoid.EuAluno.AdapterCallback;
 import com.andreoid.EuAluno.CircleTransform;
 import com.andreoid.EuAluno.Constants;
 import com.andreoid.EuAluno.R;
@@ -24,11 +25,14 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
     public List<CardItemReplyModel> cardItems;
     private AdapterCallback mAdapterCallback;
     private Context mcontext;
-    private SharedPreferences pref;
     public RecyclerAdapterReplies(List<CardItemReplyModel> cardItems, Context context){
         this.cardItems = cardItems;
         this.mcontext = context;
-        pref = context.getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
+        try {
+            this.mAdapterCallback = ((AdapterCallback) mcontext);
+        } catch (ClassCastException e) {
+            throw new ClassCastException("AdapterCallback não implementado.");
+        }
 
     }
 
@@ -52,9 +56,8 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
             itemView.findViewById(R.id.bt_anexo).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    // mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idReply);
-                    //System.out.println(cardItems.get(getAdapterPosition()).author);
-
+                    System.out.println(cardItems.get(getAdapterPosition()).anexo);
+                     mAdapterCallback.onMethodCallbackReply(cardItems.get(getAdapterPosition()).anexo);
                 }
             });
 
@@ -98,7 +101,5 @@ public class RecyclerAdapterReplies extends RecyclerView.Adapter<RecyclerAdapter
     public int getItemCount() {
         return cardItems.size();
     }
-    public static interface AdapterCallback {
-        void onMethodCallback(String idTopico);
-    }
+
 }

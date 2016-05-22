@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:padding="8dp">
 
-    <!-- Thumbnail Image -->
 
-    <!-- Movie Title -->
     <TextView
         android:id="@+id/tv_disciplina"
         android:layout_width="wrap_content"
@@ -16,7 +14,6 @@
         android:textStyle="bold"
         android:text="Disciplina" />
 
-    <!-- Rating -->
     <TextView
         android:id="@+id/tv_turma"
         android:layout_width="fill_parent"
@@ -27,7 +24,6 @@
         android:text="3 ano A"
         android:layout_alignLeft="@+id/tv_disciplina" />
 
-    <!-- Genre -->
     <TextView
         android:id="@+id/tv_professor"
         android:layout_width="fill_parent"
@@ -39,7 +35,6 @@
         android:text="Professor"
         android:layout_alignLeft="@+id/tv_disciplina" />
 
-    <!-- Release Year -->
     <TextView
         android:id="@+id/tv_qtdtopicos"
         android:layout_width="wrap_content"
@@ -50,6 +45,8 @@
         android:layout_alignTop="@+id/tv_professor"
         android:layout_alignRight="@+id/tv_professor"
         android:layout_alignEnd="@+id/tv_professor"
-        android:layout_alignBottom="@+id/tv_professor" />
+        android:layout_alignBottom="@+id/tv_professor"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentRight="false" />
 
 </RelativeLayout>

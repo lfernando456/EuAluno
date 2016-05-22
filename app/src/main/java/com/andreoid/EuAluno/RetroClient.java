@@ -21,9 +21,9 @@ public class RetroClient {
     private static Retrofit getRetroClient() {
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
                 .client(client)

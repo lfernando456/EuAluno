@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.andreoid.EuAluno.AdapterCallback;
 import com.andreoid.EuAluno.R;
 import com.andreoid.EuAluno.models.CardItemTopicoModel;
 
@@ -16,14 +17,14 @@ import java.util.List;
 public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapterTopicos.ViewHolder> {
 
     public List<CardItemTopicoModel> cardItems;
-    private AdapterCallback mAdapterCallback;
+    private AdapterCallback mAdapterCallbackTopico;
 
     public RecyclerAdapterTopicos(List<CardItemTopicoModel> cardItems, Context context){
         this.cardItems = cardItems;
 
 
         try {
-            this.mAdapterCallback = ((AdapterCallback) context);
+            this.mAdapterCallbackTopico = ((AdapterCallback) context);
         } catch (ClassCastException e) {
             throw new ClassCastException("AdapterCallback não implementado.");
         }
@@ -48,7 +49,7 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
             itemView.findViewById(R.id.relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mAdapterCallback.onMethodCallback(cardItems.get(getAdapterPosition()).idTopico,cardItems.get(getAdapterPosition()).title);
+                    mAdapterCallbackTopico.onMethodCallbackTopico(cardItems.get(getAdapterPosition()).idTopico, cardItems.get(getAdapterPosition()).title);
 
                 }
             });
@@ -85,7 +86,5 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
     public int getItemCount() {
         return cardItems.size();
     }
-    public static interface AdapterCallback {
-        void onMethodCallback(String idTopico, String title);
-    }
+
 }

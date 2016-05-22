@@ -32,7 +32,7 @@ public class DisciplinasListAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int location) {
+    public Disciplina getItem(int location) {
         return disciplinas.get(location);
     }
 
@@ -50,7 +50,7 @@ public class DisciplinasListAdapter extends BaseAdapter {
         if (convertView == null)
             convertView = inflater.inflate(R.layout.disciplina_list_item, null);
 
-
+        //convertView.se
         TextView tv_disciplina = (TextView) convertView.findViewById(R.id.tv_disciplina);
         TextView tv_turma = (TextView) convertView.findViewById(R.id.tv_turma);
         TextView tv_professor = (TextView) convertView.findViewById(R.id.tv_professor);

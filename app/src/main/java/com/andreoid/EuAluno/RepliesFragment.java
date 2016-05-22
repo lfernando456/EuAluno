@@ -1,19 +1,23 @@
 package com.andreoid.EuAluno;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +60,7 @@ import retrofit2.Response;
  * A simple {@link Fragment} subclass.
  */
 public class RepliesFragment extends Fragment {
+
 
     private List<CardItemReplyModel> cardItems = new ArrayList();
 
@@ -170,7 +175,7 @@ public class RepliesFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
     public void addItem(String idReply, String author, String reply_content, String data_reply, String unique_id, String anexo){
-        recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply,unique_id,anexo));
+        recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply, unique_id, anexo));
         recyclerAdapterReplies.notifyDataSetChanged();
     }
 
@@ -263,16 +268,15 @@ public class RepliesFragment extends Fragment {
 
                 progressDialog.dismiss();
                 System.out.println(response.body().getResult());
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     if (response.body().getResult().equals("success")) {
                         Toast.makeText(getActivity(), "Upload feito com sucesso", Toast.LENGTH_LONG).show();
                         insertReply(response.body().getName());
-                    }
-                    else
+                    } else
                         Toast.makeText(getActivity(), "Falha no upload", Toast.LENGTH_LONG).show();
 
                 } else {
-                    Toast.makeText(getActivity(),"Falha no upload", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Falha no upload", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -361,7 +365,7 @@ public class RepliesFragment extends Fragment {
         final ServerRequest request = new ServerRequest();
         request.setOperation("getReplies");
         request.setReply_topic(reply_topic);
-        request.setUnique_id(pref.getString(Constants.UNIQUE_ID,""));
+        request.setUnique_id(pref.getString(Constants.UNIQUE_ID, ""));
         Call<ServerResponse> response = requestInterface.operation(request);
 
         response.enqueue(new Callback<ServerResponse>() {
@@ -420,6 +424,8 @@ public class RepliesFragment extends Fragment {
 
         }
     }
+
+
 
 
 }
