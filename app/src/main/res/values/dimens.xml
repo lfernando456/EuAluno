@@ -12,7 +12,7 @@
 
     <dimen name="dialog_layout_padding">24dp</dimen>
 
-    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_padding">0dp</dimen>
     <dimen name="textview_padding">16dp</dimen>
 
     <dimen name="about_card_margin">-6dp</dimen>
