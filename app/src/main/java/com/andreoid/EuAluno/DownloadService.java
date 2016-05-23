@@ -93,7 +93,7 @@ public class DownloadService extends IntentService {
         byte data[] = new byte[1024 * 4];
         long fileSize = body.contentLength();
         InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
-        outputFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+        outputFile = getFile(filename,1);
         OutputStream output = new FileOutputStream(outputFile);
         total = 0;
         long startTime = System.currentTimeMillis();
@@ -128,6 +128,18 @@ public class DownloadService extends IntentService {
 
     }
 
+    private File getFile(String filename,int tries) {
+
+        File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+        if(f.exists()){
+            String fileNameWithOutExt = removeExtension(filename);
+            fileNameWithOutExt+="-"+tries;
+            filename=fileNameWithOutExt+getExtension(filename);
+            return getFile(filename,tries+1);
+
+        }else return f;
+    }
+
     private void sendNotification(Download download){
 
         notificationBuilder.setProgress(100,download.getProgress(),false);
@@ -141,6 +153,8 @@ public class DownloadService extends IntentService {
         notificationBuilder.setProgress(0,0,false);
         notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_alert));
         notificationBuilder.setContentText("Falha no Download");
+        notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
+
         outputFile.delete();
         notificationManager.notify(0, notificationBuilder.build());
     }
@@ -182,6 +196,54 @@ public class DownloadService extends IntentService {
                     fileExtension.toLowerCase());
         }
         return mimeType;
+    }
+    private static final char EXTENSION_SEPARATOR = '.';
+    private static final char EXISTS_SEPARATOR = '-';
+    public String removeExtension(String filename) {
+        if (filename == null) {
+            return null;
+        }
+        int index = indexOfExtension(filename,this.filename.lastIndexOf(EXISTS_SEPARATOR)==-1);
+
+        if (index == -1) {
+            return filename;
+        } else {
+            return filename.substring(0, index);
+        }
+    }
+
+
+    public String getExtension(String filename) {
+        if (filename == null) {
+            return null;
+        }
+
+        int index = indexOfExtension(filename,false);
+
+        if (index == -1) {
+            return filename;
+        } else {
+            return filename.substring(index);
+        }
+    }
+
+
+
+    public int indexOfExtension(String filename,boolean a) {
+
+        if (filename == null) {
+            return -1;
+        }
+
+        int extensionPos = filename.lastIndexOf(EXTENSION_SEPARATOR);
+
+        int lastDirSeparator = this.filename.lastIndexOf(EXISTS_SEPARATOR);
+
+        if (lastDirSeparator!=-1&&lastDirSeparator < extensionPos&&a) {
+            return lastDirSeparator;
+        }
+
+        return extensionPos;
     }
 
 }
