@@ -123,11 +123,11 @@ public class DownloadService extends IntentService {
 
     }
 
-    private File getFile(String filename,int tries) {
+    private static File getFile(String filename,int tries) {
 
         File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
         if(f.exists()){
-            String fileNameWithOutExt = removeExtension(this.filename);
+            String fileNameWithOutExt = removeExtension(filename);
             fileNameWithOutExt+="-"+tries;
             filename=fileNameWithOutExt+getExtension(filename);
             return getFile(filename,tries+1);
