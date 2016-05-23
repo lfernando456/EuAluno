@@ -34,7 +34,7 @@ public class DownloadService extends IntentService {
     private RequestInterface requestInterface;
     private long total;
     private File outputFile;
-    int MAXTRIES = 3;
+    private int MAXTRIES = 3;
     private Response<ResponseBody> request;
     private String mimetype;
 
@@ -45,8 +45,8 @@ public class DownloadService extends IntentService {
     private NotificationCompat.Builder notificationBuilder;
     private NotificationManager notificationManager;
     private double totalFileSize;
-    Intent intent = new Intent();
-    String filename;
+    private Intent intent = new Intent();
+    private String filename;
     @Override
     protected void onHandleIntent(Intent intent) {
         this.intent=intent;
@@ -63,28 +63,23 @@ public class DownloadService extends IntentService {
                 .setContentText("Baixando " + filename)
                 .setAutoCancel(true);
         if (Build.VERSION.SDK_INT >= 21) notificationBuilder.setVibrate(new long[0]);
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(filename, 0, notificationBuilder.build());
 
-        initDownload(0);
+        initDownload(1);
 
     }
 
     private void initDownload(int tries){
-
-
         try {
             request = requestInterface.download(filename).execute();
             mimetype = request.headers().get("Content-Type");
-            System.out.println(mimetype);
+            //System.out.println(mimetype);
             downloadFile(request.body());
         } catch (IOException e) {
             e.printStackTrace();
             if(tries<=MAXTRIES)initDownload(tries+1);
             else sendNotificationError();
         }
-
-        //downloadFile(request.execute().body());
-        //request
     }
 
     private void downloadFile(ResponseBody body) throws IOException {
@@ -93,7 +88,7 @@ public class DownloadService extends IntentService {
         byte data[] = new byte[1024 * 4];
         long fileSize = body.contentLength();
         InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
-        outputFile = getFile(filename,1);
+        outputFile = getFile(filename, 1);
         OutputStream output = new FileOutputStream(outputFile);
         total = 0;
         long startTime = System.currentTimeMillis();
@@ -132,7 +127,7 @@ public class DownloadService extends IntentService {
 
         File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
         if(f.exists()){
-            String fileNameWithOutExt = removeExtension(filename);
+            String fileNameWithOutExt = removeExtension(this.filename);
             fileNameWithOutExt+="-"+tries;
             filename=fileNameWithOutExt+getExtension(filename);
             return getFile(filename,tries+1);
@@ -142,21 +137,21 @@ public class DownloadService extends IntentService {
 
     private void sendNotification(Download download){
 
-        notificationBuilder.setProgress(100,download.getProgress(),false);
-        notificationBuilder.setContentText("Baixando " + filename + ": " + download.getCurrentFileSize() + "/" + totalFileSize + " KB");
+        notificationBuilder.setProgress(100, download.getProgress(), false);
+        notificationBuilder.setContentText("Baixando " + outputFile.getName() + ": " + download.getCurrentFileSize() + "/" + totalFileSize + " KB");
         notificationBuilder.setPriority(Notification.PRIORITY_DEFAULT);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(filename,0, notificationBuilder.build());
     }
     private void sendNotificationError(){
 
         notificationBuilder.setProgress(0,0,false);
-        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_alert));
+        notificationBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_error_black_48dp));
         notificationBuilder.setContentText("Falha no Download");
         notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
         outputFile.delete();
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(filename,0, notificationBuilder.build());
     }
 
 
@@ -165,7 +160,7 @@ public class DownloadService extends IntentService {
 
         notificationManager.cancel(0);
         notificationBuilder.setProgress(0, 0, false);
-        notificationBuilder.setContentText("Arquivo Baixado: " + filename);
+        notificationBuilder.setContentText("Arquivo Baixado: " + outputFile.getName());
 
 
         Intent i2 = new Intent();
@@ -176,7 +171,7 @@ public class DownloadService extends IntentService {
         notificationBuilder.setContentIntent(pendingIntent);
         notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        notificationManager.notify(filename,0, notificationBuilder.build());
 
     }
 
@@ -184,26 +179,13 @@ public class DownloadService extends IntentService {
     public void onTaskRemoved(Intent rootIntent) {
         notificationManager.cancel(0);
     }
-    public String getMimeType(Uri uri) {
-        String mimeType = null;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
-            ContentResolver cr = getApplicationContext().getContentResolver();
-            mimeType = cr.getType(uri);
-        } else {
-            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
-                    .toString());
-            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
-                    fileExtension.toLowerCase());
-        }
-        return mimeType;
-    }
+
     private static final char EXTENSION_SEPARATOR = '.';
-    private static final char EXISTS_SEPARATOR = '-';
-    public String removeExtension(String filename) {
+    public static String removeExtension(String filename) {
         if (filename == null) {
             return null;
         }
-        int index = indexOfExtension(filename,this.filename.lastIndexOf(EXISTS_SEPARATOR)==-1);
+        int index = indexOfExtension(filename);
 
         if (index == -1) {
             return filename;
@@ -213,12 +195,12 @@ public class DownloadService extends IntentService {
     }
 
 
-    public String getExtension(String filename) {
+    public static String getExtension(String filename) {
         if (filename == null) {
             return null;
         }
 
-        int index = indexOfExtension(filename,false);
+        int index = indexOfExtension(filename);
 
         if (index == -1) {
             return filename;
@@ -229,7 +211,7 @@ public class DownloadService extends IntentService {
 
 
 
-    public int indexOfExtension(String filename,boolean a) {
+    public static int indexOfExtension(String filename) {
 
         if (filename == null) {
             return -1;
@@ -237,11 +219,11 @@ public class DownloadService extends IntentService {
 
         int extensionPos = filename.lastIndexOf(EXTENSION_SEPARATOR);
 
-        int lastDirSeparator = this.filename.lastIndexOf(EXISTS_SEPARATOR);
+        /*int lastDirSeparator = this.filename.lastIndexOf(EXISTS_SEPARATOR);
 
         if (lastDirSeparator!=-1&&lastDirSeparator < extensionPos&&a) {
             return lastDirSeparator;
-        }
+        }*/
 
         return extensionPos;
     }
