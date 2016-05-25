@@ -205,10 +205,10 @@ public class TopicosFragment extends Fragment {
 
                 topicos = response.body().getListaDeTopicos();
                 if(topicos!=null){
-                    recyclerAdapterTopicos.cardItems.clear();
-                    recyclerAdapterTopicos.notifyDataSetChanged();
+                    cardItems.clear();
                     for (int i = 0; i < topicos.size(); i++) {
-                        addItem(
+
+                        cardItems.add(new CardItemTopicoModel(
                                 topicos.get(i).getIdTopics(),
                                 topicos.get(i).getTopic_subject(),
                                 topicos.get(i).getContent(),
@@ -216,8 +216,9 @@ public class TopicosFragment extends Fragment {
                                 topicos.get(i).getNomeDisciplina(),
                                 topicos.get(i).getTopics_view_number(),
                                 topicos.get(i).getTopic_replies_number()
-                        );
+                        ));
                     }
+                    recyclerAdapterTopicos.notifyDataSetChanged();
                 }else {
                     tv_naopossui.setVisibility(View.VISIBLE);
                 }

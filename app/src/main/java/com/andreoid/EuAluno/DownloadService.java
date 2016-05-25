@@ -88,7 +88,7 @@ public class DownloadService extends IntentService {
         byte data[] = new byte[1024 * 4];
         long fileSize = body.contentLength();
         InputStream bis = new BufferedInputStream(body.byteStream(), 1024 * 8);
-        outputFile = getFile(filename, 1);
+        outputFile = getFile(filename);
         OutputStream output = new FileOutputStream(outputFile);
         total = 0;
         long startTime = System.currentTimeMillis();
@@ -123,16 +123,14 @@ public class DownloadService extends IntentService {
 
     }
 
-    private static File getFile(String filename,int tries) {
-
-        File f = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
-        if(f.exists()){
-            String fileNameWithOutExt = removeExtension(filename);
-            fileNameWithOutExt+="-"+tries;
-            filename=fileNameWithOutExt+getExtension(filename);
-            return getFile(filename,tries+1);
-
-        }else return f;
+    private static File getFile(String filename) {
+        String fileNameWithOutExt = removeExtension(filename);
+        String extension = getExtension(filename);
+        int count=1;
+        while(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename).exists()) {
+            filename = fileNameWithOutExt + "-" + count+extension;
+            ++count;
+        }return new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
     }
 
     private void sendNotification(Download download){
