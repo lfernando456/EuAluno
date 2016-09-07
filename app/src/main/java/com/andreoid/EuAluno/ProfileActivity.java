@@ -460,13 +460,30 @@ public class ProfileActivity extends NavigationLiveo implements AdapterCallback 
         ft.replace(R.id.container, mFragment).addToBackStack( title ).commit();
 
     }
-
-    @Override
-    public void onMethodCallbackReply(String filename) {
-        this.filename=filename;
-        downloadFile(filename);
-    }
     String filename;
+    @Override
+    public void onMethodCallbackReply(final String filename) {
+        this.filename=filename;
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setNegativeButton("Cancelar",null);
+        dialogBuilder.setMessage("O que você deseja fazer?");
+        dialogBuilder.setPositiveButton("Download aqui", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                downloadFile(filename);
+            }
+        });
+        dialogBuilder.setNeutralButton("Enviar para o email", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+
+
+
+    }
+
     public void downloadFile(String filename){
 
         if(checkPermission()){
