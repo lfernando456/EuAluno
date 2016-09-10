@@ -25,7 +25,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:id="@+id/relativeLayout"
-            style="@style/Base.Widget.AppCompat.Button.Borderless">
+            style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
+            android:clickable="false">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -88,7 +89,7 @@
                     android:maxLines="2"
                     android:scrollHorizontally="false"
                     android:ellipsize="end"
-                    android:paddingTop="24dp"
+                    android:paddingTop="30dp"
                     android:text="Titulo titulo 1"
                     android:layout_alignLeft="@+id/card_content"
                     android:layout_alignStart="@+id/card_content"
@@ -118,7 +119,10 @@
                 android:layout_alignEnd="@+id/card_content"
                 android:layout_gravity="right"
                 android:singleLine="false"
-                android:textAlignment="textEnd" />
+                android:textAlignment="textEnd"
+                android:layout_toRightOf="@+id/tv_novo"
+                android:layout_toEndOf="@+id/tv_novo"
+                android:layout_alignBottom="@+id/tv_novo" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -130,6 +134,27 @@
                 android:layout_marginTop="24dp"
                 android:layout_toLeftOf="@+id/linearLayout3"
                 android:layout_toStartOf="@+id/linearLayout3" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top"
+                android:layout_alignParentTop="true">
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_novo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:scrollHorizontally="false"
+                android:text="NOVO"
+                android:layout_alignTop="@+id/linearLayout2"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                android:background="#ff6464"
+                android:padding="3dp" />
 
         </RelativeLayout>
 

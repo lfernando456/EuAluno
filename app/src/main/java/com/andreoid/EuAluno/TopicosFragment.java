@@ -194,6 +194,7 @@ public class TopicosFragment extends Fragment {
         else {
             request.setOperation("getTopicos");
             request.setTopic_cat(topic_cat);
+            request.setUnique_id(pref.getString(Constants.UNIQUE_ID,""));
         }
 
         Call<ServerResponse> response = requestInterface.operation(request);
@@ -215,7 +216,8 @@ public class TopicosFragment extends Fragment {
                                 "Professor(a): " + topicos.get(i).getNomeProfessor(),
                                 topicos.get(i).getNomeDisciplina(),
                                 topicos.get(i).getTopics_view_number(),
-                                topicos.get(i).getTopic_replies_number()
+                                topicos.get(i).getTopic_replies_number(),
+                                topicos.get(i).getTopic_viewed()
                         ));
                     }
                     recyclerAdapterTopicos.notifyDataSetChanged();
@@ -245,8 +247,8 @@ public class TopicosFragment extends Fragment {
         });
 
         }
-    public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number){
-        recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico, title, content, professor, disciplina, views, replies_number));
+    public void addItem(String idTopico,String title, String content,String professor,String disciplina,String views,String replies_number,int viewed){
+        recyclerAdapterTopicos.cardItems.add(new CardItemTopicoModel(idTopico, title, content, professor, disciplina, views, replies_number,viewed));
         recyclerAdapterTopicos.notifyDataSetChanged();
     }
     public void removeItem(){

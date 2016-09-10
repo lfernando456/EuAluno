@@ -15,8 +15,9 @@ public class Topico {
         private String content;
         private String topic_replies_number;
         private String topics_view_number;
+        private int viewed;
 
-        public String getTopics_view_number() {
+    public String getTopics_view_number() {
             return topics_view_number;
         }
 
@@ -81,6 +82,12 @@ public class Topico {
         public void setTopic_by(String topic_by) {
             this.topic_by = topic_by;
         }
-    }
+
+      public int getTopic_viewed() {
+            return viewed;
+        }
+
+
+}
 
 

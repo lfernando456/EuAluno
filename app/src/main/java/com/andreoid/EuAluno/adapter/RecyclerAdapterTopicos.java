@@ -37,6 +37,7 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
         TextView disciplina;
         TextView views;
         TextView replies_number;
+        TextView tv_novo;
         public ViewHolder(final View itemView) {
             super(itemView);
 
@@ -46,6 +47,7 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
             this.disciplina = (TextView)itemView.findViewById(R.id.card_disciplina);
             this.views = (TextView)itemView.findViewById(R.id.card_views);
             this.replies_number = (TextView)itemView.findViewById(R.id.card_replies_number);
+            this.tv_novo = (TextView)itemView.findViewById(R.id.tv_novo);
             itemView.findViewById(R.id.relativeLayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -74,6 +76,8 @@ public class RecyclerAdapterTopicos extends RecyclerView.Adapter<RecyclerAdapter
         holder.disciplina.setText(cardItems.get(position).disciplina);
         holder.views.setText(cardItems.get(position).views);
         holder.replies_number.setText(cardItems.get(position).replies_number);
+        if(cardItems.get(position).viewed==0)holder.tv_novo.setVisibility(View.VISIBLE);
+        else holder.tv_novo.setVisibility(View.GONE);
         /*holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

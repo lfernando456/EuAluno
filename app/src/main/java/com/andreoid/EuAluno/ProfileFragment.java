@@ -127,7 +127,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     public void onViewCreated(View view, Bundle savedInstanceState) {
 
 
-        tv_name.setText("Bem-Vindo : "+pref.getString(Constants.NAME,""));
+        tv_name.setText(pref.getString(Constants.NAME,""));
         tv_email.setText(pref.getString(Constants.EMAIL,""));
         tv_uid.setText(pref.getString(Constants.UNIQUE_ID, ""));
 
