@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.andreoid.EuAluno.broadcast_receivers.NotificationEventReceiver;
+
 
 public class MainActivity extends AppCompatActivity {
 

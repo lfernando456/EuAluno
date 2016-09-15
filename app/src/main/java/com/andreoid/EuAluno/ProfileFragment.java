@@ -67,7 +67,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         ivImage = (ImageView)view.findViewById(R.id.userPhoto);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
         context = getContext();
 
 

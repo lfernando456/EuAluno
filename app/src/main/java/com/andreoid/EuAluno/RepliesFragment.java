@@ -105,7 +105,7 @@ public class RepliesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_replies, container, false);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         recyclerView = (RecyclerView)view.findViewById(R.id.fab_recycler_view2);

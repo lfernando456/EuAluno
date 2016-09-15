@@ -18,11 +18,15 @@ public class RetroClient {
     }
 
 
-    private static Retrofit getRetroClient() {
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    private static Retrofit getRetroClient(int debug) {
+        OkHttpClient client;
+        if(debug==1) {
+            HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+        }else {
+            client = new OkHttpClient.Builder().build();
+        }
 
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)
@@ -32,7 +36,7 @@ public class RetroClient {
 
     }
 
-    public static RequestInterface getApiService() {
-        return getRetroClient().create(RequestInterface.class);
+    public static RequestInterface getApiService(int debug) {
+        return getRetroClient(debug).create(RequestInterface.class);
     }
 }

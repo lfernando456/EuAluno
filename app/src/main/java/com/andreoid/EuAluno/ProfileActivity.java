@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterTopicos;
+import com.andreoid.EuAluno.broadcast_receivers.NotificationEventReceiver;
 import com.andreoid.EuAluno.fragment.MainFragment;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
@@ -57,7 +58,7 @@ public class ProfileActivity extends NavigationLiveo implements AdapterCallback 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
+        NotificationEventReceiver.setupAlarm(getApplicationContext());
         super.onCreate(savedInstanceState);
     }
     @Override
@@ -80,7 +81,7 @@ public class ProfileActivity extends NavigationLiveo implements AdapterCallback 
         //Fetching email from shared preferences
 
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
 
         pref = getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
@@ -248,6 +249,8 @@ public class ProfileActivity extends NavigationLiveo implements AdapterCallback 
                         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                         finish();
                         startActivity(intent);
+
+                        NotificationEventReceiver.cancelAlarm(getApplicationContext());
                     }
                 });
 

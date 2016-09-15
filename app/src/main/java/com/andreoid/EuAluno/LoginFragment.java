@@ -44,7 +44,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         View view = inflater.inflate(R.layout.fragment_login,container,false);
         initViews(view);
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
 
         et_email.setText(pref.getString(Constants.EMAIL,""));

@@ -36,7 +36,7 @@ public class RegisterFragment extends Fragment  implements View.OnClickListener{
 
         View view = inflater.inflate(R.layout.fragment_register,container,false);
         initViews(view);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
         return view;
     }

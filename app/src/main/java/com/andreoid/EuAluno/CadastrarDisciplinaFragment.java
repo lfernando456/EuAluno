@@ -104,7 +104,7 @@ public class CadastrarDisciplinaFragment extends Fragment{
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
 

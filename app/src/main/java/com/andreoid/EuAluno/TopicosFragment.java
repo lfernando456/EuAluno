@@ -100,7 +100,7 @@ public class TopicosFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_topicos, container, false);
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
         pref = getActivity().getSharedPreferences("EuAluno", Context.MODE_PRIVATE);
         floatingActionButton = (FloatingActionButton) view.findViewById(R.id.fab);
         if(getArguments().getString(Constants.TIPO, "").equals(Constants.IS_ALUNO)){

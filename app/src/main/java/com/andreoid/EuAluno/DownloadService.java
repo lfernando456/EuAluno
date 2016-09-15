@@ -51,7 +51,7 @@ public class DownloadService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         this.intent=intent;
         filename = intent.getExtras().getString("FILENAME");
-        requestInterface = RetroClient.getApiService();
+        requestInterface = RetroClient.getApiService(1);
 
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
