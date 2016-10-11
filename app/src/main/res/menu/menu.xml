@@ -9,6 +9,13 @@
         android:orderInCategory="1"
         android:visible="false"
         app:showAsAction="always" />
+    <item android:id="@+id/info"
+        android:icon="@drawable/ic_info_outline_white_24dp"
+        android:title="Informações"
+        android:alphabeticShortcut="i"
+        android:orderInCategory="2"
+        android:visible="false"
+        app:showAsAction="always" />
     <item android:id="@+id/item2"
         android:titleCondensed="Selecionar"
         android:title="Selecionar"

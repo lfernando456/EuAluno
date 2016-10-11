@@ -40,18 +40,20 @@ public class NotificationIntentService extends IntentService {
     public NotificationIntentService() {
         super(NotificationIntentService.class.getSimpleName());
     }
-
+    boolean notificado = false;
     public static Intent createIntentStartNotificationService(Context context) {
         Intent intent = new Intent(context, NotificationIntentService.class);
         intent.setAction(ACTION_START);
         requestInterface = RetroClient.getApiService(0);
         request = new ServerRequest();
+        //notificado=true;
         return intent;
     }
 
     public static Intent createIntentDeleteNotification(Context context) {
         Intent intent = new Intent(context, NotificationIntentService.class);
         intent.setAction(ACTION_DELETE);
+        //notificado=false;
         return intent;
     }
 
@@ -88,24 +90,28 @@ public class NotificationIntentService extends IntentService {
 
                 ServerResponse resp = response.body();
 //
-                Toast.makeText(getApplicationContext(),resp.getMessage(),Toast.LENGTH_SHORT).show();
+           //     Toast.makeText(getApplicationContext(),resp.getMessage(),Toast.LENGTH_SHORT).show();
                 String content="";
-                for(int i=0;i<response.body().getListaDeTopicos().size();i++) {
-                    if (response.body().getListaDeTopicos().get(i).getTopic_viewed() == 0) {
 
-                        content+= response.body().getListaDeTopicos().get(i).getNomeDisciplina()+": "+response.body().getListaDeTopicos().get(i).getTopic_subject()+"\n";
+                if(response.body().getListaDeTopicos()!=null) {
+                    for (int i = 0; i < response.body().getListaDeTopicos().size(); i++) {
+                        if (response.body().getListaDeTopicos().get(i).getTopic_viewed() == 0) {
+
+                            content += response.body().getListaDeTopicos().get(i).getNomeDisciplina() + ": " + response.body().getListaDeTopicos().get(i).getTopic_subject() + "\n";
+                        }
                     }
+                    if (content != "")
+                        showNotification("Atualizações de conteúdo", content.substring(0, content.lastIndexOf('\n')));
                 }
-                showNotification("Atualizações de conteúdo",content.substring(0,content.lastIndexOf('\n')));
             }
 
 
             @Override
             public void onFailure(Call<ServerResponse> call, Throwable t) {
 
-                System.out.println(call.request().body());
+                //System.out.println(call.request().body());
 
-                Log.d(Constants.TAG, t.getMessage());
+                Log.d(Constants.TAG, "falha notification");
 
 
             }

@@ -394,17 +394,23 @@ public class ProfileActivity extends NavigationLiveo implements AdapterCallback 
 
         dialogBuilder.setCancelable(false);
         final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
+
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+
                 String siap = edt.getText().toString();
+                if(siap!=null&&siap!="") {
+                    registerProfessor(uniqueId, siap);
 
-                registerProfessor(uniqueId, siap);
+                    Fragment mFragment = new CadastrarDisciplinaFragment();
 
-                Fragment mFragment = new CadastrarDisciplinaFragment();
-
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.container, mFragment);
-                ft.commit();
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.container, mFragment);
+                    ft.commit();
+                }
+                else{
+                    showConfigAlunoDialogProfessor(uniqueId);
+                }
             }
         });
 

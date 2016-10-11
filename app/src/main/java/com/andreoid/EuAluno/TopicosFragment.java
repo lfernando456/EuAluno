@@ -146,6 +146,7 @@ public class TopicosFragment extends Fragment {
             case R.id.refresh:
                 getTopicos(getArguments().getString(Constants.TOPIC_CAT));
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

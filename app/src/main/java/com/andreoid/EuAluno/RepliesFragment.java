@@ -159,7 +159,7 @@ public class RepliesFragment extends Fragment {
 
 
         menu.findItem(R.id.refresh).setVisible(true);
-
+        menu.findItem(R.id.info).setVisible(true);
 
         super.onPrepareOptionsMenu(menu);
 
@@ -171,9 +171,25 @@ public class RepliesFragment extends Fragment {
             case R.id.refresh:
                 getReplies(getArguments().getString(Constants.IDTOPIC));
                 break;
+            case R.id.info:
+                getUserViews(getArguments().getString(Constants.IDTOPIC));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void getUserViews(String IDTOPIC) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Lista de Usuários que visualizaram")
+                .setMessage("Teste = "+IDTOPIC)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
     public void addItem(String idReply, String author, String reply_content, String data_reply, String unique_id, String anexo){
         recyclerAdapterReplies.cardItems.add(new CardItemReplyModel(idReply, author, reply_content, data_reply, unique_id, anexo));
         recyclerAdapterReplies.notifyDataSetChanged();
