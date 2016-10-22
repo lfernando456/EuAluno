@@ -121,24 +121,29 @@ public class DisciplinaFragment extends Fragment{
             @Override
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
                 //System.out.println(response.body());
+
                 //btn_concluir.setVisibility(View.VISIBLE);
+
                 disciplinas = response.body().getListaDeDisciplinas();
+            if(disciplinas != null) {
                 nomes = new String[disciplinas.size()];
-                nomesTurmas =new String[disciplinas.size()];
+                nomesTurmas = new String[disciplinas.size()];
                 for (int i = 0; i < disciplinas.size(); i++) {
-                    nomesTurmas [i] = disciplinas.get(i).getNomeTurma();
-                    if( pref.getString("tipo","").equals("1")) {
+                    nomesTurmas[i] = disciplinas.get(i).getNomeTurma();
+                    if (pref.getString("tipo", "").equals("1")) {
 
 
                         nomes[i] = disciplinas.get(i).getNome() + " -> " + nomesTurmas[i];
-                    }else{
+                    } else {
                         nomes[i] = disciplinas.get(i).getNome();
                     }
                 }
 
                 adapter = new DisciplinasListAdapter(getActivity(), disciplinas);
-                // Assign adapter to ListView
                 listView.setAdapter(adapter);
+
+            }
+                // Assign adapter to ListView
 
                 //asdasdasdasdasd
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -31,6 +31,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -38,10 +39,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.andreoid.EuAluno.adapter.RecyclerAdapterReplies;
+import com.andreoid.EuAluno.adapter.UserViewedListAdapter;
 import com.andreoid.EuAluno.models.CardItemReplyModel;
 import com.andreoid.EuAluno.models.Reply;
 import com.andreoid.EuAluno.models.ServerRequest;
 import com.andreoid.EuAluno.models.ServerResponse;
+import com.andreoid.EuAluno.models.User;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import java.io.File;
@@ -70,6 +73,7 @@ public class RepliesFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton floatingActionButton;
     private List<Reply> replies;
+    private List<User> user_viewed;
     private RecyclerAdapterReplies recyclerAdapterReplies;
     private View dialogView;
     Button buttonSendDocs;
@@ -179,14 +183,20 @@ public class RepliesFragment extends Fragment {
     }
 
     private void getUserViews(String IDTOPIC) {
-        new AlertDialog.Builder(getContext())
-                .setTitle("Lista de Usuários que visualizaram")
-                .setMessage("Teste = "+IDTOPIC)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                })
+
+        new AlertDialog.Builder(getContext())
+
+                .setTitle("Lista de Usuários que visualizaram")
+                .setAdapter(
+                        new UserViewedListAdapter(getActivity(),user_viewed),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+
                 .show();
     }
 
@@ -390,6 +400,7 @@ public class RepliesFragment extends Fragment {
             public void onResponse(Call<ServerResponse> call, Response<ServerResponse> response) {
 
                 replies = response.body().getListaDeReplies();
+                user_viewed = response.body().getListaDeUser_viewed();
                 if (replies != null){
                     recyclerAdapterReplies.cardItems.clear();
                     recyclerAdapterReplies.notifyDataSetChanged();

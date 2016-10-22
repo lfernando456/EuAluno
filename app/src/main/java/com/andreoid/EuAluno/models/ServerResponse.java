@@ -14,6 +14,7 @@ public class ServerResponse {
     private List<Reply> replies;
     private List<Topico> topicos;
     private List<Turma> turmas;
+    private List<User> user_viewed;
     private String name;
 
     public String getResult() {
@@ -54,5 +55,9 @@ public class ServerResponse {
 
     public List<Turma> getListaDeTurmas() {
         return turmas;
+    }
+
+    public List<User> getListaDeUser_viewed() {
+        return user_viewed;
     }
 }

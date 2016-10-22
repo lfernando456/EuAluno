@@ -84,7 +84,8 @@
                         android:textColor="#000000"
                         android:nestedScrollingEnabled="false"
                         android:autoText="false"
-                        android:allowUndo="false" />
+                        android:allowUndo="false"
+                        android:singleLine="false" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
