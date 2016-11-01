@@ -20,13 +20,13 @@ public class RetroClient {
 
     private static Retrofit getRetroClient(int debug) {
         OkHttpClient client;
-        if(debug==1) {
+        //if(debug==1) {
             HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
             interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
             client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
-        }else {
-            client = new OkHttpClient.Builder().build();
-        }
+        //}else {
+           // client = new OkHttpClient.Builder().build();
+       // }
 
         return new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL)

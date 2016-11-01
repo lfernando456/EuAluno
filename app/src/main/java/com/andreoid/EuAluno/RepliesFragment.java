@@ -274,6 +274,7 @@ public class RepliesFragment extends Fragment {
     }
 
     private void uploadAnexo() {
+
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Enviando anexo...");
